@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>登入 — 大事設計有限公司</title>
+<title>ç»å¥ â å¤§äºè¨­è¨æéå¬å¸</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif;
+  font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif;
   background: linear-gradient(135deg, #1a2535 0%, #2c4a6e 60%, #1a2535 100%);
   min-height: 100vh;
   display: flex;
@@ -34,3 +34,111 @@ body {
 .form-group { margin-bottom: 20px; }
 label { display: block; font-size: 13px; color: #666; margin-bottom: 6px; font-weight: 600; }
 input[type="text"], input[type="password"] {
+  width: 100%;
+  border: 1.5px solid #e0e4ee;
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 15px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+input:focus { border-color: #4a6fa5; }
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 2px;
+  transition: opacity 0.2s;
+  margin-top: 4px;
+}
+.btn-login:hover { opacity: 0.88; }
+.error-msg {
+  background: #fff0f0;
+  border: 1px solid #fcc;
+  color: #c0392b;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+.footer-note {
+  text-align: center;
+  font-size: 12px;
+  color: #bbb;
+  padding: 0 36px 24px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <div class="icon">ð </div>
+    <h1>å¤§äºè¨­è¨æéå¬å¸</h1>
+    <p>Interior Design Quote System</p>
+  </div>
+  <div class="card-body">
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="form-group">
+      <label>å¸³ãè</label>
+      <input type="text" id="username" placeholder="è«è¼¸å¥å¸³è" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>å¯ãç¢¼</label>
+      <input type="password" id="password" placeholder="è«è¼¸å¥å¯ç¢¼" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">ç»ãå¥</button>
+  </div>
+  <div class="footer-note">Â© å®¤å§è¨­è¨æéå¬å¸</div>
+</div>
+
+<script>
+document.getElementById('password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('username').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('password').focus();
+});
+
+async function doLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  if (!username || !password) {
+    errEl.textContent = 'è«å¡«å¯«å¸³èèå¯ç¢¼';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      window.location.href = '/index.html';
+    } else {
+      errEl.textContent = data.error || 'ç»å¥å¤±æ';
+      errEl.style.display = 'block';
+    }
+  } catch {
+    errEl.textContent = 'ç¶²è·¯é¯èª¤ï¼è«ç¨å¾åè©¦';
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>
