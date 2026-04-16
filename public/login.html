@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ç»å¥ â å¤§äºè¨­è¨æéå¬å¸</title>
+<title>登入 — 大事設計有限公司</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif;
+  font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif;
   background: linear-gradient(135deg, #1a2535 0%, #2c4a6e 60%, #1a2535 100%);
   min-height: 100vh;
   display: flex;
@@ -82,23 +82,23 @@ input:focus { border-color: #4a6fa5; }
 <body>
 <div class="card">
   <div class="card-header">
-    <div class="icon">ð </div>
-    <h1>å¤§äºè¨­è¨æéå¬å¸</h1>
+    <div class="icon">🏠</div>
+    <h1>大事設計有限公司</h1>
     <p>Interior Design Quote System</p>
   </div>
   <div class="card-body">
     <div class="error-msg" id="errorMsg"></div>
     <div class="form-group">
-      <label>å¸³ãè</label>
-      <input type="text" id="username" placeholder="è«è¼¸å¥å¸³è" autocomplete="username">
+      <label>帳　號</label>
+      <input type="text" id="username" placeholder="請輸入帳號" autocomplete="username">
     </div>
     <div class="form-group">
-      <label>å¯ãç¢¼</label>
-      <input type="password" id="password" placeholder="è«è¼¸å¥å¯ç¢¼" autocomplete="current-password">
+      <label>密　碼</label>
+      <input type="password" id="password" placeholder="請輸入密碼" autocomplete="current-password">
     </div>
-    <button class="btn-login" onclick="doLogin()">ç»ãå¥</button>
+    <button class="btn-login" onclick="doLogin()">登　入</button>
   </div>
-  <div class="footer-note">Â© å®¤å§è¨­è¨æéå¬å¸</div>
+  <div class="footer-note">© 室內設計有限公司</div>
 </div>
 
 <script>
@@ -116,7 +116,7 @@ async function doLogin() {
   errEl.style.display = 'none';
 
   if (!username || !password) {
-    errEl.textContent = 'è«å¡«å¯«å¸³èèå¯ç¢¼';
+    errEl.textContent = '請填寫帳號與密碼';
     errEl.style.display = 'block';
     return;
   }
@@ -131,11 +131,11 @@ async function doLogin() {
     if (res.ok) {
       window.location.href = '/index.html';
     } else {
-      errEl.textContent = data.error || 'ç»å¥å¤±æ';
+      errEl.textContent = data.error || '登入失敗';
       errEl.style.display = 'block';
     }
   } catch {
-    errEl.textContent = 'ç¶²è·¯é¯èª¤ï¼è«ç¨å¾åè©¦';
+    errEl.textContent = '網路錯誤，請稍後再試';
     errEl.style.display = 'block';
   }
 }
