@@ -3,34 +3,411 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>歷史單價庫 — 大事設計有限公司</title>
+<title>æ­·å²å®å¹åº« â å¤§äºè¨­è¨æéå¬å¸</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
-.navbar { background: linear-gradient(135deg, #2c3e50, #4a6fa5); color: #fff; padding: 0 24px; height: 54px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif; background: #f0f2f5; color: #333; }
+
+.navbar {
+  background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+  color: #fff; padding: 0 24px; height: 54px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
 .nav-brand { font-size: 16px; font-weight: 700; cursor: pointer; }
 .nav-links { display: flex; gap: 6px; align-items: center; }
-.nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 5px 11px; border-radius: 5px; font-size: 13px; }
+.nav-link {
+  color: rgba(255,255,255,0.8); text-decoration: none;
+  padding: 5px 11px; border-radius: 5px; font-size: 13px;
+}
 .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.2); color: #fff; }
 .nav-right { display: flex; align-items: center; gap: 10px; }
 .nav-user { font-size: 13px; opacity: 0.85; }
-.nav-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-family: inherit; }
+.nav-btn {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  color: #fff; padding: 5px 12px; border-radius: 6px; cursor: pointer;
+  font-size: 13px; font-family: inherit;
+}
 .nav-btn:hover { background: rgba(255,255,255,0.25); }
+
 .main { max-width: 1200px; margin: 0 auto; padding: 24px; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .page-title { font-size: 22px; font-weight: 700; color: #2c3e50; }
 .page-title span { font-size: 14px; font-weight: 400; color: #888; margin-left: 10px; }
+
 .toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
-.search-input { flex: 1; min-width: 200px; border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 14px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input {
+  flex: 1; min-width: 200px; border: 1.5px solid #e0e4ee; border-radius: 8px;
+  padding: 8px 14px; font-size: 14px; font-family: inherit; outline: none;
+}
 .search-input:focus { border-color: #4a6fa5; }
-.filter-select { border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; outline: none; background: #fff; cursor: pointer; }
-.btn-add { background: #4a6fa5; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; white-space: nowrap; }
+.filter-select {
+  border: 1.5px solid #e0e4ee; border-radius: 8px;
+  padding: 8px 12px; font-size: 14px; font-family: inherit; outline: none;
+  background: #fff; cursor: pointer;
+}
+.btn-add {
+  background: #4a6fa5; color: #fff; border: none;
+  padding: 8px 18px; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 700; font-family: inherit; white-space: nowrap;
+}
 .btn-add:hover { background: #3a5f95; }
-.table-wrap { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+.table-wrap {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
 table { width: 100%; border-collapse: collapse; }
 thead tr { background: #f7f8fc; }
-thead th { padding: 13px 16px; font-size: 12px; color: #7b8fa6; text-align: left; font-weight: 600; letter-spacing: 0.5px; border-bottom: 1.5px solid #e8eaf0; white-space: nowrap; }
+thead th {
+  padding: 13px 16px; font-size: 12px; color: #7b8fa6;
+  text-align: left; font-weight: 600; letter-spacing: 0.5px;
+  border-bottom: 1.5px solid #e8eaf0; white-space: nowrap;
+}
 tbody tr { border-bottom: 1px solid #f0f2f5; transition: background 0.15s; }
 tbody tr:hover { background: #f5f7ff; }
 tbody tr:last-child { border-bottom: none; }
 tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+.td-cat { font-size: 11px; padding: 3px 8px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+.td-item { font-weight: 600; color: #2c3e50; }
+.td-price { font-weight: 700; color: #4a6fa5; font-size: 15px; }
+.td-actions { display: flex; gap: 8px; }
+.act-btn {
+  padding: 5px 12px; border-radius: 5px; border: 1px solid #e0e4ee;
+  background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; font-weight: 600;
+}
+.act-btn.edit { color: #4a6fa5; border-color: #c0d0ef; }
+.act-btn.edit:hover { background: #eef3ff; }
+.act-btn.del { color: #e05050; border-color: #f5c0c0; }
+.act-btn.del:hover { background: #fff0f0; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #bbb; background: #fff; border-radius: 12px; }
+.empty-state .icon { font-size: 48px; margin-bottom: 14px; }
+.empty-state p { font-size: 15px; }
+
+/* Category colors */
+.cat-demolish { background: #fff0eb; color: #c0552b; }
+.cat-masonry  { background: #eef3ff; color: #3a5f95; }
+.cat-woodwork { background: #fef9e7; color: #a07a22; }
+.cat-paint    { background: #efffee; color: #1e8a56; }
+.cat-metal    { background: #f3eeff; color: #6a4aaf; }
+.cat-protection { background: #fff0f0; color: #a03030; }
+.cat-weakelec { background: #e8f4ff; color: #1e70a0; }
+.cat-landscape { background: #efffee; color: #1e8030; }
+.cat-glass    { background: #e8faff; color: #138aa4; }
+.cat-lighting { background: #fffde8; color: #b08010; }
+.cat-cabinet  { background: #f0f5f0; color: #406040; }
+.cat-other    { background: #f5f5f5; color: #707070; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  z-index: 500; display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: #fff; border-radius: 14px; padding: 28px 30px;
+  width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+}
+.modal-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { font-size: 12px; color: #888; font-weight: 600; }
+.form-group input, .form-group select, .form-group textarea {
+  border: 1.5px solid #e0e4ee; border-radius: 7px; padding: 9px 11px;
+  font-size: 14px; font-family: inherit; outline: none; color: #333;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #4a6fa5; }
+.form-group textarea { resize: vertical; min-height: 60px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+.btn-cancel {
+  background: #fff; border: 1.5px solid #e0e4ee; color: #888;
+  padding: 9px 20px; border-radius: 7px; cursor: pointer; font-size: 14px; font-family: inherit;
+}
+.btn-cancel:hover { border-color: #ccc; }
+.btn-save {
+  background: #4a6fa5; color: #fff; border: none;
+  padding: 9px 24px; border-radius: 7px; cursor: pointer; font-size: 14px;
+  font-weight: 700; font-family: inherit;
+}
+.btn-save:hover { background: #3a5f95; }
+
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px;
+  font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none;
+}
+.toast.error { background: #c0392b; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand" onclick="location.href='/index.html'">å¤§äºè¨­è¨æéå¬å¸</div>
+  <div class="nav-links">
+    <a href="/index.html" class="nav-link">å ±å¹å®</a>
+    <a href="/clients.html" class="nav-link">æ¥­ä¸»è³æ</a>
+    <a href="/vendors.html" class="nav-link">å» åè³æ</a>
+    <a href="/prices.html" class="nav-link active">æ­·å²å®å¹</a>
+    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">ä½¿ç¨èç®¡ç</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="navUser"></span>
+    <button class="nav-btn" onclick="logout()">ç»åº</button>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">æ­·å²å®å¹è³æåº« <span id="priceCount"></span></div>
+    <button class="btn-add" onclick="openModal()">ï¼ æ°å¢å®å¹</button>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" class="search-input" id="searchInput" placeholder="æå°åé åç¨±ãè¦æ ¼..." oninput="filterPrices()">
+    <select class="filter-select" id="catFilter" onchange="filterPrices()">
+      <option value="">å¨é¨å·¥ç¨é¡å¥</option>
+      <option value="demolish">æé¤å·¥ç¨</option>
+      <option value="masonry">æ³¥ä½ï¼æ°´é»å·¥ç¨</option>
+      <option value="woodwork">æ¨ä½å·¥ç¨</option>
+      <option value="paint">æ²¹æ¼ï¼å¡è£å·¥ç¨</option>
+      <option value="metal">éµä»¶å·¥ç¨</option>
+      <option value="protection">ä¿è­·å·¥ç¨</option>
+      <option value="weakelec">å¼±é»å·¥ç¨</option>
+      <option value="landscape">æ¯è§å·¥ç¨</option>
+      <option value="glass">ç»çå·¥ç¨</option>
+      <option value="lighting">çå·å·¥ç¨</option>
+      <option value="cabinet">ç³»çµ±æ«å·¥ç¨</option>
+      <option value="other">å¶ä»å·¥ç¨</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table id="priceTable">
+      <thead>
+        <tr>
+          <th>å·¥ç¨é¡å¥</th>
+          <th>åé åç¨±</th>
+          <th>è¦æ ¼èªªæ</th>
+          <th>å®ä½</th>
+          <th>å®å¹ (NT$)</th>
+          <th>ä¾æº / åè¨»</th>
+          <th style="width:130px">æä½</th>
+        </tr>
+      </thead>
+      <tbody id="priceBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <div class="icon">ð°</div>
+      <p>å°ç¡æ­·å²å®å¹è³æï¼é»æå³ä¸è§ãæ°å¢å®å¹ãéå§å»ºç«</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="onOverlayClick(event)">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">æ°å¢å®å¹</div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>å·¥ç¨é¡å¥ *</label>
+        <select id="fCategory">
+          <option value="">è«é¸æ</option>
+          <option value="demolish">æé¤å·¥ç¨</option>
+          <option value="masonry">æ³¥ä½ï¼æ°´é»å·¥ç¨</option>
+          <option value="woodwork">æ¨ä½å·¥ç¨</option>
+          <option value="paint">æ²¹æ¼ï¼å¡è£å·¥ç¨</option>
+          <option value="metal">éµä»¶å·¥ç¨</option>
+          <option value="protection">ä¿è­·å·¥ç¨</option>
+          <option value="weakelec">å¼±é»å·¥ç¨</option>
+          <option value="landscape">æ¯è§å·¥ç¨</option>
+          <option value="glass">ç»çå·¥ç¨</option>
+          <option value="lighting">çå·å·¥ç¨</option>
+          <option value="cabinet">ç³»çµ±æ«å·¥ç¨</option>
+          <option value="other">å¶ä»å·¥ç¨</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label>åé åç¨± *</label>
+        <input type="text" id="fItemName" placeholder="ä¾ï¼å°åªç£ç£éªè¨­">
+      </div>
+      <div class="form-group full">
+        <label>è¦æ ¼èªªæ</label>
+        <input type="text" id="fSpec" placeholder="ä¾ï¼60x60cm æåç³è±ç£">
+      </div>
+      <div class="form-group">
+        <label>å®ä½</label>
+        <input type="text" id="fUnit" placeholder="æ / åª / å¼ / ç">
+      </div>
+      <div class="form-group">
+        <label>å®å¹ (NT$) *</label>
+        <input type="number" id="fUnitPrice" placeholder="0" min="0">
+      </div>
+      <div class="form-group full">
+        <label>ä¾æº / åè¨»</label>
+        <textarea id="fNotes" placeholder="ä¾ï¼2024å¹´Aå» åå ±å¹ãå¸å ´è¡æåå¹..."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">åæ¶</button>
+      <button class="btn-save" onclick="savePrice()">å²å­</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CAT_LABELS = {
+  demolish: 'æé¤å·¥ç¨', masonry: 'æ³¥ä½ï¼æ°´é»', woodwork: 'æ¨ä½å·¥ç¨',
+  paint: 'æ²¹æ¼å¡è£', metal: 'éµä»¶å·¥ç¨', protection: 'ä¿è­·å·¥ç¨',
+  weakelec: 'å¼±é»å·¥ç¨', landscape: 'æ¯è§å·¥ç¨', glass: 'ç»çå·¥ç¨',
+  lighting: 'çå·å·¥ç¨', cabinet: 'ç³»çµ±æ«', other: 'å¶ä»å·¥ç¨'
+};
+
+let allPrices = [];
+let editingId = null;
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.href = '/login.html';
+}
+
+async function init() {
+  try {
+    const me = await (await fetch('/api/me')).json();
+    if (me.error) return location.href = '/login.html';
+    document.getElementById('navUser').textContent = 'ð¤ ' + me.displayName;
+    if (me.role === 'admin') document.getElementById('adminLink').style.display = '';
+  } catch { location.href = '/login.html'; }
+  loadPrices();
+}
+
+async function loadPrices() {
+  const res = await fetch('/api/prices');
+  allPrices = await res.json();
+  filterPrices();
+}
+
+function filterPrices() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const cat = document.getElementById('catFilter').value;
+  const filtered = allPrices.filter(p => {
+    const matchQ = !q || p.item_name.toLowerCase().includes(q) ||
+      (p.spec || '').toLowerCase().includes(q);
+    const matchCat = !cat || p.category === cat;
+    return matchQ && matchCat;
+  });
+  renderPrices(filtered);
+}
+
+function renderPrices(prices) {
+  document.getElementById('priceCount').textContent = `ï¼å± ${prices.length} ç­ï¼`;
+  const tbody = document.getElementById('priceBody');
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('priceTable');
+  if (prices.length === 0) {
+    table.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  table.style.display = 'table';
+  empty.style.display = 'none';
+  tbody.innerHTML = prices.map(p => `
+    <tr>
+      <td><span class="td-cat cat-${p.category}">${CAT_LABELS[p.category] || p.category}</span></td>
+      <td class="td-item">${esc(p.item_name)}</td>
+      <td style="color:#666;font-size:13px;">${esc(p.spec)}</td>
+      <td style="text-align:center;color:#888;">${esc(p.unit)}</td>
+      <td class="td-price">NT$ ${Math.round(p.unit_price).toLocaleString('zh-TW')}</td>
+      <td style="color:#999;font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(p.notes||p.source)}</td>
+      <td>
+        <div class="td-actions">
+          <button class="act-btn edit" onclick="openModal(${p.id})">ç·¨è¼¯</button>
+          <button class="act-btn del" onclick="deletePrice(${p.id})">åªé¤</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function openModal(id = null) {
+  editingId = id;
+  document.getElementById('modalTitle').textContent = id ? 'ç·¨è¼¯å®å¹' : 'æ°å¢å®å¹';
+  ['fCategory','fItemName','fSpec','fUnit','fUnitPrice','fNotes']
+    .forEach(f => document.getElementById(f).value = '');
+
+  if (id) {
+    const p = allPrices.find(x => x.id === id);
+    if (p) {
+      document.getElementById('fCategory').value = p.category || '';
+      document.getElementById('fItemName').value = p.item_name || '';
+      document.getElementById('fSpec').value = p.spec || '';
+      document.getElementById('fUnit').value = p.unit || '';
+      document.getElementById('fUnitPrice').value = p.unit_price || '';
+      document.getElementById('fNotes').value = p.notes || p.source || '';
+    }
+  }
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+function onOverlayClick(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+async function savePrice() {
+  const payload = {
+    category: document.getElementById('fCategory').value,
+    item_name: document.getElementById('fItemName').value.trim(),
+    spec: document.getElementById('fSpec').value.trim(),
+    unit: document.getElementById('fUnit').value.trim() || 'å¼',
+    unit_price: parseFloat(document.getElementById('fUnitPrice').value) || 0,
+    notes: document.getElementById('fNotes').value.trim(),
+    source: document.getElementById('fNotes').value.trim(),
+  };
+  if (!payload.category) { showToast('è«é¸æå·¥ç¨é¡å¥', true); return; }
+  if (!payload.item_name) { showToast('è«å¡«å¯«åé åç¨±', true); return; }
+
+  const method = editingId ? 'PUT' : 'POST';
+  const url = editingId ? `/api/prices/${editingId}` : '/api/prices';
+  const res = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (data.success) {
+    showToast(editingId ? 'â å®å¹å·²æ´æ°' : 'â å®å¹å·²æ°å¢');
+    closeModal();
+    loadPrices();
+  } else {
+    showToast('å²å­å¤±æï¼' + (data.error || ''), true);
+  }
+}
+
+async function deletePrice(id) {
+  if (!confirm('ç¢ºå®è¦åªé¤æ­¤ç­å®å¹è³æåï¼')) return;
+  const res = await fetch(`/api/prices/${id}`, { method: 'DELETE' });
+  const data = await res.json();
+  if (data.success) {
+    showToast('å·²åªé¤');
+    loadPrices();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
