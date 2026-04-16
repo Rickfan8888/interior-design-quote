@@ -36,6 +36,45 @@ db.exec(`
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS vendors (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    contact_person TEXT,
+    phone TEXT,
+    mobile TEXT,
+    email TEXT,
+    specialty TEXT,
+    address TEXT,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS clients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    company TEXT,
+    phone TEXT,
+    mobile TEXT,
+    email TEXT,
+    address TEXT,
+    notes TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS price_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category TEXT NOT NULL,
+    item_name TEXT NOT NULL,
+    spec TEXT,
+    unit TEXT,
+    unit_price REAL NOT NULL,
+    notes TEXT,
+    source TEXT,
+    user_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  );
 `);
 
 // 若無任何使用者，建立預設管理員
@@ -61,7 +100,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ── 驗證中介 ──────────────────────────────────────────────
 function requireLogin(req, res, next) {
   if (req.session.userId) return next();
-  if (req.headers['content-type'] === 'application/json') {
+  if (req.headers['content-type'] === 'application/json' || req.path.startsWith('/api/')) {
     return res.status(401).json({ error: '請先登入' });
   }
   res.redirect('/login.html');
@@ -110,7 +149,6 @@ app.get('/api/me', (req, res) => {
 });
 
 // ── 報價單 API ─────────────────────────────────────────────
-// 取得列表
 app.get('/api/quotes', requireLogin, (req, res) => {
   let quotes;
   if (req.session.role === 'admin') {
@@ -132,7 +170,6 @@ app.get('/api/quotes', requireLogin, (req, res) => {
   res.json(quotes);
 });
 
-// 取得單一報價單
 app.get('/api/quotes/:id', requireLogin, (req, res) => {
   const q = db.prepare('SELECT * FROM quotes WHERE id = ?').get(req.params.id);
   if (!q) return res.status(404).json({ error: '找不到此報價單' });
@@ -142,7 +179,6 @@ app.get('/api/quotes/:id', requireLogin, (req, res) => {
   res.json(q);
 });
 
-// 新增報價單
 app.post('/api/quotes', requireLogin, (req, res) => {
   const { quote_no, client_name, total_amount, data } = req.body;
   const result = db.prepare(`
@@ -152,7 +188,6 @@ app.post('/api/quotes', requireLogin, (req, res) => {
   res.json({ success: true, id: result.lastInsertRowid });
 });
 
-// 更新報價單
 app.put('/api/quotes/:id', requireLogin, (req, res) => {
   const q = db.prepare('SELECT * FROM quotes WHERE id = ?').get(req.params.id);
   if (!q) return res.status(404).json({ error: '找不到此報價單' });
@@ -166,7 +201,6 @@ app.put('/api/quotes/:id', requireLogin, (req, res) => {
   res.json({ success: true });
 });
 
-// 刪除報價單
 app.delete('/api/quotes/:id', requireLogin, (req, res) => {
   const q = db.prepare('SELECT * FROM quotes WHERE id = ?').get(req.params.id);
   if (!q) return res.status(404).json({ error: '找不到此報價單' });
@@ -174,6 +208,137 @@ app.delete('/api/quotes/:id', requireLogin, (req, res) => {
     return res.status(403).json({ error: '無權限刪除' });
   db.prepare('DELETE FROM quotes WHERE id = ?').run(req.params.id);
   res.json({ success: true });
+});
+
+// ── 廠商資料庫 API ─────────────────────────────────────────
+app.get('/api/vendors', requireLogin, (req, res) => {
+  const vendors = db.prepare('SELECT * FROM vendors ORDER BY name').all();
+  res.json(vendors);
+});
+
+app.get('/api/vendors/:id', requireLogin, (req, res) => {
+  const v = db.prepare('SELECT * FROM vendors WHERE id = ?').get(req.params.id);
+  if (!v) return res.status(404).json({ error: '找不到此廠商' });
+  res.json(v);
+});
+
+app.post('/api/vendors', requireLogin, (req, res) => {
+  const { name, contact_person, phone, mobile, email, specialty, address, notes } = req.body;
+  if (!name) return res.status(400).json({ error: '請填寫廠商名稱' });
+  const result = db.prepare(`
+    INSERT INTO vendors (name, contact_person, phone, mobile, email, specialty, address, notes)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(name, contact_person || '', phone || '', mobile || '', email || '', specialty || '', address || '', notes || '');
+  res.json({ success: true, id: result.lastInsertRowid });
+});
+
+app.put('/api/vendors/:id', requireLogin, (req, res) => {
+  const { name, contact_person, phone, mobile, email, specialty, address, notes } = req.body;
+  if (!name) return res.status(400).json({ error: '請填寫廠商名稱' });
+  db.prepare(`
+    UPDATE vendors SET name=?, contact_person=?, phone=?, mobile=?, email=?, specialty=?, address=?, notes=?
+    WHERE id=?
+  `).run(name, contact_person || '', phone || '', mobile || '', email || '', specialty || '', address || '', notes || '', req.params.id);
+  res.json({ success: true });
+});
+
+app.delete('/api/vendors/:id', requireLogin, (req, res) => {
+  db.prepare('DELETE FROM vendors WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
+// ── 業主資料庫 API ─────────────────────────────────────────
+app.get('/api/clients', requireLogin, (req, res) => {
+  const clients = db.prepare('SELECT * FROM clients ORDER BY name').all();
+  res.json(clients);
+});
+
+app.get('/api/clients/:id', requireLogin, (req, res) => {
+  const c = db.prepare('SELECT * FROM clients WHERE id = ?').get(req.params.id);
+  if (!c) return res.status(404).json({ error: '找不到此業主' });
+  res.json(c);
+});
+
+app.post('/api/clients', requireLogin, (req, res) => {
+  const { name, company, phone, mobile, email, address, notes } = req.body;
+  if (!name) return res.status(400).json({ error: '請填寫業主姓名' });
+  const result = db.prepare(`
+    INSERT INTO clients (name, company, phone, mobile, email, address, notes)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `).run(name, company || '', phone || '', mobile || '', email || '', address || '', notes || '');
+  res.json({ success: true, id: result.lastInsertRowid });
+});
+
+app.put('/api/clients/:id', requireLogin, (req, res) => {
+  const { name, company, phone, mobile, email, address, notes } = req.body;
+  if (!name) return res.status(400).json({ error: '請填寫業主姓名' });
+  db.prepare(`
+    UPDATE clients SET name=?, company=?, phone=?, mobile=?, email=?, address=?, notes=?
+    WHERE id=?
+  `).run(name, company || '', phone || '', mobile || '', email || '', address || '', notes || '', req.params.id);
+  res.json({ success: true });
+});
+
+app.delete('/api/clients/:id', requireLogin, (req, res) => {
+  db.prepare('DELETE FROM clients WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
+// ── 歷史單價資料庫 API ─────────────────────────────────────
+app.get('/api/prices', requireLogin, (req, res) => {
+  const { category, q } = req.query;
+  let sql = 'SELECT * FROM price_history WHERE 1=1';
+  const params = [];
+  if (category) { sql += ' AND category = ?'; params.push(category); }
+  if (q) { sql += ' AND (item_name LIKE ? OR spec LIKE ?)'; params.push('%'+q+'%', '%'+q+'%'); }
+  sql += ' ORDER BY category, item_name, created_at DESC';
+  res.json(db.prepare(sql).all(...params));
+});
+
+app.post('/api/prices', requireLogin, (req, res) => {
+  const { category, item_name, spec, unit, unit_price, notes, source } = req.body;
+  if (!category || !item_name || unit_price === undefined)
+    return res.status(400).json({ error: '請填寫必要欄位（類別、品項、單價）' });
+  const result = db.prepare(`
+    INSERT INTO price_history (category, item_name, spec, unit, unit_price, notes, source, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(category, item_name, spec || '', unit || '式', parseFloat(unit_price) || 0, notes || '', source || '', req.session.userId);
+  res.json({ success: true, id: result.lastInsertRowid });
+});
+
+app.put('/api/prices/:id', requireLogin, (req, res) => {
+  const { category, item_name, spec, unit, unit_price, notes, source } = req.body;
+  if (!category || !item_name || unit_price === undefined)
+    return res.status(400).json({ error: '請填寫必要欄位' });
+  db.prepare(`
+    UPDATE price_history SET category=?, item_name=?, spec=?, unit=?, unit_price=?, notes=?, source=?
+    WHERE id=?
+  `).run(category, item_name, spec || '', unit || '式', parseFloat(unit_price) || 0, notes || '', source || '', req.params.id);
+  res.json({ success: true });
+});
+
+app.delete('/api/prices/:id', requireLogin, (req, res) => {
+  db.prepare('DELETE FROM price_history WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
+// 批次新增（從報價單匯入）
+app.post('/api/prices/batch', requireLogin, (req, res) => {
+  const { items } = req.body;
+  if (!Array.isArray(items) || items.length === 0)
+    return res.status(400).json({ error: '無資料' });
+  const stmt = db.prepare(`
+    INSERT INTO price_history (category, item_name, spec, unit, unit_price, notes, source, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+  const insertMany = db.transaction((rows) => {
+    for (const r of rows) {
+      stmt.run(r.category, r.item_name, r.spec || '', r.unit || '式',
+               parseFloat(r.unit_price) || 0, r.notes || '', r.source || '', req.session.userId);
+    }
+  });
+  insertMany(items);
+  res.json({ success: true, count: items.length });
 });
 
 // ── 使用者管理 API（管理員） ───────────────────────────────
@@ -208,7 +373,6 @@ app.delete('/api/users/:id', requireLogin, requireAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-// 修改密碼（本人或管理員）
 app.put('/api/users/:id/password', requireLogin, (req, res) => {
   if (parseInt(req.params.id) !== req.session.userId && req.session.role !== 'admin')
     return res.status(403).json({ error: '權限不足' });
