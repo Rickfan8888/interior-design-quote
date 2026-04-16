@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登入 — 大事設計報價系統</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif;
+  background: linear-gradient(135deg, #1a2535 0%, #2c4a6e 60%, #1a2535 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  width: 380px;
+  overflow: hidden;
+}
+.card-header {
+  background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+  padding: 32px 36px 28px;
+  text-align: center;
+  color: #fff;
+}
+.card-header .icon { font-size: 36px; margin-bottom: 8px; }
+.card-header h1 { font-size: 20px; font-weight: 700; letter-spacing: 2px; }
+.card-header p { font-size: 13px; opacity: 0.75; margin-top: 4px; }
+.card-body { padding: 32px 36px 28px; }
+.form-group { margin-bottom: 20px; }
+label { display: block; font-size: 13px; color: #666; margin-bottom: 6px; font-weight: 600; }
+input[type="text"], input[type="password"] {
+  width: 100%;
+  border: 1.5px solid #e0e4ee;
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 15px;
+  color: #333;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+input:focus { border-color: #4a6fa5; }
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 2px;
+  transition: opacity 0.2s;
+  margin-top: 4px;
+}
+.btn-login:hover { opacity: 0.88; }
+.error-msg {
+  background: #fff0f0;
+  border: 1px solid #fcc;
+  color: #c0392b;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: none;
+}
+.footer-note {
+  text-align: center;
+  font-size: 12px;
+  color: #bbb;
+  padding: 0 36px 24px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="card-header">
+    <div class="icon">🏠</div>
+    <h1>大事設計報價系統</h1>
+    <p>Interior Design Quote System</p>
+  </div>
+  <div class="card-body">
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="form-group">
+      <label>帳　號</label>
+      <input type="text" id="username" placeholder="請輸入帳號" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>密　碼</label>
+      <input type="password" id="password" placeholder="請輸入密碼" autocomplete="current-password">
+    </div>
+    <button class="btn-login" onclick="doLogin()">登　入</button>
+  </div>
+  <div class="footer-note">© 室內設計有限公司</div>
+</div>
+
+<script>
+document.getElementById('password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('username').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('password').focus();
+});
+
+async function doLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value;
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  if (!username || !password) {
+    errEl.textContent = '請填寫帳號與密碼';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      window.location.href = '/index.html';
+    } else {
+      errEl.textContent = data.error || '登入失敗';
+      errEl.style.display = 'block';
+    }
+  } catch {
+    errEl.textContent = '網路錯誤，請稍後再試';
+    errEl.style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>

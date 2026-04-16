@@ -385,5 +385,5 @@ app.put('/api/users/:id/password', requireLogin, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`室內設計報價系統啟動，連接埠：${PORT}`);
+  console.log(`大事設計報價系統啟動，連接埠：${PORT}`);
 });
