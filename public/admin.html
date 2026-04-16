@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>使用者管理 — 大事設計有限公司</title>
+<title>ä½¿ç¨èç®¡ç â å¤§äºè¨­è¨æéå¬å¸</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
+body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif; background: #f0f2f5; color: #333; }
 .navbar {
   background: linear-gradient(135deg, #2c3e50, #4a6fa5);
   color: #fff; padding: 0 32px; height: 58px;
@@ -34,3 +34,235 @@ body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; backgr
   width: 100%; border: 1.5px solid #e0e4ee; border-radius: 7px;
   padding: 9px 12px; font-size: 14px; font-family: inherit; outline: none;
 }
+.form-group input:focus, .form-group select:focus { border-color: #4a6fa5; }
+.btn-add { margin-top: 16px; padding: 10px 24px; background: linear-gradient(135deg,#2c3e50,#4a6fa5); color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btn-add:hover { opacity: 0.88; }
+.error-msg { background:#fff0f0; border:1px solid #fcc; color:#c0392b; border-radius:6px; padding:8px 12px; font-size:13px; margin-top:10px; display:none; }
+.success-msg { background:#f0fff4; border:1px solid #b2dfdb; color:#27ae60; border-radius:6px; padding:8px 12px; font-size:13px; margin-top:10px; display:none; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #f7f8fc; }
+thead th { padding: 11px 14px; font-size: 12px; color: #7b8fa6; text-align: left; font-weight: 600; border-bottom: 1.5px solid #e8eaf0; }
+tbody tr { border-bottom: 1px solid #f0f2f5; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 12px 14px; font-size: 14px; }
+.badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-admin { background: #eef3ff; color: #4a6fa5; }
+.badge-user { background: #f0fff4; color: #27ae60; }
+.act-btn { padding: 4px 11px; border-radius: 5px; border: 1px solid #e0e4ee; background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; margin-right: 4px; }
+.act-btn.del { color: #e05050; border-color: #f5c0c0; }
+.act-btn.del:hover { background: #fff0f0; }
+.act-btn.pwd { color: #4a6fa5; border-color: #c0d0ef; }
+.act-btn.pwd:hover { background: #eef3ff; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: none; align-items: center; justify-content: center; z-index: 200; }
+.modal-overlay.show { display: flex; }
+.modal { background: #fff; border-radius: 12px; padding: 28px 32px; width: 380px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+.modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.modal input { width: 100%; border: 1.5px solid #e0e4ee; border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; outline: none; margin-bottom: 12px; }
+.modal input:focus { border-color: #4a6fa5; }
+.modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+.modal-btns button { padding: 9px 20px; border-radius: 6px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-cancel { background: #f0f2f5; color: #666; }
+.btn-confirm { background: linear-gradient(135deg,#2c3e50,#4a6fa5); color: #fff; }
+.modal-err { color: #c0392b; font-size: 13px; margin-bottom: 8px; display: none; }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; right: 24px; background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none; }
+.toast.error { background: #c0392b; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand" onclick="location.href='/index.html'">å¤§äºè¨­è¨æéå¬å¸</div>
+  <div class="nav-right">
+    <a href="/index.html" class="nav-btn">å ±å¹å®åè¡¨</a>
+    <button class="nav-btn" onclick="logout()">ç»åº</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- æ°å¢ä½¿ç¨è -->
+  <div class="card">
+    <div class="card-header"><h2>â æ°å¢ä½¿ç¨èå¸³è</h2></div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>å¸³èï¼ç»å¥ç¨ï¼</label>
+          <input type="text" id="newUsername" placeholder="ä¾ï¼designer01">
+        </div>
+        <div class="form-group">
+          <label>é¡¯ç¤ºå§å</label>
+          <input type="text" id="newDisplayName" placeholder="ä¾ï¼çå°æ">
+        </div>
+        <div class="form-group">
+          <label>å¯ç¢¼ï¼è³å°6åå­åï¼</label>
+          <input type="password" id="newPassword" placeholder="è«è¼¸å¥å¯ç¢¼">
+        </div>
+        <div class="form-group">
+          <label>è§è²æ¬é</label>
+          <select id="newRole">
+            <option value="user">ä¸è¬ä½¿ç¨èï¼åªè½çèªå·±çå ±å¹å®ï¼</option>
+            <option value="admin">ç®¡çå¡ï¼å¯çææäººçå ±å¹å®ï¼</option>
+          </select>
+        </div>
+      </div>
+      <div class="error-msg" id="addError"></div>
+      <div class="success-msg" id="addSuccess"></div>
+      <button class="btn-add" onclick="addUser()">æ°å¢å¸³è</button>
+    </div>
+  </div>
+
+  <!-- ä½¿ç¨èåè¡¨ -->
+  <div class="card">
+    <div class="card-header"><h2>ð¥ ä½¿ç¨èåè¡¨</h2></div>
+    <div class="card-body" style="padding:0;">
+      <table>
+        <thead><tr>
+          <th>å¸³è</th><th>é¡¯ç¤ºå§å</th><th>è§è²</th><th>å»ºç«æé</th><th>æä½</th>
+        </tr></thead>
+        <tbody id="userBody"><tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px;">è¼å¥ä¸­...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ä¿®æ¹å¯ç¢¼ Modal -->
+<div class="modal-overlay" id="pwdModal">
+  <div class="modal">
+    <h3>ð ä¿®æ¹å¯ç¢¼</h3>
+    <p style="font-size:13px;color:#888;margin-bottom:14px;" id="pwdModalUser"></p>
+    <input type="password" id="pwdInput" placeholder="è¼¸å¥æ°å¯ç¢¼ï¼è³å°6åå­åï¼">
+    <input type="password" id="pwdConfirm" placeholder="åæ¬¡ç¢ºèªæ°å¯ç¢¼">
+    <div class="modal-err" id="pwdErr"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closePwdModal()">åæ¶</button>
+      <button class="btn-confirm" onclick="confirmChangePwd()">ç¢ºèªä¿®æ¹</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let changePwdUserId = null;
+let myId = null;
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.href = '/login.html';
+}
+
+async function init() {
+  const me = await (await fetch('/api/me')).json();
+  if (me.error || me.role !== 'admin') return location.href = '/index.html';
+  myId = me.id;
+  loadUsers();
+}
+
+async function loadUsers() {
+  const res = await fetch('/api/users');
+  const users = await res.json();
+  const tbody = document.getElementById('userBody');
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><strong>${u.username}</strong></td>
+      <td>${u.display_name}</td>
+      <td><span class="badge badge-${u.role}">${u.role === 'admin' ? 'ç®¡çå¡' : 'ä¸è¬ä½¿ç¨è'}</span></td>
+      <td style="font-size:12px;color:#888;">${u.created_at?.substring(0,16) || '-'}</td>
+      <td>
+        <button class="act-btn pwd" onclick="openPwdModal(${u.id},'${u.display_name}')">æ¹å¯ç¢¼</button>
+        ${u.id !== myId ? `<button class="act-btn del" onclick="deleteUser(${u.id},'${u.display_name}')">åªé¤</button>` : '<span style="font-size:12px;color:#ccc;">ï¼ç®åç»å¥ä¸­ï¼</span>'}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function addUser() {
+  const username = document.getElementById('newUsername').value.trim();
+  const display_name = document.getElementById('newDisplayName').value.trim();
+  const password = document.getElementById('newPassword').value;
+  const role = document.getElementById('newRole').value;
+  const errEl = document.getElementById('addError');
+  const sucEl = document.getElementById('addSuccess');
+  errEl.style.display = 'none'; sucEl.style.display = 'none';
+
+  if (!username || !display_name || !password) {
+    errEl.textContent = 'è«å¡«å¯«æææ¬ä½'; errEl.style.display = 'block'; return;
+  }
+
+  const res = await fetch('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password, display_name, role })
+  });
+  const data = await res.json();
+  if (data.success) {
+    sucEl.textContent = `â å·²æåå»ºç«å¸³èã${username}ã`;
+    sucEl.style.display = 'block';
+    document.getElementById('newUsername').value = '';
+    document.getElementById('newDisplayName').value = '';
+    document.getElementById('newPassword').value = '';
+    loadUsers();
+  } else {
+    errEl.textContent = data.error || 'æ°å¢å¤±æ'; errEl.style.display = 'block';
+  }
+}
+
+async function deleteUser(id, name) {
+  if (!confirm(`ç¢ºå®è¦åªé¤ä½¿ç¨èã${name}ãåï¼åªé¤å¾å¶ææå ±å¹å®è³æä»ä¿çï¼ä½ç¡æ³eç»å¥ã`)) return;
+  const res = await fetch('/api/users/' + id, { method: 'DELETE' });
+  const data = await res.json();
+  if (data.success) { showToast('å·²åªé¤ä½¿ç¨è ' + name); loadUsers(); }
+  else showToast(data.error || 'åªé¤å¤±æ', true);
+}
+
+function openPwdModal(id, name) {
+  changePwdUserId = id;
+  document.getElementById('pwdModalUser').textContent = 'ä½¿ç¨èï¼' + name;
+  document.getElementById('pwdInput').value = '';
+  document.getElementById('pwdConfirm').value = '';
+  document.getElementById('pwdErr').style.display = 'none';
+  document.getElementById('pwdModal').classList.add('show');
+}
+
+function closePwdModal() {
+  document.getElementById('pwdModal').classList.remove('show');
+}
+
+async function confirmChangePwd() {
+  const pwd = document.getElementById('pwdInput').value;
+  const confirm = document.getElementById('pwdConfirm').value;
+  const errEl = document.getElementById('pwdErr');
+  errEl.style.display = 'none';
+
+  if (pwd.length < 6) { errEl.textContent = 'å¯ç¢¼è³å°éè¦6åå­å'; errEl.style.display = 'block'; return; }
+  if (pwd !== confirm) { errEl.textContent = 'å©æ¬¡å¯ç¢¼è¼¸å¥ä¸ä¸è´'; errEl.style.display = 'block'; return; }
+
+  const res = await fetch('/api/users/' + changePwdUserId + '/password', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pwd })
+  });
+  const data = await res.json();
+  if (data.success) { closePwdModal(); showToast('å¯ç¢¼å·²æ´æ°'); }
+  else { errEl.textContent = data.error || 'æ´æ°å¤±æ'; errEl.style.display = 'block'; }
+}
+
+init();
+</script>
+</body>
+</html>
