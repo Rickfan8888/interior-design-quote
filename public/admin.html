@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使用者管理 — 室內設計報價系統</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
+.navbar {
+  background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+  color: #fff; padding: 0 32px; height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.nav-brand { font-size: 17px; font-weight: 700; cursor: pointer; }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-btn {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer;
+  font-size: 13px; font-family: inherit; text-decoration: none; display: inline-block;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.25); }
+.main { max-width: 900px; margin: 28px auto; padding: 0 20px; }
+.card { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 24px; }
+.card-header { padding: 18px 24px; border-bottom: 1px solid #e8eaf0; }
+.card-header h2 { font-size: 16px; font-weight: 700; color: #2c3e50; }
+.card-body { padding: 20px 24px; }
+
+/* Form */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
+.form-group label { display: block; font-size: 12px; color: #666; margin-bottom: 5px; font-weight: 600; }
+.form-group input, .form-group select {
+  width: 100%; border: 1.5px solid #e0e4ee; border-radius: 7px;
+  padding: 9px 12px; font-size: 14px; font-family: inherit; outline: none;
+}
+.form-group input:focus, .form-group select:focus { border-color: #4a6fa5; }
+.btn-add { margin-top: 16px; padding: 10px 24px; background: linear-gradient(135deg,#2c3e50,#4a6fa5); color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btn-add:hover { opacity: 0.88; }
+.error-msg { background:#fff0f0; border:1px solid #fcc; color:#c0392b; border-radius:6px; padding:8px 12px; font-size:13px; margin-top:10px; display:none; }
+.success-msg { background:#f0fff4; border:1px solid #b2dfdb; color:#27ae60; border-radius:6px; padding:8px 12px; font-size:13px; margin-top:10px; display:none; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #f7f8fc; }
+thead th { padding: 11px 14px; font-size: 12px; color: #7b8fa6; text-align: left; font-weight: 600; border-bottom: 1.5px solid #e8eaf0; }
+tbody tr { border-bottom: 1px solid #f0f2f5; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 12px 14px; font-size: 14px; }
+.badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+.badge-admin { background: #eef3ff; color: #4a6fa5; }
+.badge-user { background: #f0fff4; color: #27ae60; }
+.act-btn { padding: 4px 11px; border-radius: 5px; border: 1px solid #e0e4ee; background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; margin-right: 4px; }
+.act-btn.del { color: #e05050; border-color: #f5c0c0; }
+.act-btn.del:hover { background: #fff0f0; }
+.act-btn.pwd { color: #4a6fa5; border-color: #c0d0ef; }
+.act-btn.pwd:hover { background: #eef3ff; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: none; align-items: center; justify-content: center; z-index: 200; }
+.modal-overlay.show { display: flex; }
+.modal { background: #fff; border-radius: 12px; padding: 28px 32px; width: 380px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+.modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.modal input { width: 100%; border: 1.5px solid #e0e4ee; border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; outline: none; margin-bottom: 12px; }
+.modal input:focus { border-color: #4a6fa5; }
+.modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 4px; }
+.modal-btns button { padding: 9px 20px; border-radius: 6px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.btn-cancel { background: #f0f2f5; color: #666; }
+.btn-confirm { background: linear-gradient(135deg,#2c3e50,#4a6fa5); color: #fff; }
+.modal-err { color: #c0392b; font-size: 13px; margin-bottom: 8px; display: none; }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; right: 24px; background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none; }
+.toast.error { background: #c0392b; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand" onclick="location.href='/index.html'">← 室內設計報價系統</div>
+  <div class="nav-right">
+    <a href="/index.html" class="nav-btn">報價單列表</a>
+    <button class="nav-btn" onclick="logout()">登出</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- 新增使用者 -->
+  <div class="card">
+    <div class="card-header"><h2>➕ 新增使用者帳號</h2></div>
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>帳號（登入用）</label>
+          <input type="text" id="newUsername" placeholder="例：designer01">
+        </div>
+        <div class="form-group">
+          <label>顯示姓名</label>
+          <input type="text" id="newDisplayName" placeholder="例：王小明">
+        </div>
+        <div class="form-group">
+          <label>密碼（至少6個字元）</label>
+          <input type="password" id="newPassword" placeholder="請輸入密碼">
+        </div>
+        <div class="form-group">
+          <label>角色權限</label>
+          <select id="newRole">
+            <option value="user">一般使用者（只能看自己的報價單）</option>
+            <option value="admin">管理員（可看所有人的報價單）</option>
+          </select>
+        </div>
+      </div>
+      <div class="error-msg" id="addError"></div>
+      <div class="success-msg" id="addSuccess"></div>
+      <button class="btn-add" onclick="addUser()">新增帳號</button>
+    </div>
+  </div>
+
+  <!-- 使用者列表 -->
+  <div class="card">
+    <div class="card-header"><h2>👥 使用者列表</h2></div>
+    <div class="card-body" style="padding:0;">
+      <table>
+        <thead><tr>
+          <th>帳號</th><th>顯示姓名</th><th>角色</th><th>建立時間</th><th>操作</th>
+        </tr></thead>
+        <tbody id="userBody"><tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px;">載入中...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- 修改密碼 Modal -->
+<div class="modal-overlay" id="pwdModal">
+  <div class="modal">
+    <h3>🔒 修改密碼</h3>
+    <p style="font-size:13px;color:#888;margin-bottom:14px;" id="pwdModalUser"></p>
+    <input type="password" id="pwdInput" placeholder="輸入新密碼（至少6個字元）">
+    <input type="password" id="pwdConfirm" placeholder="再次確認新密碼">
+    <div class="modal-err" id="pwdErr"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closePwdModal()">取消</button>
+      <button class="btn-confirm" onclick="confirmChangePwd()">確認修改</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let changePwdUserId = null;
+let myId = null;
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.href = '/login.html';
+}
+
+async function init() {
+  const me = await (await fetch('/api/me')).json();
+  if (me.error || me.role !== 'admin') return location.href = '/index.html';
+  myId = me.id;
+  loadUsers();
+}
+
+async function loadUsers() {
+  const res = await fetch('/api/users');
+  const users = await res.json();
+  const tbody = document.getElementById('userBody');
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td><strong>${u.username}</strong></td>
+      <td>${u.display_name}</td>
+      <td><span class="badge badge-${u.role}">${u.role === 'admin' ? '管理員' : '一般使用者'}</span></td>
+      <td style="font-size:12px;color:#888;">${u.created_at?.substring(0,16) || '-'}</td>
+      <td>
+        <button class="act-btn pwd" onclick="openPwdModal(${u.id},'${u.display_name}')">改密碼</button>
+        ${u.id !== myId ? `<button class="act-btn del" onclick="deleteUser(${u.id},'${u.display_name}')">刪除</button>` : '<span style="font-size:12px;color:#ccc;">（目前登入中）</span>'}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function addUser() {
+  const username = document.getElementById('newUsername').value.trim();
+  const display_name = document.getElementById('newDisplayName').value.trim();
+  const password = document.getElementById('newPassword').value;
+  const role = document.getElementById('newRole').value;
+  const errEl = document.getElementById('addError');
+  const sucEl = document.getElementById('addSuccess');
+  errEl.style.display = 'none'; sucEl.style.display = 'none';
+
+  if (!username || !display_name || !password) {
+    errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return;
+  }
+
+  const res = await fetch('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password, display_name, role })
+  });
+  const data = await res.json();
+  if (data.success) {
+    sucEl.textContent = `✅ 已成功建立帳號「${username}」`;
+    sucEl.style.display = 'block';
+    document.getElementById('newUsername').value = '';
+    document.getElementById('newDisplayName').value = '';
+    document.getElementById('newPassword').value = '';
+    loadUsers();
+  } else {
+    errEl.textContent = data.error || '新增失敗'; errEl.style.display = 'block';
+  }
+}
+
+async function deleteUser(id, name) {
+  if (!confirm(`確定要刪除使用者「${name}」嗎？刪除後其所有報價單資料仍保留，但無法再登入。`)) return;
+  const res = await fetch('/api/users/' + id, { method: 'DELETE' });
+  const data = await res.json();
+  if (data.success) { showToast('已刪除使用者 ' + name); loadUsers(); }
+  else showToast(data.error || '刪除失敗', true);
+}
+
+function openPwdModal(id, name) {
+  changePwdUserId = id;
+  document.getElementById('pwdModalUser').textContent = '使用者：' + name;
+  document.getElementById('pwdInput').value = '';
+  document.getElementById('pwdConfirm').value = '';
+  document.getElementById('pwdErr').style.display = 'none';
+  document.getElementById('pwdModal').classList.add('show');
+}
+
+function closePwdModal() {
+  document.getElementById('pwdModal').classList.remove('show');
+}
+
+async function confirmChangePwd() {
+  const pwd = document.getElementById('pwdInput').value;
+  const confirm = document.getElementById('pwdConfirm').value;
+  const errEl = document.getElementById('pwdErr');
+  errEl.style.display = 'none';
+
+  if (pwd.length < 6) { errEl.textContent = '密碼至少需要6個字元'; errEl.style.display = 'block'; return; }
+  if (pwd !== confirm) { errEl.textContent = '兩次密碼輸入不一致'; errEl.style.display = 'block'; return; }
+
+  const res = await fetch('/api/users/' + changePwdUserId + '/password', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pwd })
+  });
+  const data = await res.json();
+  if (data.success) { closePwdModal(); showToast('密碼已更新'); }
+  else { errEl.textContent = data.error || '更新失敗'; errEl.style.display = 'block'; }
+}
+
+init();
+</script>
+</body>
+</html>
