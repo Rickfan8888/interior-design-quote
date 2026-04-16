@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>æçå ±å¹å® â å¤§äºè¨­è¨æéå¬å¸</title>
+<title>我的報價單 — 大事設計有限公司</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif; background: #f0f2f5; color: #333; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
 
 /* Navbar */
 .navbar {
@@ -157,46 +157,46 @@ tbody td { padding: 14px 16px; font-size: 14px; vertical-align: middle; }
 <body>
 
 <nav class="navbar">
-  <div class="nav-brand">å¤§äºè¨­è¨æéå¬å¸</div>
+  <div class="nav-brand">大事設計有限公司</div>
   <div class="nav-right">
-    <a href="/clients.html" class="nav-btn" style="font-size:12px;">ð¤ æ¥­ä¸»è³æ</a>
-    <a href="/vendors.html" class="nav-btn" style="font-size:12px;">ð­ å» åè³æ</a>
-    <a href="/prices.html" class="nav-btn" style="font-size:12px;">ð° æ­·å²å®å¹</a>
-    <span class="nav-user" id="navUser">è¼å¥ä¸­...</span>
-    <a href="/form.html" class="nav-btn primary">ï¼ æ°å¢å ±å¹å®</a>
-    <a href="/admin.html" class="nav-btn" id="adminLink" style="display:none">â ä½¿ç¨èç®¡ç</a>
-    <button class="nav-btn" onclick="logout()">ç»åº</button>
+    <a href="/clients.html" class="nav-btn" style="font-size:12px;">👤 業主資料</a>
+    <a href="/vendors.html" class="nav-btn" style="font-size:12px;">🏭 廠商資料</a>
+    <a href="/prices.html" class="nav-btn" style="font-size:12px;">💰 歷史單價</a>
+    <span class="nav-user" id="navUser">載入中...</span>
+    <a href="/form.html" class="nav-btn primary">＋ 新增報價單</a>
+    <a href="/admin.html" class="nav-btn" id="adminLink" style="display:none">⚙ 使用者管理</a>
+    <button class="nav-btn" onclick="logout()">登出</button>
   </div>
 </nav>
 
 <div class="main">
   <div class="page-header">
-    <div class="page-title">æçå ±å¹å® <span id="quoteCount"></span></div>
+    <div class="page-title">我的報價單 <span id="quoteCount"></span></div>
   </div>
 
   <div class="toolbar">
-    <input type="text" class="search-input" id="searchInput" placeholder="æå°æ¥­ä¸»å§åæå ±å¹å®è..." oninput="filterTable()">
+    <input type="text" class="search-input" id="searchInput" placeholder="搜尋業主姓名或報價單號..." oninput="filterTable()">
   </div>
 
   <div class="table-wrap">
-    <div class="loading" id="loadingMsg">è¼å¥ä¸­...</div>
+    <div class="loading" id="loadingMsg">載入中...</div>
     <table id="quoteTable" style="display:none">
       <thead>
         <tr>
-          <th>å ±å¹å®è</th>
-          <th>æ¥­ä¸»å§å</th>
-          <th>å«ç¨ç¸½è¨</th>
-          <th id="thCreator" style="display:none">å»ºç«è</th>
-          <th>å»ºç«æ¥æ</th>
-          <th>æå¾ä¿®æ¹</th>
-          <th style="width:130px">æä½</th>
+          <th>報價單號</th>
+          <th>業主姓名</th>
+          <th>含稅總計</th>
+          <th id="thCreator" style="display:none">建立者</th>
+          <th>建立日期</th>
+          <th>最後修改</th>
+          <th style="width:130px">操作</th>
         </tr>
       </thead>
       <tbody id="quoteBody"></tbody>
     </table>
     <div class="empty-state" id="emptyState" style="display:none">
-      <div class="icon">ð</div>
-      <p>å°ç¡å ±å¹å®ï¼é»æå³ä¸è§ãæ°å¢å ±å¹å®ãéå§å»ºç«</p>
+      <div class="icon">📋</div>
+      <p>尚無報價單，點擊右上角「新增報價單」開始建立</p>
     </div>
   </div>
 </div>
@@ -232,7 +232,7 @@ async function init() {
   try {
     const me = await (await fetch('/api/me')).json();
     if (me.error) return location.href = '/login.html';
-    document.getElementById('navUser').textContent = 'ð¤ ' + me.displayName;
+    document.getElementById('navUser').textContent = '👤 ' + me.displayName;
     isAdmin = me.role === 'admin';
     if (isAdmin) {
       document.getElementById('adminLink').style.display = 'inline-block';
@@ -251,7 +251,7 @@ async function loadQuotes() {
     allQuotes = await res.json();
     renderTable(allQuotes);
   } catch {
-    showToast('è¼å¥å¤±æï¼è«éæ°æ´ç');
+    showToast('載入失敗，請重新整理');
   } finally {
     document.getElementById('loadingMsg').style.display = 'none';
   }
@@ -259,7 +259,7 @@ async function loadQuotes() {
 
 function renderTable(quotes) {
   const tbody = document.getElementById('quoteBody');
-  document.getElementById('quoteCount').textContent = `ï¼å± ${quotes.length} ç­ï¼`;
+  document.getElementById('quoteCount').textContent = `（共 ${quotes.length} 筆）`;
   if (quotes.length === 0) {
     document.getElementById('quoteTable').style.display = 'none';
     document.getElementById('emptyState').style.display = 'block';
@@ -269,14 +269,14 @@ function renderTable(quotes) {
   tbody.innerHTML = quotes.map(q => `
     <tr onclick="openQuote(${q.id}, event)">
       <td class="td-no">${q.quote_no || '-'}</td>
-      <td class="td-client">${q.client_name || 'ï¼æªå¡«æ¥­ä¸»ï¼'}</td>
+      <td class="td-client">${q.client_name || '（未填業主）'}</td>
       <td class="td-amount">${fmt(q.total_amount)}</td>
       ${isAdmin ? `<td class="td-creator">${q.creator_name}</td>` : ''}
       <td class="td-date">${fmtDate(q.created_at)}</td>
       <td class="td-date">${fmtDate(q.updated_at)}</td>
       <td class="td-actions" onclick="event.stopPropagation()">
-        <button class="act-btn edit" onclick="location.href='/form.html?id=${q.id}'">ç·¨è¼¯</button>
-        <button class="act-btn del" onclick="deleteQuote(${q.id}, '${(q.client_name||'').replace(/'/g,'')}')">åªé¤</button>
+        <button class="act-btn edit" onclick="location.href='/form.html?id=${q.id}'">編輯</button>
+        <button class="act-btn del" onclick="deleteQuote(${q.id}, '${(q.client_name||'').replace(/'/g,'')}')">刪除</button>
       </td>
     </tr>
   `).join('');
@@ -296,14 +296,14 @@ function filterTable() {
 }
 
 async function deleteQuote(id, name) {
-  if (!confirm(`ç¢ºå®è¦åªé¤ã${name || 'æ­¤å ±å¹å®'}ãåï¼æ­¤åä½ç¡æ³éåã`)) return;
+  if (!confirm(`確定要刪除「${name || '此報價單'}」嗎？此動作無法還原。`)) return;
   const res = await fetch('/api/quotes/' + id, { method: 'DELETE' });
   const data = await res.json();
   if (data.success) {
-    showToast('å·²åªé¤å ±å¹å®');
+    showToast('已刪除報價單');
     loadQuotes();
   } else {
-    showToast('åªé¤å¤±æï¼' + (data.error || ''));
+    showToast('刪除失敗：' + (data.error || ''));
   }
 }
 
