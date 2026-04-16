@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ä½¿ç¨èç®¡ç â å¤§äºè¨­è¨æéå¬å¸</title>
+<title>使用者管理 — 大事設計有限公司</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif; background: #f0f2f5; color: #333; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
 .navbar {
   background: linear-gradient(135deg, #2c3e50, #4a6fa5);
   color: #fff; padding: 0 32px; height: 58px;
@@ -77,72 +77,72 @@ tbody td { padding: 12px 14px; font-size: 14px; }
 <body>
 
 <nav class="navbar">
-  <div class="nav-brand" onclick="location.href='/index.html'">å¤§äºè¨­è¨æéå¬å¸</div>
+  <div class="nav-brand" onclick="location.href='/index.html'">大事設計有限公司</div>
   <div class="nav-right">
-    <a href="/index.html" class="nav-btn">å ±å¹å®åè¡¨</a>
-    <button class="nav-btn" onclick="logout()">ç»åº</button>
+    <a href="/index.html" class="nav-btn">報價單列表</a>
+    <button class="nav-btn" onclick="logout()">登出</button>
   </div>
 </nav>
 
 <div class="main">
 
-  <!-- æ°å¢ä½¿ç¨è -->
+  <!-- 新增使用者 -->
   <div class="card">
-    <div class="card-header"><h2>â æ°å¢ä½¿ç¨èå¸³è</h2></div>
+    <div class="card-header"><h2>➕ 新增使用者帳號</h2></div>
     <div class="card-body">
       <div class="form-grid">
         <div class="form-group">
-          <label>å¸³èï¼ç»å¥ç¨ï¼</label>
-          <input type="text" id="newUsername" placeholder="ä¾ï¼designer01">
+          <label>帳號（登入用）</label>
+          <input type="text" id="newUsername" placeholder="例：designer01">
         </div>
         <div class="form-group">
-          <label>é¡¯ç¤ºå§å</label>
-          <input type="text" id="newDisplayName" placeholder="ä¾ï¼çå°æ">
+          <label>顯示姓名</label>
+          <input type="text" id="newDisplayName" placeholder="例：王小明">
         </div>
         <div class="form-group">
-          <label>å¯ç¢¼ï¼è³å°6åå­åï¼</label>
-          <input type="password" id="newPassword" placeholder="è«è¼¸å¥å¯ç¢¼">
+          <label>密碼（至少6個字元）</label>
+          <input type="password" id="newPassword" placeholder="請輸入密碼">
         </div>
         <div class="form-group">
-          <label>è§è²æ¬é</label>
+          <label>角色權限</label>
           <select id="newRole">
-            <option value="user">ä¸è¬ä½¿ç¨èï¼åªè½çèªå·±çå ±å¹å®ï¼</option>
-            <option value="admin">ç®¡çå¡ï¼å¯çææäººçå ±å¹å®ï¼</option>
+            <option value="user">一般使用者（只能看自己的報價單）</option>
+            <option value="admin">管理員（可看所有人的報價單）</option>
           </select>
         </div>
       </div>
       <div class="error-msg" id="addError"></div>
       <div class="success-msg" id="addSuccess"></div>
-      <button class="btn-add" onclick="addUser()">æ°å¢å¸³è</button>
+      <button class="btn-add" onclick="addUser()">新增帳號</button>
     </div>
   </div>
 
-  <!-- ä½¿ç¨èåè¡¨ -->
+  <!-- 使用者列表 -->
   <div class="card">
-    <div class="card-header"><h2>ð¥ ä½¿ç¨èåè¡¨</h2></div>
+    <div class="card-header"><h2>👥 使用者列表</h2></div>
     <div class="card-body" style="padding:0;">
       <table>
         <thead><tr>
-          <th>å¸³è</th><th>é¡¯ç¤ºå§å</th><th>è§è²</th><th>å»ºç«æé</th><th>æä½</th>
+          <th>帳號</th><th>顯示姓名</th><th>角色</th><th>建立時間</th><th>操作</th>
         </tr></thead>
-        <tbody id="userBody"><tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px;">è¼å¥ä¸­...</td></tr></tbody>
+        <tbody id="userBody"><tr><td colspan="5" style="text-align:center;color:#aaa;padding:24px;">載入中...</td></tr></tbody>
       </table>
     </div>
   </div>
 
 </div>
 
-<!-- ä¿®æ¹å¯ç¢¼ Modal -->
+<!-- 修改密碼 Modal -->
 <div class="modal-overlay" id="pwdModal">
   <div class="modal">
-    <h3>ð ä¿®æ¹å¯ç¢¼</h3>
+    <h3>🔒 修改密碼</h3>
     <p style="font-size:13px;color:#888;margin-bottom:14px;" id="pwdModalUser"></p>
-    <input type="password" id="pwdInput" placeholder="è¼¸å¥æ°å¯ç¢¼ï¼è³å°6åå­åï¼">
-    <input type="password" id="pwdConfirm" placeholder="åæ¬¡ç¢ºèªæ°å¯ç¢¼">
+    <input type="password" id="pwdInput" placeholder="輸入新密碼（至少6個字元）">
+    <input type="password" id="pwdConfirm" placeholder="再次確認新密碼">
     <div class="modal-err" id="pwdErr"></div>
     <div class="modal-btns">
-      <button class="btn-cancel" onclick="closePwdModal()">åæ¶</button>
-      <button class="btn-confirm" onclick="confirmChangePwd()">ç¢ºèªä¿®æ¹</button>
+      <button class="btn-cancel" onclick="closePwdModal()">取消</button>
+      <button class="btn-confirm" onclick="confirmChangePwd()">確認修改</button>
     </div>
   </div>
 </div>
@@ -181,11 +181,11 @@ async function loadUsers() {
     <tr>
       <td><strong>${u.username}</strong></td>
       <td>${u.display_name}</td>
-      <td><span class="badge badge-${u.role}">${u.role === 'admin' ? 'ç®¡çå¡' : 'ä¸è¬ä½¿ç¨è'}</span></td>
+      <td><span class="badge badge-${u.role}">${u.role === 'admin' ? '管理員' : '一般使用者'}</span></td>
       <td style="font-size:12px;color:#888;">${u.created_at?.substring(0,16) || '-'}</td>
       <td>
-        <button class="act-btn pwd" onclick="openPwdModal(${u.id},'${u.display_name}')">æ¹å¯ç¢¼</button>
-        ${u.id !== myId ? `<button class="act-btn del" onclick="deleteUser(${u.id},'${u.display_name}')">åªé¤</button>` : '<span style="font-size:12px;color:#ccc;">ï¼ç®åç»å¥ä¸­ï¼</span>'}
+        <button class="act-btn pwd" onclick="openPwdModal(${u.id},'${u.display_name}')">改密碼</button>
+        ${u.id !== myId ? `<button class="act-btn del" onclick="deleteUser(${u.id},'${u.display_name}')">刪除</button>` : '<span style="font-size:12px;color:#ccc;">（目前登入中）</span>'}
       </td>
     </tr>
   `).join('');
@@ -201,7 +201,7 @@ async function addUser() {
   errEl.style.display = 'none'; sucEl.style.display = 'none';
 
   if (!username || !display_name || !password) {
-    errEl.textContent = 'è«å¡«å¯«æææ¬ä½'; errEl.style.display = 'block'; return;
+    errEl.textContent = '請填寫所有欄位'; errEl.style.display = 'block'; return;
   }
 
   const res = await fetch('/api/users', {
@@ -211,28 +211,28 @@ async function addUser() {
   });
   const data = await res.json();
   if (data.success) {
-    sucEl.textContent = `â å·²æåå»ºç«å¸³èã${username}ã`;
+    sucEl.textContent = `✅ 已成功建立帳號「${username}」`;
     sucEl.style.display = 'block';
     document.getElementById('newUsername').value = '';
     document.getElementById('newDisplayName').value = '';
     document.getElementById('newPassword').value = '';
     loadUsers();
   } else {
-    errEl.textContent = data.error || 'æ°å¢å¤±æ'; errEl.style.display = 'block';
+    errEl.textContent = data.error || '新增失敗'; errEl.style.display = 'block';
   }
 }
 
 async function deleteUser(id, name) {
-  if (!confirm(`ç¢ºå®è¦åªé¤ä½¿ç¨èã${name}ãåï¼åªé¤å¾å¶ææå ±å¹å®è³æä»ä¿çï¼ä½ç¡æ³eç»å¥ã`)) return;
+  if (!confirm(`確定要刪除使用者「${name}」嗎？刪除後其所有報價單資料仍保留，但無法e��登入。`)) return;
   const res = await fetch('/api/users/' + id, { method: 'DELETE' });
   const data = await res.json();
-  if (data.success) { showToast('å·²åªé¤ä½¿ç¨è ' + name); loadUsers(); }
-  else showToast(data.error || 'åªé¤å¤±æ', true);
+  if (data.success) { showToast('已刪除使用者 ' + name); loadUsers(); }
+  else showToast(data.error || '刪除失敗', true);
 }
 
 function openPwdModal(id, name) {
   changePwdUserId = id;
-  document.getElementById('pwdModalUser').textContent = 'ä½¿ç¨èï¼' + name;
+  document.getElementById('pwdModalUser').textContent = '使用者：' + name;
   document.getElementById('pwdInput').value = '';
   document.getElementById('pwdConfirm').value = '';
   document.getElementById('pwdErr').style.display = 'none';
@@ -249,8 +249,8 @@ async function confirmChangePwd() {
   const errEl = document.getElementById('pwdErr');
   errEl.style.display = 'none';
 
-  if (pwd.length < 6) { errEl.textContent = 'å¯ç¢¼è³å°éè¦6åå­å'; errEl.style.display = 'block'; return; }
-  if (pwd !== confirm) { errEl.textContent = 'å©æ¬¡å¯ç¢¼è¼¸å¥ä¸ä¸è´'; errEl.style.display = 'block'; return; }
+  if (pwd.length < 6) { errEl.textContent = '密碼至少需要6個字元'; errEl.style.display = 'block'; return; }
+  if (pwd !== confirm) { errEl.textContent = '兩次密碼輸入不一致'; errEl.style.display = 'block'; return; }
 
   const res = await fetch('/api/users/' + changePwdUserId + '/password', {
     method: 'PUT',
@@ -258,8 +258,8 @@ async function confirmChangePwd() {
     body: JSON.stringify({ password: pwd })
   });
   const data = await res.json();
-  if (data.success) { closePwdModal(); showToast('å¯ç¢¼å·²æ´æ°'); }
-  else { errEl.textContent = data.error || 'æ´æ°å¤±æ'; errEl.style.display = 'block'; }
+  if (data.success) { closePwdModal(); showToast('密碼已更新'); }
+  else { errEl.textContent = data.error || '更新失敗'; errEl.style.display = 'block'; }
 }
 
 init();
