@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>æ¥­ä¸»è³æåº« â å¤§äºè¨­è¨æéå¬å¸</title>
+<title>業主資料庫 — 大事設計有限公司</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif; background: #f0f2f5; color: #333; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
 
 .navbar {
   background: linear-gradient(135deg, #2c3e50, #4a6fa5);
@@ -56,7 +56,11 @@ body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, san
 }
 table { width: 100%; border-collapse: collapse; }
 thead tr { background: #f7f8fc; }
-thead th { padding: 13px 16px; font-size: 12px; color: #7b8fa6; text-align: left; font-weight: 600; letter-spacing: 0.5px; border-bottom: 1.5px solid #e8eaf0; white-space: nowrap; }
+thead th {
+  padding: 13px 16px; font-size: 12px; color: #7b8fa6;
+  text-align: left; font-weight: 600; letter-spacing: 0.5px;
+  border-bottom: 1.5px solid #e8eaf0; white-space: nowrap;
+}
 tbody tr { border-bottom: 1px solid #f0f2f5; transition: background 0.15s; }
 tbody tr:hover { background: #f5f7ff; }
 tbody tr:last-child { border-bottom: none; }
@@ -127,47 +131,47 @@ tbody td { padding: 13px 16px; font-size: 14px; vertical-align: middle; }
 <body>
 
 <nav class="navbar">
-  <div class="nav-brand" onclick="location.href='/index.html'">å¤§äºè¨­è¨æéå¬å¸</div>
+  <div class="nav-brand" onclick="location.href='/index.html'">大事設計有限公司</div>
   <div class="nav-links">
-    <a href="/index.html" class="nav-link">å ±å¹å®</a>
-    <a href="/clients.html" class="nav-link active">æ¥­ä¸»è³æ</a>
-    <a href="/vendors.html" class="nav-link">å» åè³æ</a>
-    <a href="/prices.html" class="nav-link">æ­·å²å®å¹</a>
-    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">ä½¿ç¨èç®¡ç</a>
+    <a href="/index.html" class="nav-link">報價單</a>
+    <a href="/clients.html" class="nav-link active">業主資料</a>
+    <a href="/vendors.html" class="nav-link">廠商資料</a>
+    <a href="/prices.html" class="nav-link">歷史單價</a>
+    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">使用者管理</a>
   </div>
   <div class="nav-right">
     <span class="nav-user" id="navUser"></span>
-    <button class="nav-btn" onclick="logout()">ç»åº</button>
+    <button class="nav-btn" onclick="logout()">登出</button>
   </div>
 </nav>
 
 <div class="main">
   <div class="page-header">
-    <div class="page-title">æ¥­ä¸»è³æåº« <span id="clientCount"></span></div>
-    <button class="btn-add" onclick="openModal()">ï¼ æ°å¢æ¥­ä¸»</button>
+    <div class="page-title">業主資料庫 <span id="clientCount"></span></div>
+    <button class="btn-add" onclick="openModal()">＋ 新增業主</button>
   </div>
 
   <div class="toolbar">
-    <input type="text" class="search-input" id="searchInput" placeholder="æå°æ¥­ä¸»å§åãå¬å¸ãé»è©±..." oninput="filterClients()">
+    <input type="text" class="search-input" id="searchInput" placeholder="搜尋業主姓名、公司、電話..." oninput="filterClients()">
   </div>
 
   <div class="table-wrap">
     <table id="clientTable">
       <thead>
         <tr>
-          <th>æ¥­ä¸»å§å</th>
-          <th>å¬å¸åç¨±</th>
-          <th>é»è©± / ææ©</th>
+          <th>業主姓名</th>
+          <th>公司名稱</th>
+          <th>電話 / 手機</th>
           <th>Email</th>
-          <th>å°å</th>
-          <th style="width:180px">æä½</th>
+          <th>地址</th>
+          <th style="width:180px">操作</th>
         </tr>
       </thead>
       <tbody id="clientBody"></tbody>
     </table>
     <div id="emptyState" class="empty-state" style="display:none">
-      <div class="icon">ð¤</div>
-      <p>å°ç¡æ¥­ä¸»è³æï¼é»æå³ä¸è§ãæ°å¢æ¥­ä¸»ãéå§å»ºç«</p>
+      <div class="icon">👤</div>
+      <p>尚無業主資料，點擊右上角「新增業主」開始建立</p>
     </div>
   </div>
 </div>
@@ -175,40 +179,40 @@ tbody td { padding: 13px 16px; font-size: 14px; vertical-align: middle; }
 <!-- Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="onOverlayClick(event)">
   <div class="modal-box">
-    <div class="modal-title" id="modalTitle">æ°å¢æ¥­ä¸»</div>
+    <div class="modal-title" id="modalTitle">新增業主</div>
     <div class="form-grid">
       <div class="form-group">
-        <label>æ¥­ä¸»å§å *</label>
-        <input type="text" id="fName" placeholder="ä¾ï¼é³åç">
+        <label>業主姓名 *</label>
+        <input type="text" id="fName" placeholder="例：陳先生">
       </div>
       <div class="form-group">
-        <label>å¬å¸åç¨±</label>
-        <input type="text" id="fCompany" placeholder="å¬å¸æå®ä½ï¼å¯ä¸å¡«ï¼">
+        <label>公司名稱</label>
+        <input type="text" id="fCompany" placeholder="公司或單位（可不填）">
       </div>
       <div class="form-group">
-        <label>é»è©±</label>
-        <input type="text" id="fPhone" placeholder="å¸è©±">
+        <label>電話</label>
+        <input type="text" id="fPhone" placeholder="市話">
       </div>
       <div class="form-group">
-        <label>ææ©</label>
-        <input type="text" id="fMobile" placeholder="ææ©èç¢¼">
+        <label>手機</label>
+        <input type="text" id="fMobile" placeholder="手機號碼">
       </div>
       <div class="form-group full">
         <label>Email</label>
-        <input type="email" id="fEmail" placeholder="é»å­éµä»¶">
+        <input type="email" id="fEmail" placeholder="電子郵件">
       </div>
       <div class="form-group full">
-        <label>å·¥ç¨å°å</label>
-        <input type="text" id="fAddress" placeholder="æ½å·¥å°é»å°å">
+        <label>工程地址</label>
+        <input type="text" id="fAddress" placeholder="施工地點地址">
       </div>
       <div class="form-group full">
-        <label>åè¨»</label>
-        <textarea id="fNotes" placeholder="åå¥½ãç¹æ®éæ±ç­èªªæ..."></textarea>
+        <label>備註</label>
+        <textarea id="fNotes" placeholder="喜好、特殊需求等說明..."></textarea>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">åæ¶</button>
-      <button class="btn-save" onclick="saveClient()">å²å­</button>
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="saveClient()">儲存</button>
     </div>
   </div>
 </div>
@@ -236,7 +240,7 @@ async function init() {
   try {
     const me = await (await fetch('/api/me')).json();
     if (me.error) return location.href = '/login.html';
-    document.getElementById('navUser').textContent = 'ð¤ ' + me.displayName;
+    document.getElementById('navUser').textContent = '👤 ' + me.displayName;
     if (me.role === 'admin') document.getElementById('adminLink').style.display = '';
   } catch { location.href = '/login.html'; }
   loadClients();
@@ -261,7 +265,7 @@ function filterClients() {
 }
 
 function renderClients(clients) {
-  document.getElementById('clientCount').textContent = `ï¼å± ${clients.length} ç­ï¼`;
+  document.getElementById('clientCount').textContent = `（共 ${clients.length} 筆）`;
   const tbody = document.getElementById('clientBody');
   const empty = document.getElementById('emptyState');
   const table = document.getElementById('clientTable');
@@ -281,9 +285,9 @@ function renderClients(clients) {
       <td style="font-size:13px;color:#777;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.address) || '-'}</td>
       <td>
         <div class="td-actions">
-          <button class="act-btn quote" onclick="newQuoteForClient(${c.id})">æ°å¢å ±å¹</button>
-          <button class="act-btn edit" onclick="openModal(${c.id})">ç·¨è¼¯</button>
-          <button class="act-btn del" onclick="deleteClient(${c.id}, '${esc(c.name)}')">åªé¤</button>
+          <button class="act-btn quote" onclick="newQuoteForClient(${c.id})">新增報價</button>
+          <button class="act-btn edit" onclick="openModal(${c.id})">編輯</button>
+          <button class="act-btn del" onclick="deleteClient(${c.id}, '${esc(c.name)}')">刪除</button>
         </div>
       </td>
     </tr>
@@ -295,7 +299,7 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 function newQuoteForClient(id) {
   const c = allClients.find(x => x.id === id);
   if (!c) return;
-  // å¸¶æ¥­ä¸»è³æå°æ°å ±å¹å®
+  // 帶業主資料到新報價單
   const params = new URLSearchParams({
     client_name: c.name,
     client_phone: c.phone || c.mobile || '',
@@ -307,7 +311,7 @@ function newQuoteForClient(id) {
 
 function openModal(id = null) {
   editingId = id;
-  document.getElementById('modalTitle').textContent = id ? 'ç·¨è¼¯æ¥­ä¸»' : 'æ°å¢æ¥­ä¸»';
+  document.getElementById('modalTitle').textContent = id ? '編輯業主' : '新增業主';
   ['fName','fCompany','fPhone','fMobile','fEmail','fAddress','fNotes']
     .forEach(f => document.getElementById(f).value = '');
 
@@ -340,7 +344,7 @@ async function saveClient() {
     address: document.getElementById('fAddress').value.trim(),
     notes: document.getElementById('fNotes').value.trim(),
   };
-  if (!payload.name) { showToast('è«å¡«å¯«æ¥­ä¸»å§å', true); return; }
+  if (!payload.name) { showToast('請填寫業主姓名', true); return; }
 
   const method = editingId ? 'PUT' : 'POST';
   const url = editingId ? `/api/clients/${editingId}` : '/api/clients';
@@ -351,20 +355,20 @@ async function saveClient() {
   });
   const data = await res.json();
   if (data.success) {
-    showToast(editingId ? 'â æ¥­ä¸»è³æå·²æ´æ°' : 'â æ¥­ä¸»å·²æ°å¢');
+    showToast(editingId ? '✅ 業主資料已更新' : '✅ 業主已新增');
     closeModal();
     loadClients();
   } else {
-    showToast('å²å­å¤±æï¼' + (data.error || ''), true);
+    showToast('儲存失敗：' + (data.error || ''), true);
   }
 }
 
 async function deleteClient(id, name) {
-  if (!confirm(`ç¢ºå®è¦åªé¤æ¥­ä¸»ã${name}ãåï¼`)) return;
+  if (!confirm(`確定要刪除業主「${name}」嗎？`)) return;
   const res = await fetch(`/api/clients/${id}`, { method: 'DELETE' });
   const data = await res.json();
   if (data.success) {
-    showToast('å·²åªé¤æ¥­ä¸»è³æ');
+    showToast('已刪除業主資料');
     loadClients();
   }
 }
