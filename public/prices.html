@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>æ­·å²å®å¹åº« â å¤§äºè¨­è¨æéå¬å¸</title>
+<title>歷史單價庫 — 大事設計有限公司</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif; background: #f0f2f5; color: #333; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
 
 .navbar {
   background: linear-gradient(135deg, #2c3e50, #4a6fa5);
@@ -146,42 +146,42 @@ tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
 <body>
 
 <nav class="navbar">
-  <div class="nav-brand" onclick="location.href='/index.html'">å¤§äºè¨­è¨æéå¬å¸</div>
+  <div class="nav-brand" onclick="location.href='/index.html'">大事設計有限公司</div>
   <div class="nav-links">
-    <a href="/index.html" class="nav-link">å ±å¹å®</a>
-    <a href="/clients.html" class="nav-link">æ¥­ä¸»è³æ</a>
-    <a href="/vendors.html" class="nav-link">å» åè³æ</a>
-    <a href="/prices.html" class="nav-link active">æ­·å²å®å¹</a>
-    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">ä½¿ç¨èç®¡ç</a>
+    <a href="/index.html" class="nav-link">報價單</a>
+    <a href="/clients.html" class="nav-link">業主資料</a>
+    <a href="/vendors.html" class="nav-link">廠商資料</a>
+    <a href="/prices.html" class="nav-link active">歷史單價</a>
+    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">使用者管理</a>
   </div>
   <div class="nav-right">
     <span class="nav-user" id="navUser"></span>
-    <button class="nav-btn" onclick="logout()">ç»åº</button>
+    <button class="nav-btn" onclick="logout()">登出</button>
   </div>
 </nav>
 
 <div class="main">
   <div class="page-header">
-    <div class="page-title">æ­·å²å®å¹è³æåº« <span id="priceCount"></span></div>
-    <button class="btn-add" onclick="openModal()">ï¼ æ°å¢å®å¹</button>
+    <div class="page-title">歷史單價資料庫 <span id="priceCount"></span></div>
+    <button class="btn-add" onclick="openModal()">＋ 新增單價</button>
   </div>
 
   <div class="toolbar">
-    <input type="text" class="search-input" id="searchInput" placeholder="æå°åé åç¨±ãè¦æ ¼..." oninput="filterPrices()">
+    <input type="text" class="search-input" id="searchInput" placeholder="搜尋品項名稱、規格..." oninput="filterPrices()">
     <select class="filter-select" id="catFilter" onchange="filterPrices()">
-      <option value="">å¨é¨å·¥ç¨é¡å¥</option>
-      <option value="demolish">æé¤å·¥ç¨</option>
-      <option value="masonry">æ³¥ä½ï¼æ°´é»å·¥ç¨</option>
-      <option value="woodwork">æ¨ä½å·¥ç¨</option>
-      <option value="paint">æ²¹æ¼ï¼å¡è£å·¥ç¨</option>
-      <option value="metal">éµä»¶å·¥ç¨</option>
-      <option value="protection">ä¿è­·å·¥ç¨</option>
-      <option value="weakelec">å¼±é»å·¥ç¨</option>
-      <option value="landscape">æ¯è§å·¥ç¨</option>
-      <option value="glass">ç»çå·¥ç¨</option>
-      <option value="lighting">çå·å·¥ç¨</option>
-      <option value="cabinet">ç³»çµ±æ«å·¥ç¨</option>
-      <option value="other">å¶ä»å·¥ç¨</option>
+      <option value="">全部工程類別</option>
+      <option value="demolish">拆除工程</option>
+      <option value="masonry">泥作／水電工程</option>
+      <option value="woodwork">木作工程</option>
+      <option value="paint">油漆／塗裝工程</option>
+      <option value="metal">鐵件工程</option>
+      <option value="protection">保護工程</option>
+      <option value="weakelec">弱電工程</option>
+      <option value="landscape">景觀工程</option>
+      <option value="glass">玻璃工程</option>
+      <option value="lighting">燈具工程</option>
+      <option value="cabinet">系統櫃工程</option>
+      <option value="other">其他工程</option>
     </select>
   </div>
 
@@ -189,20 +189,20 @@ tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
     <table id="priceTable">
       <thead>
         <tr>
-          <th>å·¥ç¨é¡å¥</th>
-          <th>åé åç¨±</th>
-          <th>è¦æ ¼èªªæ</th>
-          <th>å®ä½</th>
-          <th>å®å¹ (NT$)</th>
-          <th>ä¾æº / åè¨»</th>
-          <th style="width:130px">æä½</th>
+          <th>工程類別</th>
+          <th>品項名稱</th>
+          <th>規格說明</th>
+          <th>單位</th>
+          <th>單價 (NT$)</th>
+          <th>來源 / 備註</th>
+          <th style="width:130px">操作</th>
         </tr>
       </thead>
       <tbody id="priceBody"></tbody>
     </table>
     <div id="emptyState" class="empty-state" style="display:none">
-      <div class="icon">ð°</div>
-      <p>å°ç¡æ­·å²å®å¹è³æï¼é»æå³ä¸è§ãæ°å¢å®å¹ãéå§å»ºç«</p>
+      <div class="icon">💰</div>
+      <p>尚無歷史單價資料，點擊右上角「新增單價」開始建立</p>
     </div>
   </div>
 </div>
@@ -210,50 +210,50 @@ tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
 <!-- Modal -->
 <div class="modal-overlay" id="modalOverlay" onclick="onOverlayClick(event)">
   <div class="modal-box">
-    <div class="modal-title" id="modalTitle">æ°å¢å®å¹</div>
+    <div class="modal-title" id="modalTitle">新增單價</div>
     <div class="form-grid">
       <div class="form-group full">
-        <label>å·¥ç¨é¡å¥ *</label>
+        <label>工程類別 *</label>
         <select id="fCategory">
-          <option value="">è«é¸æ</option>
-          <option value="demolish">æé¤å·¥ç¨</option>
-          <option value="masonry">æ³¥ä½ï¼æ°´é»å·¥ç¨</option>
-          <option value="woodwork">æ¨ä½å·¥ç¨</option>
-          <option value="paint">æ²¹æ¼ï¼å¡è£å·¥ç¨</option>
-          <option value="metal">éµä»¶å·¥ç¨</option>
-          <option value="protection">ä¿è­·å·¥ç¨</option>
-          <option value="weakelec">å¼±é»å·¥ç¨</option>
-          <option value="landscape">æ¯è§å·¥ç¨</option>
-          <option value="glass">ç»çå·¥ç¨</option>
-          <option value="lighting">çå·å·¥ç¨</option>
-          <option value="cabinet">ç³»çµ±æ«å·¥ç¨</option>
-          <option value="other">å¶ä»å·¥ç¨</option>
+          <option value="">請選擇</option>
+          <option value="demolish">拆除工程</option>
+          <option value="masonry">泥作／水電工程</option>
+          <option value="woodwork">木作工程</option>
+          <option value="paint">油漆／塗裝工程</option>
+          <option value="metal">鐵件工程</option>
+          <option value="protection">保護工程</option>
+          <option value="weakelec">弱電工程</option>
+          <option value="landscape">景觀工程</option>
+          <option value="glass">玻璃工程</option>
+          <option value="lighting">燈具工程</option>
+          <option value="cabinet">系統櫃工程</option>
+          <option value="other">其他工程</option>
         </select>
       </div>
       <div class="form-group full">
-        <label>åé åç¨± *</label>
-        <input type="text" id="fItemName" placeholder="ä¾ï¼å°åªç£ç£éªè¨­">
+        <label>品項名稱 *</label>
+        <input type="text" id="fItemName" placeholder="例：地坪磁磚鋪設">
       </div>
       <div class="form-group full">
-        <label>è¦æ ¼èªªæ</label>
-        <input type="text" id="fSpec" placeholder="ä¾ï¼60x60cm æåç³è±ç£">
+        <label>規格說明</label>
+        <input type="text" id="fSpec" placeholder="例：60x60cm 拋光石英磚">
       </div>
       <div class="form-group">
-        <label>å®ä½</label>
-        <input type="text" id="fUnit" placeholder="æ / åª / å¼ / ç">
+        <label>單位</label>
+        <input type="text" id="fUnit" placeholder="才 / 坪 / 式 / 盞">
       </div>
       <div class="form-group">
-        <label>å®å¹ (NT$) *</label>
+        <label>單價 (NT$) *</label>
         <input type="number" id="fUnitPrice" placeholder="0" min="0">
       </div>
       <div class="form-group full">
-        <label>ä¾æº / åè¨»</label>
-        <textarea id="fNotes" placeholder="ä¾ï¼2024å¹´Aå» åå ±å¹ãå¸å ´è¡æåå¹..."></textarea>
+        <label>來源 / 備註</label>
+        <textarea id="fNotes" placeholder="例：2024年A廠商報價、市場行情均價..."></textarea>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">åæ¶</button>
-      <button class="btn-save" onclick="savePrice()">å²å­</button>
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="savePrice()">儲存</button>
     </div>
   </div>
 </div>
@@ -262,10 +262,10 @@ tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
 
 <script>
 const CAT_LABELS = {
-  demolish: 'æé¤å·¥ç¨', masonry: 'æ³¥ä½ï¼æ°´é»', woodwork: 'æ¨ä½å·¥ç¨',
-  paint: 'æ²¹æ¼å¡è£', metal: 'éµä»¶å·¥ç¨', protection: 'ä¿è­·å·¥ç¨',
-  weakelec: 'å¼±é»å·¥ç¨', landscape: 'æ¯è§å·¥ç¨', glass: 'ç»çå·¥ç¨',
-  lighting: 'çå·å·¥ç¨', cabinet: 'ç³»çµ±æ«', other: 'å¶ä»å·¥ç¨'
+  demolish: '拆除工程', masonry: '泥作／水電', woodwork: '木作工程',
+  paint: '油漆塗裝', metal: '鐵件工程', protection: '保護工程',
+  weakelec: '弱電工程', landscape: '景觀工程', glass: '玻璃工程',
+  lighting: '燈具工程', cabinet: '系統櫃', other: '其他工程'
 };
 
 let allPrices = [];
@@ -288,7 +288,7 @@ async function init() {
   try {
     const me = await (await fetch('/api/me')).json();
     if (me.error) return location.href = '/login.html';
-    document.getElementById('navUser').textContent = 'ð¤ ' + me.displayName;
+    document.getElementById('navUser').textContent = '👤 ' + me.displayName;
     if (me.role === 'admin') document.getElementById('adminLink').style.display = '';
   } catch { location.href = '/login.html'; }
   loadPrices();
@@ -313,7 +313,7 @@ function filterPrices() {
 }
 
 function renderPrices(prices) {
-  document.getElementById('priceCount').textContent = `ï¼å± ${prices.length} ç­ï¼`;
+  document.getElementById('priceCount').textContent = `（共 ${prices.length} 筆）`;
   const tbody = document.getElementById('priceBody');
   const empty = document.getElementById('emptyState');
   const table = document.getElementById('priceTable');
@@ -334,8 +334,8 @@ function renderPrices(prices) {
       <td style="color:#999;font-size:12px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(p.notes||p.source)}</td>
       <td>
         <div class="td-actions">
-          <button class="act-btn edit" onclick="openModal(${p.id})">ç·¨è¼¯</button>
-          <button class="act-btn del" onclick="deletePrice(${p.id})">åªé¤</button>
+          <button class="act-btn edit" onclick="openModal(${p.id})">編輯</button>
+          <button class="act-btn del" onclick="deletePrice(${p.id})">刪除</button>
         </div>
       </td>
     </tr>
@@ -346,7 +346,7 @@ function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'
 
 function openModal(id = null) {
   editingId = id;
-  document.getElementById('modalTitle').textContent = id ? 'ç·¨è¼¯å®å¹' : 'æ°å¢å®å¹';
+  document.getElementById('modalTitle').textContent = id ? '編輯單價' : '新增單價';
   ['fCategory','fItemName','fSpec','fUnit','fUnitPrice','fNotes']
     .forEach(f => document.getElementById(f).value = '');
 
@@ -372,13 +372,13 @@ async function savePrice() {
     category: document.getElementById('fCategory').value,
     item_name: document.getElementById('fItemName').value.trim(),
     spec: document.getElementById('fSpec').value.trim(),
-    unit: document.getElementById('fUnit').value.trim() || 'å¼',
+    unit: document.getElementById('fUnit').value.trim() || '式',
     unit_price: parseFloat(document.getElementById('fUnitPrice').value) || 0,
     notes: document.getElementById('fNotes').value.trim(),
     source: document.getElementById('fNotes').value.trim(),
   };
-  if (!payload.category) { showToast('è«é¸æå·¥ç¨é¡å¥', true); return; }
-  if (!payload.item_name) { showToast('è«å¡«å¯«åé åç¨±', true); return; }
+  if (!payload.category) { showToast('請選擇工程類別', true); return; }
+  if (!payload.item_name) { showToast('請填寫品項名稱', true); return; }
 
   const method = editingId ? 'PUT' : 'POST';
   const url = editingId ? `/api/prices/${editingId}` : '/api/prices';
@@ -389,20 +389,20 @@ async function savePrice() {
   });
   const data = await res.json();
   if (data.success) {
-    showToast(editingId ? 'â å®å¹å·²æ´æ°' : 'â å®å¹å·²æ°å¢');
+    showToast(editingId ? '✅ 單價已更新' : '✅ 單價已新增');
     closeModal();
     loadPrices();
   } else {
-    showToast('å²å­å¤±æï¼' + (data.error || ''), true);
+    showToast('儲存失敗：' + (data.error || ''), true);
   }
 }
 
 async function deletePrice(id) {
-  if (!confirm('ç¢ºå®è¦åªé¤æ­¤ç­å®å¹è³æåï¼')) return;
+  if (!confirm('確定要刪除此筆單價資料嗎？')) return;
   const res = await fetch(`/api/prices/${id}`, { method: 'DELETE' });
   const data = await res.json();
   if (data.success) {
-    showToast('å·²åªé¤');
+    showToast('已刪除');
     loadPrices();
   }
 }
