@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歷史單價庫 — 大事設計報價系統</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
+.navbar { background: linear-gradient(135deg, #2c3e50, #4a6fa5); color: #fff; padding: 0 24px; height: 54px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.nav-brand { font-size: 16px; font-weight: 700; cursor: pointer; }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 5px 11px; border-radius: 5px; font-size: 13px; }
+.nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.2); color: #fff; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-user { font-size: 13px; opacity: 0.85; }
+.nav-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-family: inherit; }
+.nav-btn:hover { background: rgba(255,255,255,0.25); }
+.main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.page-title { font-size: 22px; font-weight: 700; color: #2c3e50; }
+.page-title span { font-size: 14px; font-weight: 400; color: #888; margin-left: 10px; }
+.toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.search-input { flex: 1; min-width: 200px; border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 14px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input:focus { border-color: #4a6fa5; }
+.filter-select { border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; outline: none; background: #fff; cursor: pointer; }
+.btn-add { background: #4a6fa5; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; white-space: nowrap; }
+.btn-add:hover { background: #3a5f95; }
+.table-wrap { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #f7f8fc; }
+thead th { padding: 13px 16px; font-size: 12px; color: #7b8fa6; text-align: left; font-weight: 600; letter-spacing: 0.5px; border-bottom: 1.5px solid #e8eaf0; white-space: nowrap; }
+tbody tr { border-bottom: 1px solid #f0f2f5; transition: background 0.15s; }
+tbody tr:hover { background: #f5f7ff; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 12px 16px; font-size: 14px; vertical-align: middle; }
+.td-cat { font-size: 11px; padding: 3px 8px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+.td-item { font-weight: 600; color: #2c3e50; }
+.td-price { font-weight: 700; color: #4a6fa5; font-size: 15px; }
+.td-actions { display: flex; gap: 8px; }
+.act-btn { padding: 5px 12px; border-radius: 5px; border: 1px solid #e0e4ee; background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; font-weight: 600; }
+.act-btn.edit { color: #4a6fa5; border-color: #c0d0ef; }
+.act-btn.edit:hover { background: #eef3ff; }
+.act-btn.del { color: #e05050; border-color: #f5c0c0; }
+.act-btn.del:hover { background: #fff0f0; }
+.empty-state { text-align: center; padding: 60px 20px; color: #bbb; background: #fff; border-radius: 12px; }
+.empty-state .icon { font-size: 48px; margin-bottom: 14px; }
+.empty-state p { font-size: 15px; }
+.cat-demolish{background:#fff0eb;color:#c0552b}.cat-masonry{background:#eef3ff;color:#3a5f95}.cat-woodwork{background:#fef9e7;color:#a07a22}.cat-paint{background:#efffee;color:#1e8a56}.cat-metal{background:#f3eeff;color:#6a4aaf}.cat-protection{background:#fff0f0;color:#a03030}.cat-weakelec{background:#e8f4ff;color:#1e70a0}.cat-landscape{background:#efffee;color:#1e8030}.cat-glass{background:#e8faff;color:#138aa4}.cat-lighting{background:#fffde8;color:#b08010}.cat-cabinet{background:#f0f5f0;color:#406040}.cat-other{background:#f5f5f5;color:#707070}
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 500; display: none; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal-box { background: #fff; border-radius: 14px; padding: 28px 30px; width: 520px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 12px 48px rgba(0,0,0,0.2); }
+.modal-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { font-size: 12px; color: #888; font-weight: 600; }
+.form-group input, .form-group select, .form-group textarea { border: 1.5px solid #e0e4ee; border-radius: 7px; padding: 9px 11px; font-size: 14px; font-family: inherit; outline: none; color: #333; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #4a6fa5; }
+.form-group textarea { resize: vertical; min-height: 60px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+.btn-cancel { background: #fff; border: 1.5px solid #e0e4ee; color: #888; padding: 9px 20px; border-radius: 7px; cursor: pointer; font-size: 14px; font-family: inherit; }
+.btn-save { background: #4a6fa5; color: #fff; border: none; padding: 9px 24px; border-radius: 7px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; }
+.toast { position: fixed; bottom: 24px; right: 24px; background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 9999; display: none; }
+.toast.error { background: #c0392b; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand" onclick="location.href='/index.html'">🏠 大事設計報價系統</div>
+  <div class="nav-links">
+    <a href="/index.html" class="nav-link">報價單</a>
+    <a href="/clients.html" class="nav-link">業主資料</a>
+    <a href="/vendors.html" class="nav-link">廠商資料</a>
+    <a href="/prices.html" class="nav-link active">歷史單價</a>
+    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">使用者管理</a>
+  </div>
+  <div class="nav-right"><span class="nav-user" id="navUser"></span><button class="nav-btn" onclick="logout()">登出</button></div>
+</nav>
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">歷史單價資料庫 <span id="priceCount"></span></div>
+    <button class="btn-add" onclick="openModal()">＋ 新增單價</button>
+  </div>
+  <div class="toolbar">
+    <input type="text" class="search-input" id="searchInput" placeholder="搜尋品項名稱、規格..." oninput="filterPrices()">
+    <select class="filter-select" id="catFilter" onchange="filterPrices()">
+      <option value="">全部工程類別</option>
+      <option value="demolish">拆除工程</option><option value="masonry">泥作／水電工程</option>
+      <option value="woodwork">木作工程</option><option value="paint">油漆／塗裝工程</option>
+      <option value="metal">鐵件工程</option><option value="protection">保護工程</option>
+      <option value="weakelec">弱電工程</option><option value="landscape">景觀工程</option>
+      <option value="glass">玻璃工程</option><option value="lighting">燈具工程</option>
+      <option value="cabinet">系統櫃工程</option><option value="other">其他工程</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table id="priceTable"><thead><tr><th>工程類別</th><th>品項名稱</th><th>規格說明</th><th>單位</th><th>單價 (NT$)</th><th>來源/備註</th><th style="width:130px">操作</th></tr></thead><tbody id="priceBody"></tbody></table>
+    <div id="emptyState" class="empty-state" style="display:none"><div class="icon">💰</div><p>尚無歷史單價資料</p></div>
+  </div>
+</div>
+<div class="modal-overlay" id="modalOverlay" onclick="onOverlayClick(event)">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">新增單價</div>
+    <div class="form-grid">
+      <div class="form-group full"><label>工程類別 *</label><select id="fCategory"><option value="">請選擇</option><option value="demolish">拆除工程</option><option value="masonry">泥作／水電工程</option><option value="woodwork">木作工程</option><option value="paint">油漆／塗裝工程</option><option value="metal">鐵件工程</option><option value="protection">保護工程</option><option value="weakelec">弱電工程</option><option value="landscape">景觀工程</option><option value="glass">玻璃工程</option><option value="lighting">燈具工程</option><option value="cabinet">系統櫃工程</option><option value="other">其他工程</option></select></div>
+      <div class="form-group full"><label>品項名稱 *</label><input type="text" id="fItemName" placeholder="例：地坪磁磚鋪設"></div>
+      <div class="form-group full"><label>規格說明</label><input type="text" id="fSpec"></div>
+      <div class="form-group"><label>單位</label><input type="text" id="fUnit" placeholder="才/坪/式"></div>
+      <div class="form-group"><label>單價 (NT$) *</label><input type="number" id="fUnitPrice" placeholder="0" min="0"></div>
+      <div class="form-group full"><label>來源/備註</label><textarea id="fNotes"></textarea></div>
+    </div>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">取消</button><button class="btn-save" onclick="savePrice()">儲存</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const CAT_LABELS={demolish:'拆除工程',masonry:'泥作／水電',woodwork:'木作工程',paint:'油漆塗裝',metal:'鐵件工程',protection:'保護工程',weakelec:'弱電工程',landscape:'景觀工程',glass:'玻璃工程',lighting:'燈具工程',cabinet:'系統櫃',other:'其他工程'};
+let allPrices=[],editingId=null;
+function showToast(msg,isError=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(isError?' error':'');t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
+async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/login.html';}
+async function init(){try{const me=await(await fetch('/api/me')).json();if(me.error)return location.href='/login.html';document.getElementById('navUser').textContent='👤 '+me.displayName;if(me.role==='admin')document.getElementById('adminLink').style.display='';}catch{location.href='/login.html';}loadPrices();}
+async function loadPrices(){const res=await fetch('/api/prices');allPrices=await res.json();filterPrices();}
+function filterPrices(){const q=document.getElementById('searchInput').value.toLowerCase();const cat=document.getElementById('catFilter').value;const filtered=allPrices.filter(p=>{const mQ=!q||p.item_name.toLowerCase().includes(q)||(p.spec||'').toLowerCase().includes(q);const mC=!cat||p.category===cat;return mQ&&mC;});renderPrices(filtered);}
+function renderPrices(prices){document.getElementById('priceCount').textContent=`（共 ${prices.length} 筆）`;const tbody=document.getElementById('priceBody');const empty=document.getElementById('emptyState');const table=document.getElementById('priceTable');if(prices.length===0){table.style.display='none';empty.style.display='block';return;}table.style.display='table';empty.style.display='none';tbody.innerHTML=prices.map(p=>`<tr><td><span class="td-cat cat-${p.category}">${CAT_LABELS[p.category]||p.category}</span></td><td class="td-item">${esc(p.item_name)}</td><td style="color:#666;font-size:13px;">${esc(p.spec)}</td><td style="text-align:center;color:#888;">${esc(p.unit)}</td><td class="td-price">NT$ ${Math.round(p.unit_price).toLocaleString('zh-TW')}</td><td style="color:#999;font-size:12px;">${esc(p.notes||p.source)}</td><td><div class="td-actions"><button class="act-btn edit" onclick="openModal(${p.id})">編輯</button><button class="act-btn del" onclick="deletePrice(${p.id})">刪除</button></div></td></tr>`).join('');}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function openModal(id=null){editingId=id;document.getElementById('modalTitle').textContent=id?'編輯單價':'新增單價';['fCategory','fItemName','fSpec','fUnit','fUnitPrice','fNotes'].forEach(f=>document.getElementById(f).value='');if(id){const p=allPrices.find(x=>x.id===id);if(p){document.getElementById('fCategory').value=p.category||'';document.getElementById('fItemName').value=p.item_name||'';document.getElementById('fSpec').value=p.spec||'';document.getElementById('fUnit').value=p.unit||'';document.getElementById('fUnitPrice').value=p.unit_price||'';document.getElementById('fNotes').value=p.notes||p.source||'';}}document.getElementById('modalOverlay').classList.add('show');}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+function onOverlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+async function savePrice(){const payload={category:document.getElementById('fCategory').value,item_name:document.getElementById('fItemName').value.trim(),spec:document.getElementById('fSpec').value.trim(),unit:document.getElementById('fUnit').value.trim()||'式',unit_price:parseFloat(document.getElementById('fUnitPrice').value)||0,notes:document.getElementById('fNotes').value.trim(),source:document.getElementById('fNotes').value.trim()};if(!payload.category){showToast('請選擇工程類別',true);return;}if(!payload.item_name){showToast('請填寫品項名稱',true);return;}const method=editingId?'PUT':'POST';const url=editingId?`/api/prices/${editingId}`:'/api/prices';const res=await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await res.json();if(data.success){showToast(editingId?'✅ 單價已更新':'✅ 單價已新增');closeModal();loadPrices();}else{showToast('儲存失敗：'+(data.error||''),true);}}
+async function deletePrice(id){if(!confirm('確定要刪除此筆單價資料嗎？'))return;const res=await fetch(`/api/prices/${id}`,{method:'DELETE'});const data=await res.json();if(data.success){showToast('已刪除');loadPrices();}}
+init();
+</script>
+</body>
+</html>
