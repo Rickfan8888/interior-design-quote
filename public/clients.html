@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>業主資料庫 — 大事設計有限公司</title>
+<title>æ¥­ä¸»è³æåº« â å¤§äºè¨­è¨æéå¬å¸</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
+body { font-family: 'Noto Sans TC', 'å¾®è»æ­£é»é«', Arial, sans-serif; background: #f0f2f5; color: #333; }
 
 .navbar {
   background: linear-gradient(135deg, #2c3e50, #4a6fa5);
@@ -34,3 +34,342 @@ body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; backgr
 .main { max-width: 1200px; margin: 0 auto; padding: 24px; }
 .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .page-title { font-size: 22px; font-weight: 700; color: #2c3e50; }
+.page-title span { font-size: 14px; font-weight: 400; color: #888; margin-left: 10px; }
+
+.toolbar { display: flex; gap: 10px; margin-bottom: 16px; }
+.search-input {
+  flex: 1; border: 1.5px solid #e0e4ee; border-radius: 8px;
+  padding: 8px 14px; font-size: 14px; font-family: inherit; outline: none;
+}
+.search-input:focus { border-color: #4a6fa5; }
+.btn-add {
+  background: #4a6fa5; color: #fff; border: none;
+  padding: 8px 18px; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 700; font-family: inherit; white-space: nowrap;
+}
+.btn-add:hover { background: #3a5f95; }
+
+/* Table style */
+.table-wrap {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: #f7f8fc; }
+thead th { padding: 13px 16px; font-size: 12px; color: #7b8fa6; text-align: left; font-weight: 600; letter-spacing: 0.5px; border-bottom: 1.5px solid #e8eaf0; white-space: nowrap; }
+tbody tr { border-bottom: 1px solid #f0f2f5; transition: background 0.15s; }
+tbody tr:hover { background: #f5f7ff; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 13px 16px; font-size: 14px; vertical-align: middle; }
+.td-name { font-weight: 700; color: #2c3e50; }
+.td-company { color: #666; font-size: 13px; }
+.td-contact { color: #555; }
+.td-email { color: #4a6fa5; font-size: 13px; }
+.td-actions { display: flex; gap: 8px; }
+.act-btn {
+  padding: 5px 12px; border-radius: 5px; border: 1px solid #e0e4ee;
+  background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; font-weight: 600;
+}
+.act-btn.edit { color: #4a6fa5; border-color: #c0d0ef; }
+.act-btn.edit:hover { background: #eef3ff; }
+.act-btn.del { color: #e05050; border-color: #f5c0c0; }
+.act-btn.del:hover { background: #fff0f0; }
+.act-btn.quote { color: #27ae60; border-color: #a8e6c1; }
+.act-btn.quote:hover { background: #f0fff5; }
+
+.empty-state { text-align: center; padding: 60px 20px; color: #bbb; background: #fff; border-radius: 12px; }
+.empty-state .icon { font-size: 48px; margin-bottom: 14px; }
+.empty-state p { font-size: 15px; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  z-index: 500; display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: #fff; border-radius: 14px; padding: 28px 30px;
+  width: 540px; max-width: 95vw; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.2);
+}
+.modal-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { font-size: 12px; color: #888; font-weight: 600; }
+.form-group input, .form-group textarea {
+  border: 1.5px solid #e0e4ee; border-radius: 7px; padding: 9px 11px;
+  font-size: 14px; font-family: inherit; outline: none; color: #333;
+}
+.form-group input:focus, .form-group textarea:focus { border-color: #4a6fa5; }
+.form-group textarea { resize: vertical; min-height: 70px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+.btn-cancel {
+  background: #fff; border: 1.5px solid #e0e4ee; color: #888;
+  padding: 9px 20px; border-radius: 7px; cursor: pointer; font-size: 14px; font-family: inherit;
+}
+.btn-cancel:hover { border-color: #ccc; }
+.btn-save {
+  background: #4a6fa5; color: #fff; border: none;
+  padding: 9px 24px; border-radius: 7px; cursor: pointer; font-size: 14px;
+  font-weight: 700; font-family: inherit;
+}
+.btn-save:hover { background: #3a5f95; }
+
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px;
+  font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none;
+}
+.toast.error { background: #c0392b; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand" onclick="location.href='/index.html'">å¤§äºè¨­è¨æéå¬å¸</div>
+  <div class="nav-links">
+    <a href="/index.html" class="nav-link">å ±å¹å®</a>
+    <a href="/clients.html" class="nav-link active">æ¥­ä¸»è³æ</a>
+    <a href="/vendors.html" class="nav-link">å» åè³æ</a>
+    <a href="/prices.html" class="nav-link">æ­·å²å®å¹</a>
+    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">ä½¿ç¨èç®¡ç</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="navUser"></span>
+    <button class="nav-btn" onclick="logout()">ç»åº</button>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">æ¥­ä¸»è³æåº« <span id="clientCount"></span></div>
+    <button class="btn-add" onclick="openModal()">ï¼ æ°å¢æ¥­ä¸»</button>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" class="search-input" id="searchInput" placeholder="æå°æ¥­ä¸»å§åãå¬å¸ãé»è©±..." oninput="filterClients()">
+  </div>
+
+  <div class="table-wrap">
+    <table id="clientTable">
+      <thead>
+        <tr>
+          <th>æ¥­ä¸»å§å</th>
+          <th>å¬å¸åç¨±</th>
+          <th>é»è©± / ææ©</th>
+          <th>Email</th>
+          <th>å°å</th>
+          <th style="width:180px">æä½</th>
+        </tr>
+      </thead>
+      <tbody id="clientBody"></tbody>
+    </table>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <div class="icon">ð¤</div>
+      <p>å°ç¡æ¥­ä¸»è³æï¼é»æå³ä¸è§ãæ°å¢æ¥­ä¸»ãéå§å»ºç«</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="onOverlayClick(event)">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">æ°å¢æ¥­ä¸»</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>æ¥­ä¸»å§å *</label>
+        <input type="text" id="fName" placeholder="ä¾ï¼é³åç">
+      </div>
+      <div class="form-group">
+        <label>å¬å¸åç¨±</label>
+        <input type="text" id="fCompany" placeholder="å¬å¸æå®ä½ï¼å¯ä¸å¡«ï¼">
+      </div>
+      <div class="form-group">
+        <label>é»è©±</label>
+        <input type="text" id="fPhone" placeholder="å¸è©±">
+      </div>
+      <div class="form-group">
+        <label>ææ©</label>
+        <input type="text" id="fMobile" placeholder="ææ©èç¢¼">
+      </div>
+      <div class="form-group full">
+        <label>Email</label>
+        <input type="email" id="fEmail" placeholder="é»å­éµä»¶">
+      </div>
+      <div class="form-group full">
+        <label>å·¥ç¨å°å</label>
+        <input type="text" id="fAddress" placeholder="æ½å·¥å°é»å°å">
+      </div>
+      <div class="form-group full">
+        <label>åè¨»</label>
+        <textarea id="fNotes" placeholder="åå¥½ãç¹æ®éæ±ç­èªªæ..."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">åæ¶</button>
+      <button class="btn-save" onclick="saveClient()">å²å­</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let allClients = [];
+let editingId = null;
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.href = '/login.html';
+}
+
+async function init() {
+  try {
+    const me = await (await fetch('/api/me')).json();
+    if (me.error) return location.href = '/login.html';
+    document.getElementById('navUser').textContent = 'ð¤ ' + me.displayName;
+    if (me.role === 'admin') document.getElementById('adminLink').style.display = '';
+  } catch { location.href = '/login.html'; }
+  loadClients();
+}
+
+async function loadClients() {
+  const res = await fetch('/api/clients');
+  allClients = await res.json();
+  filterClients();
+}
+
+function filterClients() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const filtered = allClients.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    (c.company || '').toLowerCase().includes(q) ||
+    (c.phone || '').includes(q) ||
+    (c.mobile || '').includes(q) ||
+    (c.email || '').toLowerCase().includes(q)
+  );
+  renderClients(filtered);
+}
+
+function renderClients(clients) {
+  document.getElementById('clientCount').textContent = `ï¼å± ${clients.length} ç­ï¼`;
+  const tbody = document.getElementById('clientBody');
+  const empty = document.getElementById('emptyState');
+  const table = document.getElementById('clientTable');
+  if (clients.length === 0) {
+    table.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  table.style.display = 'table';
+  empty.style.display = 'none';
+  tbody.innerHTML = clients.map(c => `
+    <tr>
+      <td class="td-name">${esc(c.name)}</td>
+      <td class="td-company">${esc(c.company)}</td>
+      <td class="td-contact">${[c.phone, c.mobile].filter(Boolean).map(esc).join(' / ') || '-'}</td>
+      <td class="td-email">${esc(c.email) || '-'}</td>
+      <td style="font-size:13px;color:#777;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.address) || '-'}</td>
+      <td>
+        <div class="td-actions">
+          <button class="act-btn quote" onclick="newQuoteForClient(${c.id})">æ°å¢å ±å¹</button>
+          <button class="act-btn edit" onclick="openModal(${c.id})">ç·¨è¼¯</button>
+          <button class="act-btn del" onclick="deleteClient(${c.id}, '${esc(c.name)}')">åªé¤</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function newQuoteForClient(id) {
+  const c = allClients.find(x => x.id === id);
+  if (!c) return;
+  // å¸¶æ¥­ä¸»è³æå°æ°å ±å¹å®
+  const params = new URLSearchParams({
+    client_name: c.name,
+    client_phone: c.phone || c.mobile || '',
+    client_addr: c.address || '',
+    client_email: c.email || '',
+  });
+  location.href = '/form.html?' + params.toString();
+}
+
+function openModal(id = null) {
+  editingId = id;
+  document.getElementById('modalTitle').textContent = id ? 'ç·¨è¼¯æ¥­ä¸»' : 'æ°å¢æ¥­ä¸»';
+  ['fName','fCompany','fPhone','fMobile','fEmail','fAddress','fNotes']
+    .forEach(f => document.getElementById(f).value = '');
+
+  if (id) {
+    const c = allClients.find(x => x.id === id);
+    if (c) {
+      document.getElementById('fName').value = c.name || '';
+      document.getElementById('fCompany').value = c.company || '';
+      document.getElementById('fPhone').value = c.phone || '';
+      document.getElementById('fMobile').value = c.mobile || '';
+      document.getElementById('fEmail').value = c.email || '';
+      document.getElementById('fAddress').value = c.address || '';
+      document.getElementById('fNotes').value = c.notes || '';
+    }
+  }
+  document.getElementById('modalOverlay').classList.add('show');
+  document.getElementById('fName').focus();
+}
+
+function closeModal() { document.getElementById('modalOverlay').classList.remove('show'); }
+function onOverlayClick(e) { if (e.target === document.getElementById('modalOverlay')) closeModal(); }
+
+async function saveClient() {
+  const payload = {
+    name: document.getElementById('fName').value.trim(),
+    company: document.getElementById('fCompany').value.trim(),
+    phone: document.getElementById('fPhone').value.trim(),
+    mobile: document.getElementById('fMobile').value.trim(),
+    email: document.getElementById('fEmail').value.trim(),
+    address: document.getElementById('fAddress').value.trim(),
+    notes: document.getElementById('fNotes').value.trim(),
+  };
+  if (!payload.name) { showToast('è«å¡«å¯«æ¥­ä¸»å§å', true); return; }
+
+  const method = editingId ? 'PUT' : 'POST';
+  const url = editingId ? `/api/clients/${editingId}` : '/api/clients';
+  const res = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (data.success) {
+    showToast(editingId ? 'â æ¥­ä¸»è³æå·²æ´æ°' : 'â æ¥­ä¸»å·²æ°å¢');
+    closeModal();
+    loadClients();
+  } else {
+    showToast('å²å­å¤±æï¼' + (data.error || ''), true);
+  }
+}
+
+async function deleteClient(id, name) {
+  if (!confirm(`ç¢ºå®è¦åªé¤æ¥­ä¸»ã${name}ãåï¼`)) return;
+  const res = await fetch(`/api/clients/${id}`, { method: 'DELETE' });
+  const data = await res.json();
+  if (data.success) {
+    showToast('å·²åªé¤æ¥­ä¸»è³æ');
+    loadClients();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
