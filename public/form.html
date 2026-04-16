@@ -331,486 +331,490 @@ const SECTIONS = [
   { id: 'metal',      label: '五、鐵件工程',       ph: '鐵件烤漆格柵', spec: '黑色消光烤漆',   unit: '式' },
   { id: 'protection', label: '六、保護工程',       ph: '地坪保護',     spec: '木板+珍珠棉',    unit: '坪' },
   { id: 'weakelec',   label: '七、弱電工程',       ph: '網路線佈線',   spec: 'Cat.6 UTP',      unit: '點' },
-  { id: 'landscape',  label: '八、景觤��、9}�栽造 la: '地坪保�"compan��葉9}�物色消光烤漆',   unit: '�18a4c
-  { id: 'metal',��', 玻璃: '六、保護工程��化))re��璃隔lab',��保�10mm ���化e��璃漆三度�        unit: '�d4a017; { id: 'weakel十', �spel: '六、保護工程� �sp��膠漆地坪保�LED 7W 白pec��板+珍珠��      unit: '�5a7a5a; { id: 'masonr十sh',  系統櫃: '六、�工程��統衣櫃漆地坪保�E1   材� 3�紋��'漆�光烤氺     unit: '�95a5a
-  { id: 'paint',��s',   其他: '六、保�工程��他lde目漆地坪保�aaa有資
-    <漆地�光烤漆',   ];
+  { id: 'landscape',  label: '八、景觀工程',       ph: '植栽造景',     spec: '室內觀葉植物',   unit: '式' },
+  { id: 'glass',      label: '九、玻璃工程',       ph: '強化清玻璃隔間',spec: '10mm 強化玻璃', unit: '才' },
+  { id: 'lighting',   label: '十、燈具工程',       ph: '崁燈安裝',     spec: 'LED 7W 白光',    unit: '盞' },
+  { id: 'cabinet',    label: '十一、系統櫃工程',   ph: '系統衣櫃',     spec: 'E1板材 木紋色',  unit: '尺' },
+  { id: 'other',      label: '十二、其他工程',     ph: '其他項目',     spec: '請填寫說明',     unit: '式' },
+];
 
-letolidgrou" oncId
-conull;
-letoalloninpus
-con];
-letoall" oncl
-con];
-letolidgrouPl-sear
-  { Id
-conull;
-letolidgrouPl-seRow
-conull;
-/div>
+let currentQuoteId = null;
+let allClients = [];
+let allPrices = [];
+let currentPriceSectionId = null;
+let currentPriceRow = null;
 
-<scr��始化頁��程分�fun }
-.vabuild#d0e0ff;()er; }
-.設�s */
-.sect= documrou.getElemrouById('container" id="se'255,255設�mmary-box"t= documrou.getElemrouById('cmary-box"'2555,2�� =====.forEach(l
-c>er; } �s */
-.sec.insecHTML += `rPriceModal()">
-  20px 20px; }d: #${s.id}"：30坪"></div>
-    }
-.sec-other ss="modal-c.delet#d0e0ff('${s.id}')"：30坪��"></div>
-    }
-.sec-rgin-er="例：30坪��"></div>
-    }
-.sec-v class${s. 'pai}="例：30坪��"></div>
-    }
-.sec-v1; }
-.sect">小計="例：30坪��"></div>
-    }
-.sec-v1; }iv class; }
-${s.id}"�NT$ 0="例：30坪��"��</h3>
-      .delete-ceiv classelete${s.id}"�▾iceModal()">�✕</button>
-��"></div>
-    }
-.sec-tyleiv clatyle#${s.id}"：30坪�說
+// ===== 初始化頁面 =====
+function buildSections() {
+  const container = document.getElementById('sectionsContainer');
+  const summaryBox = document.getElementById('summaryBox');
 
-/*：30坪��說}
-}
-<<tr：30坪���說}>#</�}>��}div>
-     ; }
-th">lde目r="搜</�}>��}div>
-     ; ���">規: '
-    <h3�}>��30坪���說}>le"位</�}>��}>數量</�}>��}>le">� (NT$)</�}>��}>l��計 (NT$)</�}>��}>h3�}>��30坪���h3�r>h3�}
-}
-</0坪���說adius clarows#${s.id}"�h3�tyle>
-0坪���h3�
+  SECTIONS.forEach(s => {
+    container.innerHTML += `
+    <div class="work-section sec-${s.id}">
+      <div class="section-header" onclick="toggleSection('${s.id}')">
+        <div class="section-color"></div>
+        <div class="section-title">${s.label}</div>
+        <div class="section-total-label">小計</div>
+        <div class="section-total" id="total-${s.id}">NT$ 0</div>
+        <button class="toggle-btn" id="toggle-${s.id}">▾</button>
+      </div>
+      <div class="section-body" id="body-${s.id}">
+        <table>
+          <thead><tr>
+            <th>#</th><th class="col-desc">項目名稱</th><th class="col-spec">規格說明</th>
+            <th>單位</th><th>數量</th><th>單價 (NT$)</th><th>小計 (NT$)</th><th></th>
+          </tr></thead>
+          <tbody id="rows-${s.id}"></tbody>
+        </table>
+        <button class="add-row-btn" onclick="addRow('${s.id}')">＋ 新增項目</button>
+      </div>
+    </div>`;
+  });
 
-/*：30坪��"��</h3>
-      ar, .actionss="modal-car,Row('${s.id}')"�＋ 所梞lde目iceModal()">�✕</button>
-�</but`55,2}2555,2letocmary-bHOCTY=2�� =====.map(l
-c>ton>
-`-section">
-    <div iv cla"></span>
-  .sect">${s. 'pai} 小計="�新�a"></span>
-   }
-.tss="summa
-${s.id}"�NT$ 0="�新�a</but`ton).joif(''255,2cmary-bHOCTY+= `rPriceModal()">
-    <div iv ctil">
-  ng: 18px 200; border-top: 2pxection" styb; fsolid #e8eafay: f"：30坪""></span>
-  .sect"til">
-   .item-price{ fo">未�er=�計="�新弚30坪""></span>
-   }
-.tss="summ right;all"�NT$ 0="�新� Email"></div>
+  let summaryHtml = SECTIONS.map(s =>
+    `<div class="summary-row"><span class="label">${s.label} 小計</span><span class="value" id="sum-${s.id}">NT$ 0</span></div>`
+  ).join('');
+  summaryHtml += `
+    <div class="summary-row" style="border-top:2px solid #e8eaf0;margin-top:4px;padding-top:10px;">
+      <span class="label" style="font-weight:600;">未稅合計</span>
+      <span class="value" id="subtotal-all">NT$ 0</span>
     </div>
-    <div iv cl��30坪""></span>
-  .sect olor: #class="in�e率el>施巼�30坪��"   </div>
-  numbr ss
-      . gap: 5px; }
-iv clasaxR <inp }
-.t="5" { w="0"x-sh="100"> %)">�✕<�新弚30坪""></span>
-   }
-.tss="su. gaamount"�NT$ 0="�新� Email"></div>
+    <div class="summary-row">
+      <span class="label tax-row"><label>稅率</label>
+        <input type="number" class="tax-rate-input" id="taxRate" value="5" min="0" max="100"> %
+      </span>
+      <span class="value" id="tax-amount">NT$ 0</span>
     </div>
-    <div iv  eight: 60"：30坪""></span>
-  .sect">含�e總計="�新弚30坪""></span>
-   }
-.tss="sugiv c-v1; }i�NT$ 0="�新� Email"></`55,2cmary-box".insecHTML =2cmary-bHOCT555,2�� =====.forEach(l
-c>ear,Row(s.id���.ph���.��俻��.�光)rgba(0ocumrou.getElemrouById('saxR <i')bar,EiceM id=esec('x; }
-漆recalcAll rgba�fun }
-.vafmt(n)er�return 'NT$ ' + Math.d inp(n).toLoidthStrd #('l>
-<h'55,255fun }
-.va.mod#f8f0(msg, isEone; = false, du; = 2800)er; }
-.設�tt= documrou.getElemrouById('ss="t'255,2t.  <iCnter; t= msg55,2t.pan>
-ext"t= 'ss="t' + (isEone; ? ' none;' 烤'255,2t.il">
-.dy.collt= 'iv cl'55,2cetTimen" o()ec>et.il">
-.dy.collt= ' { b', du; rgba�fun }
-.va.delet#d0e0ff(id)er; }
-.設�adius= documrou.getElemrouById('tyle#' + id)55,255設�<but= documrou.getElemrouById('sselete' + id)55,2; }
-  an>
- id= .delet(' .section'255,2t: 7  <iCnter; t= ; }
-  an>
- id= s */
-.ss(' .section'2 ? '▸' 烤▾'rgba�div>
+    <div class="summary-row total-row">
+      <span class="label">含稅總計</span>
+      <span class="value" id="grand-total">NT$ 0</span>
+    </div>`;
+  summaryBox.innerHTML = summaryHtml;
 
-<sc計算程分�fun }
-.vacalc#d0e0ff(id)er; }
-.設�rowst= documrou.getElemrouById('rows#' + id).querySpointorAll('se'255,2letoother =  0; zrows.forEach(iv  c>er; } �s *���qtus= p<heaFt-si(iv .querySpointor('.qtu')?; }
-.t) ||  0; z �s *���dal-it= p<heaFt-si(iv .querySpointor('.dal-i')?; }
-.t) ||  0; z �s *���dal-=�qtus*�dal-i0; z �other +=2cmb0; z �s *���f0; }= iv .querySpointor('.n: right; }
-t'255,2  if ( }
-t)�f0; 7  <iCnter; t= dal-> 0 ? Math.d inp(dal).toLoidthStrd #('l>
-<h'5 烤0'55,2}255a(0ocumrou.getElemrouById('sight;' + id).  <iCnter; t= fmt(sight255a(0ocumrou.getElemrouById('mma
-' + id).  <iCnter; t= fmt(sight255a(return sightrgba�fun }
-.varecalcAll()er; }letocmbother =  0; z�� =====.forEach(l
-c>erocmbother +=2calc#d0e0ff(s.id55,2)55,255設�saxR <it= p<heaFt-si(0ocumrou.getElemrouById('saxR <i')b }
-.t) ||  0; z55設�saxt= dalother *�saxR <it/op: 0; z0ocumrou.getElemrouById('mm right;all').  <iCnter; t= fmt(mm rightrgba(0ocumrou.getElemrouById('saxaamount').  <iCnter; t= fmt(saxrgba(0ocumrou.getElemrouById('giv c-v1; }').  <iCnter; t= fmt(mm right + saxrgb}
-/div>
+  SECTIONS.forEach(s => addRow(s.id, s.ph, s.spec, s.unit));
+  document.getElementById('taxRate').addEventListener('input', recalcAll);
+}
 
-<scr��管理程分�fun }
-.vaar,Row(id��}
-thPht= '件烤�Pht= '件�光Pht= '件data
-conull)er; }
-.設�tadius= documrou.getElemrouById('rows#' + id);; }
-.設�rowNums= tadiu.querySpointorAll('se'2.leng�}d+x; lin
-.設�tct= documrou.cre <iElemrou('se'255,2tr.insecHTML =2`rPricetd>${rowNum}="td>rPricetd>    </div>
-    <input type}
-thpx; }
-iv="priceSearch${}
-thPh}np }
-.t="${}ata?.}
-the|| ''}"�h3�d>rPricetd>    </div>
-    <inp="priceSearch${烤�Ph}np }
-.t="${}ata?.}
-the|| ''}"�h3�d>rPricetd>    </div>
-    <inp="priceSearch${�光Pht|| '漆'}"til">
-  .modal-empt { textnp }
-.t="${}ata?.�光e|| ''}"�h3�d>rPricetd>    </div>
-  numbr ss
-      tbody td iqtunp="priceSearch0" { w="0"x }
-.t="${}ata?.qtus|| ''}"�h3�d>rPricetds
-      ay: none;
-"：30坪"   </div>
-  numbr ss
-      tbody td iay: nnp="priceSearch0" { w="0"x }
-.t="${}ata?.dal-it|| ''}"�價查詢</h3>
-       .toggle-b" v cla="�� 歷dalTitle">�ss="btn-from-dboninput="fi'${id}', this.lose"su('se'2ick="s�iceModal()">✕<�d>rPricetds
-      n: right; }
-t">0�<�d>rPricetds
-      .add-row-bt"�h��</h3>="btn-fro.add-rRow(this,'${id}'losePriceModal(�<�d>`55,2tadiu.
-<dindCdal-(tr255,2tr.querySpointorAll('.qtu,.dal-i').forEach(y t
-c>ey tbar,EiceM id=esec('x; }
-漆recalcAll 255,2if (}ata)arecalcAll()rgba�fun }
-.va.add-rRow(e-btnid)er; }
-.設�tadius= t: 7lose"su('se'2.ckgrouElemrou55,2if (tadiu.querySpointorAll('se'2.leng�}d<= 1)er�dthru('每olde/ ====��少需保留一r��'55,returnnone !i: 7lose"su('se'2.remove()55,2tadiu.querySpointorAll('se'2.forEach((rtni)ec>er.w-bts[0].  <iCnter; t= id+x;255a(recalcAll()rgba�div>
+function fmt(n) { return 'NT$ ' + Math.round(n).toLocaleString('zh-TW'); }
 
-<sc收�nav-lin程分�fun }
-.vac.seint�寫Data()er; }
-.設�containet= {};5,2�� =====.forEach(l
-c>er; } �containe[s.id]
-con];
- } �documrou.getElemrouById('rows#' + s.id5.querySpointorAll('se'2.forEach(iv  c>er; } � }
-.設�x; }
-s}= iv .querySpointorAll('x; }
-�255,2   �containe[s.id].push({��30坪��}
-th: �x; }
-s[0]?; }
-.tt|| '',��30坪�蝪保��x; }
-s[1]?; }
-.tt|| '',��30坪��光��x; }
-s[2]?; }
-.tt|| '',��30坪��qze:   p<heaFt-si(x; }
-s[3]?; }
-.t) ||  ,��30坪��dal-i: p<heaFt-si(x; }
-s[4]?; }
-.t) ||  ,��30坪}255,2  }255,2}255a(return {��30�ype="te: } �documrou.getElemrouById('ype="te')b }
-.t,��30�ype="text":�documrou.getElemrouById('ype="text"')b }
-.t,��30�ype="text" :documrou.getElemrouById('ype="text" ')b }
-.t,��30�ype="text":�documrou.getElemrouById('ype="text"')b }
-.t,��30�ype="tder=":documrou.getElemrouById('ype="tder="')b }
-.t,��30�ype="tex:} �documrou.getElemrouById('ype="tex')b }
-.t,��30�ype="date: �documrou.getElemrouById('ype="D <i')b }
-.t,��30�es-se30坪��}ocumrou.getElemrouById('es-s')b }
-.t,��30�yuerit; te �documrou.getElemrouById('yuerit; ')b }
-.t,��30�saxR <i: } �documrou.getElemrouById('saxR <i')b }
-.t,��30�ype="date":�documrou.getElemrouById('ype="date"')b }
-.t,��30� <tex:0坪��}ocumrou.getElemrouById(' <tex')b }
-.t,��30�containe,��3}gb}
-/div>
+function showToast(msg, isError = false, dur = 2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', dur);
+}
 
-<scr��入av-lin程分�fun }
-.vafill�寫Data(}ata)a{
- �documrou.getElemrouById('ype="te')b }
-.t�30�=�data.ype="tet|| ''gba(0ocumrou.getElemrouById('ype="text"')b }
-.t�=�data.ype="text"t|| ''gba(0ocumrou.getElemrouById('ype="text" ')b }
-.t=�data.ype="text" t|| ''gba(0ocumrou.getElemrouById('ype="text"')b }
-.t�=�data.ype="text"t|| ''gba(0ocumrou.getElemrouById('ype="tder="')b }
-.t=�data.ype="tder="t|| ''gba(0ocumrou.getElemrouById('ype="tex')b }
-.t30�=�data.ype="text|| ''gba(0ocumrou.getElemrouById('ype="D <i')b }
-.t0�=�data.ype="D <it|| ''gba(0ocumrou.getElemrouById('es-s')b }
-.t30坪��=�data.</h3>|| ''gba(0ocumrou.getElemrouById('yuerit; ')b }
-.t30�=�data.yuerit; >|| ''gba(0ocumrou.getElemrouById('saxR <i')b }
-.t����=�data.saxR <it|| '5'gba(0ocumrou.getElemrouById('ype="date"')b }
-.t�=�data.ype="date">|| ''gba(0ocumrou.getElemrouById(' <tex')b }
-.t0坪��=�data. <tex>|| ''gb5,2if (}ata/* Sectio) {��30定 =====.forEach(l
-c>er; } � }
-.設�tadius= documrou.getElemrouById('rows#' + s.id55; } � }tadiu.insecHTML =2''gba( � }
-.設�rowst= data/* Sectio[s.id]gba( � }if (rowst&&zrows.leng�}d> 0) {��30坪��rows.forEach(iv  c>ear,Row(s.id���.ph���.��俻��.�光,�row)55; } � }} el0; }��30坪��ar,Row(s.id���.ph���.��俻��.�光)5; } � }}5,2  }255,2}5a(recalcAll()rgba�fun }
-.vare�填寫�er; }
-idgrou" oncId
-conull;
-,2�� =====.forEach(l
-c>er; } �s *���tadius= documrou.getElemrouById('rows#' + s.id55; } �tadiu.insecHTML =2''gba( �ar,Row(s.id���.ph���.��俻��.�光)5; }}255a(0ocumrou.querySpointorAll('.y: inherit; }
-, # <tex, #ype="te, #ype="date"')bforEach(el
-c>eelb }
-.t�=��'255,20ocumrou.getElemrouById('saxR <i')b }
-.t�= '5'gba(=devD <is(255a(recalcAll()rg z0ocumrou.getElemrouById('me-status"').  <iCnter; t= ''rgba�div>
+function toggleSection(id) {
+  const body = document.getElementById('body-' + id);
+  const btn = document.getElementById('toggle-' + id);
+  body.classList.toggle('collapsed');
+  btn.textContent = body.classList.contains('collapsed') ? '▸' : '▾';
+}
 
-<sceQuote程分�async fun }
-.va.een" onclier; }
-.設�f寫Datat= c.seint�寫Data() lin
-.設�tightT <is= documrou.getElemrouById('giv c-v1; }').  <iCnter;  lin
-.設�tightt= p<heaFt-si(tightT <i.re="pri(/[^0-9.]/g,��'2) ||  0; z55設�payt-sd
-co{��30�ype="_ne: } ��f寫Data.ype="te,��30�ype="t_nxt":��f寫Data.ype="text",; z �other_amount:�other,��30�yata:坪����f寫Data,��3}gb,2tryo{��30�letorex, rexult55,2  if ( idgrou" oncId) {��30坪rcl
-coawai��fetch('/api/ype="s/' +  idgrou" oncId, }��30坪��metho '�PUT漆other x:0{ 'Cnter; -Type''�
-<dtn-rit; /js; '    unnnnnnnadiu: JSON.strd #ify(payt-sd),��30坪}255,2  } el0; }��30坪rcl
-coawai��fetch('/api/ype="s', }��30坪��metho '�POST漆other x:0{ 'Cnter; -Type''�
-<dtn-rit; /js; '    unnnnnnnadiu: JSON.strd #ify(payt-sd),��30坪}255,2  }
-0坪rclult
-coawai��rcl.js; (255,2  if (rclult.success) {��30坪if (!
-idgrou" oncId
-&&zrclult.id) {��30坪��
-idgrou" oncId
-corclult.id;��30坪��history.re="pritatue(null, '件'/f寫a hre?id=' +  idgrou" oncId)5; } � }}5,2   a.mod#f8f0('✅ 已eQuote()">💾 �255,2   �0ocumrou.getElemrouById('me-status"').  <iCnter; t= '已eQuote'55,2  } el0; }��30坪.mod#f8f0('eQuote(��敗：' + (rclult.none; || ''),2tr.t)55,2  }
-0�} -ri; }
-..mod#f8f0('�',   錯誤，請稍後再試',2tr.t)5ock !�div>
+// ===== 計算 =====
+function calcSection(id) {
+  const rows = document.getElementById('rows-' + id).querySelectorAll('tr');
+  let total = 0;
+  rows.forEach(row => {
+    const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
+    const price = parseFloat(row.querySelector('.price')?.value) || 0;
+    const sub = qty * price;
+    total += sub;
+    const cell = row.querySelector('.subtotal-cell');
+    if (cell) cell.textContent = sub > 0 ? Math.round(sub).toLocaleString('zh-TW') : '0';
+  });
+  document.getElementById('total-' + id).textContent = fmt(total);
+  document.getElementById('sum-' + id).textContent = fmt(total);
+  return total;
+}
 
-<sceQuote()">💰 儲存單程分�async fun }
-.va.een" onclick="savePrer; }
-.設�f寫Datat= c.seint�寫Data() lin
-.設�ype="tet=�f寫Data.ype="te || '手動匯入' lin
-.設�y: fl
-con];
- }�� =====.forEach(l
-c>er; } �(f寫Data.containe[s.id]
-|| []2.forEach(iv  c>er; } � }if (row.}
-the&&zrow.dal-it> 0) {��30坪��y: fl.push({��30坪��  -riegory: s.id,��30坪��  y: f_nxt":�row.}
-th,��30坪��  ��保�row.}
-the|| '',��30坪��  �光�row.�光e|| �.�光,��30坪��  �光_dal-i: row.dal-i,��30坪��  �our-i: '()">💾  ' + ype="te,��30������� <tex:0'()">💾  ' + ype="te,��30�����})5; } � }}5,2  }255,2}255,2if (y: fl.leng�}d
-<sc0) {..mod#f8f0('沒有可匯入的()">�（請確認已e��入eholder="搜與()">�）',2tr.t)5oreturnnone !if (!
-" oncli`k="if(要將 ${y: fl.leng�}} 筆eholder)">�eQuote�� 儲存�)">�e��嗎？`))oreturnnb,2tryo{��30�
-.設�rcl
-coawai��fetch('/api/
-    </bri; ', }��30坪metho '�POST漆other x:0{ 'Cnter; -Type''�
-<dtn-rit; /js; '    unnnnnadiu: JSON.strd #ify({�y: fl
-}),��30�})5; } �
-.設�data
-coawai��rcl.js; (255,2  if (data/*uccess) {��30坪.mod#f8f0(`✅ 已e��入 ${}ata.count} 筆e)">💰 儲存單`)55,2  } el0; }��30坪.mod#f8f0('e��入(��敗：' + (}ata.none; || ''),2tr.t)55,2  }
-0�} -ri; }
-..mod#f8f0('�',   錯誤',2tr.t)5ock !�div>
+function recalcAll() {
+  let subtotal = 0;
+  SECTIONS.forEach(s => { subtotal += calcSection(s.id); });
+  const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+  const tax = subtotal * taxRate / 100;
+  document.getElementById('subtotal-all').textContent = fmt(subtotal);
+  document.getElementById('tax-amount').textContent = fmt(tax);
+  document.getElementById('grand-total').textContent = fmt(subtotal + tax);
+}
 
-<scick="l程分�async fun }
-.va-btn" on }��3awai��fetch('/api/-btn" ', }�metho '�POST��})5; }rand" onclickt= '/-btinon.hrergba�div>
+// ===== 列管理 =====
+function addRow(id, descPh = '', specPh = '', unitPh = '', data = null) {
+  const tbody = document.getElementById('rows-' + id);
+  const rowNum = tbody.querySelectorAll('tr').length + 1;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${rowNum}</td>
+    <td><input type="text" class="desc-input" placeholder="${descPh}" value="${data?.desc || ''}"></td>
+    <td><input type="text" placeholder="${specPh}" value="${data?.spec || ''}"></td>
+    <td><input type="text" placeholder="${unitPh || '式'}" style="text-align:center;" value="${data?.unit || ''}"></td>
+    <td><input type="number" class="num-input qty" placeholder="0" min="0" value="${data?.qty || ''}"></td>
+    <td class="price-cell">
+      <input type="number" class="num-input price" placeholder="0" min="0" value="${data?.price || ''}">
+      <button class="lookup-btn" title="查詢歷史單價" onclick="openPriceModal('${id}', this.closest('tr'))">💡</button>
+    </td>
+    <td class="subtotal-cell">0</td>
+    <td class="delete-cell"><button onclick="deleteRow(this,'${id}')">✕</button></td>`;
+  tbody.appendChild(tr);
+  tr.querySelectorAll('.qty,.price').forEach(inp => inp.addEventListener('input', recalcAll));
+  if (data) recalcAll();
+}
 
-<sc�><labr��始化程分�fun }
-.va=devD <is(2er; }
-.設�todllt= new D <i() lin
-.設�psd
-con c>eStrd #(n2.ckdSn-it(2,'0'255,255設�ymd
-cotodll.getFullYear(2e+ '#' + ckd(todll.getMnteh()+12e+ '#' + ckd(todll.getD <i()255,2if (!0ocumrou.getElemrouById('ype="D <i')b }
-.t)(0ocumrou.getElemrouById('ype="D <i')b }
-.t0=�ymd55,2if (!0ocumrou.getElemrouById('ype="date"')b }
-.t)o{��30�
-.設�vt= new D <i(todll)5ov.cotD <i(v.getD <i() + 30);
- } �documrou.getElemrouById('ype="date"')b }
-.t�=�v.getFullYear(2e+ '#' + ckd(v.getMnteh()+12e+ '#' + ckd(v.getD <i()255,2ck !�div>
+function deleteRow(btn, id) {
+  const tbody = btn.closest('tr').parentElement;
+  if (tbody.querySelectorAll('tr').length <= 1) { alert('每個分類至少需保留一列'); return; }
+  btn.closest('tr').remove();
+  tbody.querySelectorAll('tr').forEach((r, i) => r.cells[0].textContent = i + 1);
+  recalcAll();
+}
 
-<sc   <h3>👤 從); }
+// ===== 收集資料 =====
+function collectFormData() {
+  const sections = {};
+  SECTIONS.forEach(s => {
+    sections[s.id] = [];
+    document.getElementById('rows-' + s.id).querySelectorAll('tr').forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      sections[s.id].push({
+        desc:  inputs[0]?.value || '',
+        spec:  inputs[1]?.value || '',
+        unit:  inputs[2]?.value || '',
+        qty:   parseFloat(inputs[3]?.value) || 0,
+        price: parseFloat(inputs[4]?.value) || 0,
+      });
+    });
+  });
+  return {
+    quoteNo:    document.getElementById('quoteNo').value,
+    clientName: document.getElementById('clientName').value,
+    clientPhone:document.getElementById('clientPhone').value,
+    clientAddr: document.getElementById('clientAddr').value,
+    clientEmail:document.getElementById('clientEmail').value,
+    designer:   document.getElementById('designer').value,
+    quoteDate:  document.getElementById('quoteDate').value,
+    area:       document.getElementById('area').value,
+    duration:   document.getElementById('duration').value,
+    taxRate:    document.getElementById('taxRate').value,
+    validUntil: document.getElementById('validUntil').value,
+    notes:      document.getElementById('notes').value,
+    sections,
+  };
+}
 
-/* ===�async fun }
-.vam-db" onclick="opo{��3if (alloninpus.leng�}d
-<sc0) {��30�
-.設�rcl
-coawai��fetch('/api/
-    <a�255,2  alloninpus
-coawai��rcl.js; (255,2}ba(0ocumrou.getElemrouById('ype="tarch" ')b }
-.t�= ''55a(rend" oninput="filalloninpus)gba(0ocumrou.getElemrouById('ype="tt="fi')b an>
- id= ar,('mmod')gba(0ocumrou.getElemrouById('ype="tarch" ')b
-.mod()rgba�fun }
-.valose" onclick="clo-bodocumrou.getElemrouById('ype="tt="fi')b an>
- id= remove('mmod')g2}bfun }
-.vamdal" onclick="onClio-boif (e.n-igetd
-<scdocumrou.getElemrouById('ype="tt="fi'))alose" onclick="clo5,255fun }
-.va�..." oninput="filter; }
-.設�q =(0ocumrou.getElemrouById('ype="tarch" ')b }
-.t.toLow" oasi() lin
-.設�..." ed
-coalloninpus.�..." (c
-c>ton>
-c.nxt".toLow" oasi().inclu}
-t(q) ||; } �(cpacing:  || '').toLow" oasi().inclu}
-t(q) ||; } �(cppxt" t|| '').inclu}
-t(q)ton)55a(rend" oninput="fil�..." ed)rgba�fun }
-.varend" oninput="fil
-    <ater; }
-.設�6fa5;scdocumrou.getElemrouById('ype="tt="fi id='255,2if (cninpus.leng�}d
-<sc0) {��30�6fa5.insecHTML =2'eModal()">
-    <diight;">找10;3��符合的   <h3il"></'55,2  returnnb,2}ba(6fa5.insecHTML =2cninpus.map(c
-c> `rPriceModal()">
- n-top: 3px="btn btn-grpointoninpu(${c.id})"：30坪"></div>
-   }
-.modal-">${
-th(c.nxt")} ${c.acing:  ?2'eidUntil">
-   .item-price400argin-le 12p">���' + 
-th(c.acing: 2e+ '="�新�' 烤'}="例：30坪"></div>
-    
-.modal">${[cppxt" ,
-c.mobile].�..." (Boolean).joif(' / ')}${c.eer="t? ' ·�' + c.eer="t烤'}${c.ar,rclst? ' ·�' + c.ar,rclst烤'}="例：30�="例：3`).joif(''255255fun }
-.va.pointoninpu(id)er; }
-.設�c
-coalloninpus.�.nd(x
-c> x.idd
-<scid55; }if (!
-)oreturnnb,20ocumrou.getElemrouById('ype="text"')b }
-.t� =2c.nxt"t|| ''gba(0ocumrou.getElemrouById('ype="text" ')b }
-.t =2c.pxt" t|| c.mobilet|| ''gba(0ocumrou.getElemrouById('ype="text"')b }
-.t� =2c.ar,rclst|| ''gba(0ocumrou.getElemrouById('ype="tder="')b }
-.t =2c.eer="t|| ''gba(lose" onclick="clo5
- a.mod#f8f0('✅ 已e��入   <h3>👤 ：' + c.nxt")rgba�div>
+// ===== 填入資料 =====
+function fillFormData(data) {
+  document.getElementById('quoteNo').value    = data.quoteNo || '';
+  document.getElementById('clientName').value = data.clientName || '';
+  document.getElementById('clientPhone').value= data.clientPhone || '';
+  document.getElementById('clientAddr').value = data.clientAddr || '';
+  document.getElementById('clientEmail').value= data.clientEmail || '';
+  document.getElementById('designer').value   = data.designer || '';
+  document.getElementById('quoteDate').value  = data.quoteDate || '';
+  document.getElementById('area').value       = data.area || '';
+  document.getElementById('duration').value   = data.duration || '';
+  document.getElementById('taxRate').value    = data.taxRate || '5';
+  document.getElementById('validUntil').value = data.validUntil || '';
+  document.getElementById('notes').value      = data.notes || '';
 
-<sc愲存�)">�); }
-
-/* ===�async fun }
-.vam-dboninput="fisr
-  { Id,�row)er; }
-idgrouPl-sear
-  { Id
-cosr
-  { Id;; }
-idgrouPl-seRow
-corow;; }
-.設�conY=2�� =====.�.nd(l
-c>es.idd
-<scsr
-  { Id)gba(0ocumrou.getElemrouById('
-      <h3 id="').  <iCnter; t= `iceModalTitle">� ���${conY?csr
-; }
-.to烤'}`gb5,2
-.設�rcl
-coawai��fetch('/api/
-    <?-riegory=' + sr
-  { Id)gba(all" oncl
-coawai��rcl.js; (255ba(divAlso t-sd
-all�dal-is}if 20px; }
-.asr { b��3if (all" oncl.leng�}d
-<sc0) {��30�
-.設�rclA; }= awai��fetch('/api/
-    <�255,2  all" oncl
-coawai��rclA; .js; (255,2}bba(0ocumrou.getElemrouById('
-    arch" ')b }
-.t�= ''55a(rend" oninput="fiall" oncl,csr
-  { Id)gba(0ocumrou.getElemrouById('
-      <h3')b an>
- id= ar,('mmod')gba(0ocumrou.getElemrouById('
-    arch" ')b
-.mod()rgba�fun }
-.valose"oninput="fila{
- �documrou.getElemrouById('
-      <h3')b an>
- id= remove('mmod')g; }
-idgrouPl-seRow
-conull;
-}bfun }
-.vamdal" onclick="onPro-boif (e.n-igetd
-<scdocumrou.getElemrouById('
-      <h3'))alose"oninput="fil5,255fun }
-.va�..." oninput="fila{
- �
-.設�q =(0ocumrou.getElemrouById('
-    arch" ')b }
-.t.toLow" oasi() lin
-.設�..." ed
-coall" oncl.�..." (p
-c>ton>
-p.y: f_nxt".toLow" oasi().inclu}
-t(q) || (p.}
-the|| '').toLow" oasi().inclu}
-t(q)ton)55a(rend" oninput="fi�..." ed,}
-idgrouPl-sear
-  { Id)rgba�
-.設�CAT_LABELS
-co{��3S = [
-  ���    ph: '�' },
- ��� label二、: '�' },
-  �護',bel',��3�' },�護label: '�' },�程',   ／�' },
-  { al',   ph: ing:' },
-  烤漱、: '�' },
-  {�護label: '18a4c�程��璃�ba(6fa017; �程�spel: '5a7a5a;�程��統櫃漆95a5a�程��他'
-};a�fun }
-.varend" oninput="fip oncl,c
-idgrouCatter; }
-.設�6fa5;scdocumrou.getElemrouById('odal-list" id='255,2if (p oncl.leng�}d
-<sc0) {��30�6fa5.insecHTML =2'eModal()">
-    <diight;">尚無dalTitle">�av-linkbr><small>aaa慈至「dalTitle">�」頁��建立av-link"small>il"></'55,2  returnnb,2}ba(divSor jusidgrou -riegory le; }; }
-.設�cor ed
-co[...dal-is].cor ((a, b) c>er; } �if (a.-riegory 
-<sc
-idgrouCate&&zb.-riegory !<sc
-idgrouCat)oreturn -155,2  if (b.-riegory 
-<sc
-idgrouCate&&za.-riegory !<sc
-idgrouCat)oreturn 155,2  return  0; z})5; }rfa5.insecHTML =2cor ed.map(p
-c> `rPriceModal()">
- n-top: 3px="btn btn-grpointoninp(${p.id})"：30坪""></span>
+  if (data.sections) {
+    SECTIONS.forEach(s => {
+      const tbody = document.getElementById('rows-' + s.id);
+      tbody.innerHTML = '';
+      const rows = data.sections[s.id];
+      if (rows && rows.length > 0) {
+        rows.forEach(row => addRow(s.id, s.ph, s.spec, s.unit, row));
+      } else {
+        addRow(s.id, s.ph, s.spec, s.unit);
+      }
+    });
   }
-.modal-ii�NT$ ${Math.d inp(p.�光_dal-i).toLoidthStrd #('l>
-<h'5} / ${p.�光e|| '漆'}="�新弚30坪"></div>
-   }
-.modal-">${
-th(p.y: f_nxt")}="例：30坪"></div>
-    
-.modal">${CAT_LABELS[p.-riegory]
-|| p.-riegory}${p.}
-the? ' ·�' + 
-th(p.}
-th)t烤'}${p. <tex>? ' ·�' + 
-th(p. <tex)t烤'}="例：30�="例：3`).joif(''255255fun }
-.va.pointoninp(id)er; }
-.設�p
-coall" oncl.�.nd(x
-c> x.idd
-<scid55; }if (!p
-|| !
-idgrouPl-seRow)oreturnnb,2
-.設�x; }
-s}= 
-idgrouPl-seRow.querySpointorAll('x; }
-�255,2if (!x; }
-s[0]b }
-.t)ox; }
-s[0]b }
-.tt= p.y: f_nxt"55,2if (!x; }
-s[1]b }
-.t)ox; }
-s[1]b }
-.tt= p.}
-the|| ''gba(=d }
-s[2]b }
-.tt= p.�光e|| ''gba(=d }
-s[4]b }
-.tt= p.�光_dal-i0; zdivTrigger(recalcba(=d }
-s[4]bdy.cri; EiceM(new EiceM('x; }
-�2)gba(lose"oninput="fil5
- a.mod#f8f0('✅ 已e��入 alTitle">�：NT$ ' + Math.d inp(p.�光_dal-i).toLoidthStrd #('l>
-<h'5255255fun }
-.va
-th(s)er�return Strd #(s||''2.re="pri(/&/g,'&amp;'2.re="pri(/</g,'&lt;'2.re="pri(/>/g,'&gt;'2.re="pri(/"/g,'&ype=;'55,255div>
+  recalcAll();
+}
 
-<sce��動/* ===�async fun }
-.va=devila{
- �tryo{��30�
-.設�t"t= awai��(awai��fetch('/api/t"')).js; (255,2  if (t".none;)oreturn rand" onclickt= '/-btinon.hrerg����}ocumrou.getElemrouById(' nav-us').  <iCnter; t= 'er">
-' + m
-.dy.collNxt"55,2} -ri; }
-.return rand" onclickt= '/-btinon.hrer2}bba(build#d0e0ff;()gba(=devD <is(255a(recalcAll()rg; zdivURL p<haflex來自   <h3>👤 從的 ��梞()">�lin
-.設�pshaflt= new URLarch" Pshafl(rand" onc" clas) lin
-.設�idd
-�pshafl.get('xd'255,255設�ype="text"td
-�pshafl.get('ype="t_nxt"'255,255設�ype="text" t
-�pshafl.get('ype="t_pxt" ')55,255設�ype="text"tt
-�pshafl.get('ype="t_axt"')55,255設�ype="tder="t
-�pshafl.get('ype="t_eer="')gb5,2if (ype="text") {��30�0ocumrou.getElemrouById('ype="text"')b }
-.t� =2cpe="text";��30�0ocumrou.getElemrouById('ype="text" ')b }
-.t =2cpe="text" t|| ''gba(a(0ocumrou.getElemrouById('ype="text"')b }
-.t� =2cpe="text"t|| ''gba(a(0ocumrou.getElemrouById('ype="tder="')b }
-.t =2cpe="tder="t|| ''gba(}b5,2if (id) {��30�
-idgrou" oncId
-cop<heaIpu(id)5; } �tryo{��30�,2
-.設�rcl
-coawai��fetch('/api/ype="s/' + id55; } � }if (rcl.ok) {��30坪��
-.設�q =(awai��rcl.js; (255,2  ���fill�寫Data(q.}ata)55,2  ���0ocumrou.getElemrouById('me-status"').  <iCnter; t= '已eQuote'55,2   }} el0; }��30坪��.mod#f8f0('���d��載入()">💾 �,2tr.t)55,2   }}5,2  } -ri; }
-..mod#f8f0('載入(��敗',2tr.t)5ocka(}b5,2divPret-sd
-cninpus(=dbody td inp5,2fetch('/api/
-    <a�2.5a5n(rec>er.js; (22.5a5n(data
-c>er�dtloninpus
-codata5,2)55}b5=devil;!impdiv>
-</</tyle>
-</n.hr>
+function resetForm() {
+  currentQuoteId = null;
+  SECTIONS.forEach(s => {
+    const tbody = document.getElementById('rows-' + s.id);
+    tbody.innerHTML = '';
+    addRow(s.id, s.ph, s.spec, s.unit);
+  });
+  document.querySelectorAll('.info-row input, #notes, #quoteNo, #validUntil').forEach(el => el.value = '');
+  document.getElementById('taxRate').value = '5';
+  initDates();
+  recalcAll();
+  document.getElementById('saveStatus').textContent = '';
+}
+
+// ===== 儲存 =====
+async function saveQuote() {
+  const formData = collectFormData();
+  const totalText = document.getElementById('grand-total').textContent;
+  const total = parseFloat(totalText.replace(/[^0-9.]/g, '')) || 0;
+  const payload = {
+    quote_no:     formData.quoteNo,
+    client_name:  formData.clientName,
+    total_amount: total,
+    data:         formData,
+  };
+  try {
+    let res, result;
+    if (currentQuoteId) {
+      res = await fetch('/api/quotes/' + currentQuoteId, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } else {
+      res = await fetch('/api/quotes', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    }
+    result = await res.json();
+    if (result.success) {
+      if (!currentQuoteId && result.id) {
+        currentQuoteId = result.id;
+        history.replaceState(null, '', '/form.html?id=' + currentQuoteId);
+      }
+      showToast('✅ 已儲存報價單');
+      document.getElementById('saveStatus').textContent = '已儲存';
+    } else {
+      showToast('儲存失敗：' + (result.error || ''), true);
+    }
+  } catch { showToast('網路錯誤，請稍後再試', true); }
+}
+
+// ===== 儲存單價至歷史庫 =====
+async function savePricesFromQuote() {
+  const formData = collectFormData();
+  const quoteNo = formData.quoteNo || '手動匯入';
+  const items = [];
+  SECTIONS.forEach(s => {
+    (formData.sections[s.id] || []).forEach(row => {
+      if (row.desc && row.price > 0) {
+        items.push({
+          category: s.id,
+          item_name: row.desc,
+          spec: row.spec || '',
+          unit: row.unit || s.unit,
+          unit_price: row.price,
+          source: '報價單 ' + quoteNo,
+          notes: '報價單 ' + quoteNo,
+        });
+      }
+    });
+  });
+  if (items.length === 0) { showToast('沒有可匯入的單價（請確認已填入品項名稱與單價）', true); return; }
+  if (!confirm(`確定要將 ${items.length} 筆品項單價儲存至歷史單價庫嗎？`)) return;
+  try {
+    const res = await fetch('/api/prices/batch', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(`✅ 已匯入 ${data.count} 筆單價至歷史庫`);
+    } else {
+      showToast('匯入失敗：' + (data.error || ''), true);
+    }
+  } catch { showToast('網路錯誤', true); }
+}
+
+// ===== 登出 =====
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.href = '/login.html';
+}
+
+// ===== 日期初始化 =====
+function initDates() {
+  const today = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const ymd = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate());
+  if (!document.getElementById('quoteDate').value) document.getElementById('quoteDate').value = ymd;
+  if (!document.getElementById('validUntil').value) {
+    const v = new Date(today); v.setDate(v.getDate() + 30);
+    document.getElementById('validUntil').value = v.getFullYear() + '-' + pad(v.getMonth()+1) + '-' + pad(v.getDate());
+  }
+}
+
+// ===== 業主資料庫 Modal =====
+async function openClientModal() {
+  if (allClients.length === 0) {
+    const res = await fetch('/api/clients');
+    allClients = await res.json();
+  }
+  document.getElementById('clientSearch').value = '';
+  renderClientModal(allClients);
+  document.getElementById('clientModal').classList.add('show');
+  document.getElementById('clientSearch').focus();
+}
+
+function closeClientModal() { document.getElementById('clientModal').classList.remove('show'); }
+function onClientModalClick(e) { if (e.target === document.getElementById('clientModal')) closeClientModal(); }
+
+function filterClientModal() {
+  const q = document.getElementById('clientSearch').value.toLowerCase();
+  const filtered = allClients.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    (c.company || '').toLowerCase().includes(q) ||
+    (c.phone || '').includes(q)
+  );
+  renderClientModal(filtered);
+}
+
+function renderClientModal(clients) {
+  const list = document.getElementById('clientModalList');
+  if (clients.length === 0) {
+    list.innerHTML = '<div class="modal-empty">找不到符合的業主</div>';
+    return;
+  }
+  list.innerHTML = clients.map(c => `
+    <div class="modal-item" onclick="selectClient(${c.id})">
+      <div class="item-main">${esc(c.name)} ${c.company ? '<span style="font-weight:400;color:#888;">— ' + esc(c.company) + '</span>' : ''}</div>
+      <div class="item-sub">${[c.phone, c.mobile].filter(Boolean).join(' / ')}${c.email ? ' · ' + c.email : ''}${c.address ? ' · ' + c.address : ''}</div>
+    </div>
+  `).join('');
+}
+
+function selectClient(id) {
+  const c = allClients.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('clientName').value  = c.name || '';
+  document.getElementById('clientPhone').value = c.phone || c.mobile || '';
+  document.getElementById('clientAddr').value  = c.address || '';
+  document.getElementById('clientEmail').value = c.email || '';
+  closeClientModal();
+  showToast('✅ 已帶入業主資料：' + c.name);
+}
+
+// ===== 歷史單價 Modal =====
+async function openPriceModal(sectionId, row) {
+  currentPriceSectionId = sectionId;
+  currentPriceRow = row;
+  const sec = SECTIONS.find(s => s.id === sectionId);
+  document.getElementById('priceModalTitle').textContent = `💰 歷史單價 — ${sec ? sec.label : ''}`;
+
+  const res = await fetch('/api/prices?category=' + sectionId);
+  allPrices = await res.json();
+
+  // Also load all prices if section has none
+  if (allPrices.length === 0) {
+    const resAll = await fetch('/api/prices');
+    allPrices = await resAll.json();
+  }
+
+  document.getElementById('priceSearch').value = '';
+  renderPriceModal(allPrices, sectionId);
+  document.getElementById('priceModal').classList.add('show');
+  document.getElementById('priceSearch').focus();
+}
+
+function closePriceModal() {
+  document.getElementById('priceModal').classList.remove('show');
+  currentPriceRow = null;
+}
+function onPriceModalClick(e) { if (e.target === document.getElementById('priceModal')) closePriceModal(); }
+
+function filterPriceModal() {
+  const q = document.getElementById('priceSearch').value.toLowerCase();
+  const filtered = allPrices.filter(p =>
+    p.item_name.toLowerCase().includes(q) || (p.spec || '').toLowerCase().includes(q)
+  );
+  renderPriceModal(filtered, currentPriceSectionId);
+}
+
+const CAT_LABELS = {
+  demolish: '拆除', masonry: '泥作水電', woodwork: '木作',
+  paint: '油漆', metal: '鐵件', protection: '保護',
+  weakelec: '弱電', landscape: '景觀', glass: '玻璃',
+  lighting: '燈具', cabinet: '系統櫃', other: '其他'
+};
+
+function renderPriceModal(prices, currentCat) {
+  const list = document.getElementById('priceModalList');
+  if (prices.length === 0) {
+    list.innerHTML = '<div class="modal-empty">尚無歷史單價資料<br><small>請先至「歷史單價」頁面建立資料</small></div>';
+    return;
+  }
+  // Sort: current category first
+  const sorted = [...prices].sort((a, b) => {
+    if (a.category === currentCat && b.category !== currentCat) return -1;
+    if (b.category === currentCat && a.category !== currentCat) return 1;
+    return 0;
+  });
+  list.innerHTML = sorted.map(p => `
+    <div class="modal-item" onclick="selectPrice(${p.id})">
+      <span class="item-price">NT$ ${Math.round(p.unit_price).toLocaleString('zh-TW')} / ${p.unit || '式'}</span>
+      <div class="item-main">${esc(p.item_name)}</div>
+      <div class="item-sub">${CAT_LABELS[p.category] || p.category}${p.spec ? ' · ' + esc(p.spec) : ''}${p.notes ? ' · ' + esc(p.notes) : ''}</div>
+    </div>
+  `).join('');
+}
+
+function selectPrice(id) {
+  const p = allPrices.find(x => x.id === id);
+  if (!p || !currentPriceRow) return;
+  const inputs = currentPriceRow.querySelectorAll('input');
+  if (!inputs[0].value) inputs[0].value = p.item_name;
+  if (!inputs[1].value) inputs[1].value = p.spec || '';
+  inputs[2].value = p.unit || '';
+  inputs[4].value = p.unit_price;
+  // Trigger recalc
+  inputs[4].dispatchEvent(new Event('input'));
+  closePriceModal();
+  showToast('✅ 已帶入歷史單價：NT$ ' + Math.round(p.unit_price).toLocaleString('zh-TW'));
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ===== 啟動 =====
+async function init() {
+  try {
+    const me = await (await fetch('/api/me')).json();
+    if (me.error) return location.href = '/login.html';
+    document.getElementById('navUser').textContent = '👤 ' + me.displayName;
+  } catch { return location.href = '/login.html'; }
+
+  buildSections();
+  initDates();
+  recalcAll();
+
+  // URL params: 來自業主資料庫的新增報價
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  const clientName  = params.get('client_name');
+  const clientPhone = params.get('client_phone');
+  const clientAddr  = params.get('client_addr');
+  const clientEmail = params.get('client_email');
+
+  if (clientName) {
+    document.getElementById('clientName').value  = clientName;
+    document.getElementById('clientPhone').value = clientPhone || '';
+    document.getElementById('clientAddr').value  = clientAddr || '';
+    document.getElementById('clientEmail').value = clientEmail || '';
+  }
+
+  if (id) {
+    currentQuoteId = parseInt(id);
+    try {
+      const res = await fetch('/api/quotes/' + id);
+      if (res.ok) {
+        const q = await res.json();
+        fillFormData(q.data);
+        document.getElementById('saveStatus').textContent = '已儲存';
+      } else {
+        showToast('無法載入報價單', true);
+      }
+    } catch { showToast('載入失敗', true); }
+  }
+
+  // Preload clients in background
+  fetch('/api/clients').then(r => r.json()).then(data => { allClients = data; });
+}
+
+init();
+</script>
+</body>
+</html>

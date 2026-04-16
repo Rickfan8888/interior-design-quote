@@ -223,7 +223,7 @@ async function addUser() {
 }
 
 async function deleteUser(id, name) {
-  if (!confirm(`確定要刪除使用者「${name}」嗎？刪除後其所有報價單資料仍保留，但無法e��登入。`)) return;
+  if (!confirm(`確定要刪除使用者「${name}」嗎？刪除後其所有報價單資料仍保留，但無法再登入。`)) return;
   const res = await fetch('/api/users/' + id, { method: 'DELETE' });
   const data = await res.json();
   if (data.success) { showToast('已刪除使用者 ' + name); loadUsers(); }
