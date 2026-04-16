@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>廠商資料庫 — 大事設計報價系統</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
+.navbar { background: linear-gradient(135deg, #2c3e50, #4a6fa5); color: #fff; padding: 0 24px; height: 54px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.nav-brand { font-size: 16px; font-weight: 700; cursor: pointer; }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 5px 11px; border-radius: 5px; font-size: 13px; }
+.nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.2); color: #fff; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-user { font-size: 13px; opacity: 0.85; }
+.nav-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-family: inherit; }
+.nav-btn:hover { background: rgba(255,255,255,0.25); }
+.main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.page-title { font-size: 22px; font-weight: 700; color: #2c3e50; }
+.page-title span { font-size: 14px; font-weight: 400; color: #888; margin-left: 10px; }
+.toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+.search-input { flex: 1; min-width: 220px; border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 14px; font-size: 14px; font-family: inherit; outline: none; }
+.search-input:focus { border-color: #4a6fa5; }
+.filter-select { border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; outline: none; background: #fff; cursor: pointer; }
+.btn-add { background: #4a6fa5; color: #fff; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; white-space: nowrap; }
+.btn-add:hover { background: #3a5f95; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.vendor-card { background: #fff; border-radius: 12px; padding: 18px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border: 1.5px solid #eef0f5; }
+.vendor-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); border-color: #c8d5ef; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.card-name { font-size: 17px; font-weight: 700; color: #2c3e50; }
+.card-tag { font-size: 11px; padding: 3px 8px; border-radius: 12px; background: #e8f0ff; color: #4a6fa5; font-weight: 600; white-space: nowrap; margin-left: 8px; }
+.card-info { font-size: 13px; color: #666; line-height: 1.7; }
+.card-info .row { display: flex; gap: 6px; align-items: baseline; }
+.card-info .label { color: #999; font-size: 12px; width: 52px; flex-shrink: 0; }
+.card-actions { display: flex; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #f0f2f5; }
+.act-btn { padding: 5px 14px; border-radius: 6px; border: 1.5px solid #e0e4ee; background: #fff; cursor: pointer; font-size: 12px; font-family: inherit; font-weight: 600; }
+.act-btn.edit { color: #4a6fa5; border-color: #c0d0ef; }
+.act-btn.edit:hover { background: #eef3ff; }
+.act-btn.del { color: #e05050; border-color: #f5c0c0; }
+.act-btn.del:hover { background: #fff0f0; }
+.empty-state { text-align: center; padding: 60px 20px; color: #bbb; background: #fff; border-radius: 12px; }
+.empty-state .icon { font-size: 48px; margin-bottom: 14px; }
+.empty-state p { font-size: 15px; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 500; display: none; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal-box { background: #fff; border-radius: 14px; padding: 28px 30px; width: 560px; max-width: 95vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 12px 48px rgba(0,0,0,0.2); }
+.modal-title { font-size: 18px; font-weight: 700; color: #2c3e50; margin-bottom: 20px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label { font-size: 12px; color: #888; font-weight: 600; }
+.form-group input, .form-group select, .form-group textarea { border: 1.5px solid #e0e4ee; border-radius: 7px; padding: 9px 11px; font-size: 14px; font-family: inherit; outline: none; color: #333; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #4a6fa5; }
+.form-group textarea { resize: vertical; min-height: 70px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+.btn-cancel { background: #fff; border: 1.5px solid #e0e4ee; color: #888; padding: 9px 20px; border-radius: 7px; cursor: pointer; font-size: 14px; font-family: inherit; }
+.btn-save { background: #4a6fa5; color: #fff; border: none; padding: 9px 24px; border-radius: 7px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; }
+.toast { position: fixed; bottom: 24px; right: 24px; background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; z-index: 9999; display: none; }
+.toast.error { background: #c0392b; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand" onclick="location.href='/index.html'">🏠 大事設計報價系統</div>
+  <div class="nav-links">
+    <a href="/index.html" class="nav-link">報價單</a>
+    <a href="/clients.html" class="nav-link">業主資料</a>
+    <a href="/vendors.html" class="nav-link active">廠商資料</a>
+    <a href="/prices.html" class="nav-link">歷史單價</a>
+    <a href="/admin.html" class="nav-link" id="adminLink" style="display:none">使用者管理</a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="navUser"></span>
+    <button class="nav-btn" onclick="logout()">登出</button>
+  </div>
+</nav>
+<div class="main">
+  <div class="page-header">
+    <div class="page-title">廠商資料庫 <span id="vendorCount"></span></div>
+    <button class="btn-add" onclick="openModal()">＋ 新增廠商</button>
+  </div>
+  <div class="toolbar">
+    <input type="text" class="search-input" id="searchInput" placeholder="搜尋廠商名稱、聯絡人..." oninput="filterVendors()">
+    <select class="filter-select" id="specialtyFilter" onchange="filterVendors()">
+      <option value="">全部專業類別</option>
+      <option>拆除工程</option><option>泥作／水電工程</option><option>木作工程</option>
+      <option>油漆／塗裝工程</option><option>鐵件工程</option><option>保護工程</option>
+      <option>弱電工程</option><option>景觀工程</option><option>玻璃工程</option>
+      <option>燈具工程</option><option>系統櫃工程</option><option>其他工程</option>
+    </select>
+  </div>
+  <div id="vendorGrid" class="card-grid"></div>
+  <div id="emptyState" class="empty-state" style="display:none"><div class="icon">🏭</div><p>尚無廠商資料，點擊「新增廠商」開始建立</p></div>
+</div>
+<div class="modal-overlay" id="modalOverlay" onclick="onOverlayClick(event)">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">新增廠商</div>
+    <div class="form-grid">
+      <div class="form-group full"><label>廠商名稱 *</label><input type="text" id="fName" placeholder="例：台北木作精工"></div>
+      <div class="form-group"><label>聯絡人</label><input type="text" id="fContact"></div>
+      <div class="form-group"><label>專業類別</label><select id="fSpecialty"><option value="">請選擇</option><option>拆除工程</option><option>泥作／水電工程</option><option>木作工程</option><option>油漆／塗裝工程</option><option>鐵件工程</option><option>保護工程</option><option>弱電工程</option><option>景觀工程</option><option>玻璃工程</option><option>燈具工程</option><option>系統櫃工程</option><option>其他工程</option></select></div>
+      <div class="form-group"><label>電話</label><input type="text" id="fPhone"></div>
+      <div class="form-group"><label>手機</label><input type="text" id="fMobile"></div>
+      <div class="form-group full"><label>Email</label><input type="email" id="fEmail"></div>
+      <div class="form-group full"><label>地址</label><input type="text" id="fAddress"></div>
+      <div class="form-group full"><label>備註</label><textarea id="fNotes"></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">取消</button>
+      <button class="btn-save" onclick="saveVendor()">儲存</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+let allVendors=[],editingId=null;
+function showToast(msg,isError=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(isError?' error':'');t.style.display='block';setTimeout(()=>t.style.display='none',2800);}
+async function logout(){await fetch('/api/logout',{method:'POST'});location.href='/login.html';}
+async function init(){try{const me=await(await fetch('/api/me')).json();if(me.error)return location.href='/login.html';document.getElementById('navUser').textContent='👤 '+me.displayName;if(me.role==='admin')document.getElementById('adminLink').style.display='';}catch{location.href='/login.html';}loadVendors();}
+async function loadVendors(){const res=await fetch('/api/vendors');allVendors=await res.json();filterVendors();}
+function filterVendors(){const q=document.getElementById('searchInput').value.toLowerCase();const sp=document.getElementById('specialtyFilter').value;const filtered=allVendors.filter(v=>{const mQ=!q||v.name.toLowerCase().includes(q)||(v.contact_person||'').toLowerCase().includes(q);const mS=!sp||v.specialty===sp;return mQ&&mS;});renderVendors(filtered);}
+function renderVendors(vendors){document.getElementById('vendorCount').textContent=`（共 ${vendors.length} 筆）`;const grid=document.getElementById('vendorGrid');const empty=document.getElementById('emptyState');if(vendors.length===0){grid.innerHTML='';empty.style.display='block';return;}empty.style.display='none';grid.innerHTML=vendors.map(v=>`<div class="vendor-card"><div class="card-header"><div><span class="card-name">${esc(v.name)}</span>${v.specialty?`<span class="card-tag">${esc(v.specialty)}</span>`:''}</div></div><div class="card-info">${v.contact_person?`<div class="row"><span class="label">聯絡人</span><span>${esc(v.contact_person)}</span></div>`:''} ${v.phone?`<div class="row"><span class="label">電話</span><span>${esc(v.phone)}</span></div>`:''} ${v.mobile?`<div class="row"><span class="label">手機</span><span>${esc(v.mobile)}</span></div>`:''} ${v.email?`<div class="row"><span class="label">Email</span><span>${esc(v.email)}</span></div>`:''}</div><div class="card-actions"><button class="act-btn edit" onclick="openModal(${v.id})">✏ 編輯</button><button class="act-btn del" onclick="deleteVendor(${v.id},'${esc(v.name)}')">  刪除</button></div></div>`).join('');}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function openModal(id=null){editingId=id;document.getElementById('modalTitle').textContent=id?'編輯廠商':'新增廠商';['fName','fContact','fSpecialty','fPhone','fMobile','fEmail','fAddress','fNotes'].forEach(f=>document.getElementById(f).value='');if(id){const v=allVendors.find(x=>x.id===id);if(v){document.getElementById('fName').value=v.name||'';document.getElementById('fContact').value=v.contact_person||'';document.getElementById('fSpecialty').value=v.specialty||'';document.getElementById('fPhone').value=v.phone||'';document.getElementById('fMobile').value=v.mobile||'';document.getElementById('fEmail').value=v.email||'';document.getElementById('fAddress').value=v.address||'';document.getElementById('fNotes').value=v.notes||'';}}document.getElementById('modalOverlay').classList.add('show');document.getElementById('fName').focus();}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+function onOverlayClick(e){if(e.target===document.getElementById('modalOverlay'))closeModal();}
+async function saveVendor(){const payload={name:document.getElementById('fName').value.trim(),contact_person:document.getElementById('fContact').value.trim(),specialty:document.getElementById('fSpecialty').value,phone:document.getElementById('fPhone').value.trim(),mobile:document.getElementById('fMobile').value.trim(),email:document.getElementById('fEmail').value.trim(),address:document.getElementById('fAddress').value.trim(),notes:document.getElementById('fNotes').value.trim()};if(!payload.name){showToast('請填寫廠商名稱',true);return;}const method=editingId?'PUT':'POST';const url=editingId?`/api/vendors/${editingId}`:'/api/vendors';const res=await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const data=await res.json();if(data.success){showToast(editingId?'✅ 廠商資料已更新':'✅ 廠商已新增');closeModal();loadVendors();}else{showToast('儲存失敗：'+(data.error||''),true);}}
+async function deleteVendor(id,name){if(!confirm(`確定要刪除廠商「${name}」嗎？`))return;const res=await fetch(`/api/vendors/${id}`,{method:'DELETE'});const data=await res.json();if(data.success){showToast('已刪除廠商');loadVendors();}}
+init();
+</script>
+</body>
+</html>
