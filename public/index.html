@@ -162,6 +162,7 @@ tbody td { padding: 14px 16px; font-size: 14px; vertical-align: middle; }
     <a href="/clients.html" class="nav-btn" style="font-size:12px;">👤 業主資料</a>
     <a href="/vendors.html" class="nav-btn" style="font-size:12px;">🏭 廠商資料</a>
     <a href="/prices.html" class="nav-btn" style="font-size:12px;">💰 歷史單價</a>
+    <a href="/closing.html" class="nav-btn" id="closingLink" style="display:none;font-size:12px;">📦 結案管理</a>
     <span class="nav-user" id="navUser">載入中...</span>
     <a href="/form.html" class="nav-btn primary">＋ 新增報價單</a>
     <a href="/admin.html" class="nav-btn" id="adminLink" style="display:none">⚙ 使用者管理</a>
@@ -189,6 +190,7 @@ tbody td { padding: 14px 16px; font-size: 14px; vertical-align: middle; }
           <th id="thCreator" style="display:none">建立者</th>
           <th>建立日期</th>
           <th>最後修改</th>
+          <th>結案</th>
           <th style="width:130px">操作</th>
         </tr>
       </thead>
@@ -236,6 +238,7 @@ async function init() {
     isAdmin = me.role === 'admin';
     if (isAdmin) {
       document.getElementById('adminLink').style.display = 'inline-block';
+      document.getElementById('closingLink').style.display = 'inline-block';
       document.getElementById('thCreator').style.display = '';
     }
     loadQuotes();
@@ -274,8 +277,10 @@ function renderTable(quotes) {
       ${isAdmin ? `<td class="td-creator">${q.creator_name}</td>` : ''}
       <td class="td-date">${fmtDate(q.created_at)}</td>
       <td class="td-date">${fmtDate(q.updated_at)}</td>
+      <td>${q.closing_status === 'closed' ? '<span style="background:#e8f5e9;color:#2e7d32;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700;">已結案</span>' : q.closing_status === 'draft' ? '<span style="background:#fff3e0;color:#d07000;padding:2px 8px;border-radius:8px;font-size:11px;">草稿</span>' : '<span style="color:#bbb;font-size:12px;">—</span>'}</td>
       <td class="td-actions" onclick="event.stopPropagation()">
         <button class="act-btn edit" onclick="location.href='/form.html?id=${q.id}'">編輯</button>
+        <button class="act-btn edit" style="color:#16a085;border-color:#a0d8cc;" onclick="location.href='/closing.html?quote=${q.id}'">結案</button>
         <button class="act-btn del" onclick="deleteQuote(${q.id}, '${(q.client_name||'').replace(/'/g,'')}')">刪除</button>
       </td>
     </tr>
