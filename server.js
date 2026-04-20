@@ -75,6 +75,25 @@ db.exec(`
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
+
+  CREATE TABLE IF NOT EXISTS case_closings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    quote_id INTEGER NOT NULL UNIQUE,
+    closed_by INTEGER NOT NULL,
+    cost_total REAL DEFAULT 0,
+    client_total REAL DEFAULT 0,
+    actual_cost REAL DEFAULT 0,
+    absorbed_amount REAL DEFAULT 0,
+    extra_billed REAL DEFAULT 0,
+    gross_profit REAL DEFAULT 0,
+    items TEXT DEFAULT '[]',
+    notes TEXT DEFAULT '',
+    status TEXT DEFAULT 'draft',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (quote_id) REFERENCES quotes(id),
+    FOREIGN KEY (closed_by) REFERENCES users(id)
+  );
 `);
 
 // 若無任何使用者，建立預設管理員
@@ -154,15 +173,19 @@ app.get('/api/quotes', requireLogin, (req, res) => {
   if (req.session.role === 'admin') {
     quotes = db.prepare(`
       SELECT q.id, q.quote_no, q.client_name, q.total_amount, q.created_at, q.updated_at,
-             u.display_name as creator_name
+             u.display_name as creator_name,
+             c.status as closing_status, c.gross_profit
       FROM quotes q JOIN users u ON q.user_id = u.id
+      LEFT JOIN case_closings c ON c.quote_id = q.id
       ORDER BY q.updated_at DESC
     `).all();
   } else {
     quotes = db.prepare(`
       SELECT q.id, q.quote_no, q.client_name, q.total_amount, q.created_at, q.updated_at,
-             u.display_name as creator_name
+             u.display_name as creator_name,
+             c.status as closing_status, c.gross_profit
       FROM quotes q JOIN users u ON q.user_id = u.id
+      LEFT JOIN case_closings c ON c.quote_id = q.id
       WHERE q.user_id = ?
       ORDER BY q.updated_at DESC
     `).all(req.session.userId);
@@ -319,6 +342,70 @@ app.put('/api/prices/:id', requireLogin, (req, res) => {
 
 app.delete('/api/prices/:id', requireLogin, (req, res) => {
   db.prepare('DELETE FROM price_history WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+
+// ── 結案系統 API ───────────────────────────────────────────
+app.get('/api/closings', requireLogin, (req, res) => {
+  const rows = db.prepare(`
+    SELECT c.*, q.quote_no, q.client_name, u.display_name as closer_name
+    FROM case_closings c
+    JOIN quotes q ON c.quote_id = q.id
+    JOIN users u ON c.closed_by = u.id
+    ORDER BY c.updated_at DESC
+  `).all();
+  rows.forEach(r => { try { r.items = JSON.parse(r.items); } catch { r.items = []; } });
+  res.json(rows);
+});
+
+app.get('/api/closings/:quoteId', requireLogin, (req, res) => {
+  const row = db.prepare(`
+    SELECT c.*, q.quote_no, q.client_name, q.data as quote_data
+    FROM case_closings c
+    JOIN quotes q ON c.quote_id = q.id
+    WHERE c.quote_id = ?
+  `).get(req.params.quoteId);
+  if (!row) return res.status(404).json({ error: '尚未結案' });
+  try { row.items = JSON.parse(row.items); } catch { row.items = []; }
+  try { row.quote_data = JSON.parse(row.quote_data); } catch { row.quote_data = null; }
+  res.json(row);
+});
+
+app.post('/api/closings', requireLogin, (req, res) => {
+  const { quote_id, cost_total, client_total, actual_cost, absorbed_amount, extra_billed, gross_profit, items, notes, status } = req.body;
+  if (!quote_id) return res.status(400).json({ error: '缺少 quote_id' });
+  const existing = db.prepare('SELECT id FROM case_closings WHERE quote_id = ?').get(quote_id);
+  if (existing) {
+    db.prepare(`UPDATE case_closings SET
+      closed_by=?, cost_total=?, client_total=?, actual_cost=?, absorbed_amount=?, extra_billed=?,
+      gross_profit=?, items=?, notes=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?
+    `).run(req.session.userId, cost_total||0, client_total||0, actual_cost||0,
+           absorbed_amount||0, extra_billed||0, gross_profit||0,
+           JSON.stringify(items||[]), notes||'', status||'draft', existing.id);
+    return res.json({ success: true, id: existing.id });
+  }
+  const result = db.prepare(`INSERT INTO case_closings
+    (quote_id, closed_by, cost_total, client_total, actual_cost, absorbed_amount, extra_billed, gross_profit, items, notes, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(quote_id, req.session.userId, cost_total||0, client_total||0, actual_cost||0,
+         absorbed_amount||0, extra_billed||0, gross_profit||0,
+         JSON.stringify(items||[]), notes||'', status||'draft');
+  res.json({ success: true, id: result.lastInsertRowid });
+});
+
+app.put('/api/closings/:id', requireLogin, (req, res) => {
+  const { cost_total, client_total, actual_cost, absorbed_amount, extra_billed, gross_profit, items, notes, status } = req.body;
+  db.prepare(`UPDATE case_closings SET
+    closed_by=?, cost_total=?, client_total=?, actual_cost=?, absorbed_amount=?, extra_billed=?,
+    gross_profit=?, items=?, notes=?, status=?, updated_at=CURRENT_TIMESTAMP WHERE id=?
+  `).run(req.session.userId, cost_total||0, client_total||0, actual_cost||0,
+         absorbed_amount||0, extra_billed||0, gross_profit||0,
+         JSON.stringify(items||[]), notes||'', status||'draft', req.params.id);
+  res.json({ success: true });
+});
+
+app.delete('/api/closings/:id', requireLogin, requireAdmin, (req, res) => {
+  db.prepare('DELETE FROM case_closings WHERE id = ?').run(req.params.id);
   res.json({ success: true });
 });
 
