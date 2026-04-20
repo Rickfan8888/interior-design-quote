@@ -175,6 +175,16 @@ td.price-cell:hover .lookup-btn { display: block; }
 .btn-reset:hover { border-color: #e05050; color: #e05050; }
 .btn-purple { background: #fff; border: 1.5px solid #8e5cbf; color: #8e5cbf; }
 .btn-purple:hover { background: #f8f0ff; }
+.btn-orange { background: #fff; border: 1.5px solid #e8721a; color: #e8721a; }
+.btn-orange:hover { background: #fff8f3; }
+
+/* Section profit input */
+.section-profit { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #aaa; margin-right: 8px; white-space: nowrap; }
+.profit-input { width: 44px; border: 1px solid #e0e0e0; border-radius: 4px; padding: 2px 4px; font-size: 11px; text-align: center; font-family: inherit; background: #fafafa; color: #555; }
+.profit-input:focus { border-color: #4a6fa5; outline: none; background: #fff; color: #333; }
+
+/* Print badge */
+.print-badge { display: none; text-align: center; font-size: 11px; color: #c0392b; letter-spacing: 2px; padding: 6px 0 2px; font-weight: 600; border-bottom: 1px dashed #f0c0c0; margin: 0 32px 0; }
 
 /* Toast */
 .toast { position: fixed; bottom: 24px; right: 24px; background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none; }
@@ -214,11 +224,12 @@ td.price-cell:hover .lookup-btn { display: block; }
 .modal-empty { text-align: center; padding: 32px; color: #bbb; font-size: 14px; }
 
 @media print {
-  .navbar, .actions, .add-row-btn, .delete-cell, .toggle-btn, .lookup-btn, .btn-from-db { display: none !important; }
+  .navbar, .actions, .add-row-btn, .delete-cell, .toggle-btn, .lookup-btn, .btn-from-db, .section-profit { display: none !important; }
   body { background: #fff; }
   .wrapper { box-shadow: none; max-width: 100%; margin: 0; border-radius: 0; }
   tbody td input { background: transparent !important; }
   .section-body.collapsed { display: block !important; }
+  body.print-cost .print-badge { display: block !important; }
 }
 </style>
 </head>
@@ -235,7 +246,7 @@ td.price-cell:hover .lookup-btn { display: block; }
     <span class="save-status" id="saveStatus"></span>
     <span class="nav-user" id="navUser"></span>
     <button class="nav-btn save-btn" onclick="saveQuote()">💾 儲存</button>
-    <button class="nav-btn" onclick="window.print()">🖨 列印</button>
+    <button class="nav-btn" onclick="printClient()">🖨 列印</button>
     <button class="nav-btn" onclick="logout()">登出</button>
   </div>
 </nav>
@@ -252,6 +263,8 @@ td.price-cell:hover .lookup-btn { display: block; }
       <div class="quote-no"><input type="text" id="quoteNo" placeholder="Q-20260415-001"></div>
     </div>
   </div>
+
+  <div class="print-badge" id="printBadge">【內部文件】此為成本報價單，請勿對外提供</div>
 
   <div class="info-section">
     <div class="info-block">
@@ -290,7 +303,8 @@ td.price-cell:hover .lookup-btn { display: block; }
   <div class="actions">
     <button class="btn btn-reset" onclick="if(confirm('確定清空所有資料重新填寫？'))resetForm()">清空重填</button>
     <button class="btn btn-purple" onclick="savePricesFromQuote()">💰 儲存單價至歷史庫</button>
-    <button class="btn btn-outline" onclick="window.print()">🖨 列印 / PDF</button>
+    <button class="btn btn-outline" onclick="printCost()">📄 列印成本報價</button>
+    <button class="btn btn-orange" onclick="printClient()">📋 列印客戶報價</button>
     <button class="btn btn-green" onclick="saveQuote()">💾 儲存報價單</button>
   </div>
 </div>
@@ -355,6 +369,10 @@ function buildSections() {
       <div class="section-header" onclick="toggleSection('${s.id}')">
         <div class="section-color"></div>
         <div class="section-title">${s.label}</div>
+        <div class="section-profit" title="此分類的利潤加成百分比">
+          利潤 <input type="number" class="profit-input" id="profit-${s.id}" value="0" min="0" max="999" placeholder="0"
+            onclick="event.stopPropagation()" oninput="event.stopPropagation()"> %
+        </div>
         <div class="section-total-label">小計</div>
         <div class="section-total" id="total-${s.id}">NT$ 0</div>
         <button class="toggle-btn" id="toggle-${s.id}">▾</button>
@@ -473,7 +491,9 @@ function deleteRow(btn, id) {
 // ===== 收集資料 =====
 function collectFormData() {
   const sections = {};
+  const profits = {};
   SECTIONS.forEach(s => {
+    profits[s.id] = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
     sections[s.id] = [];
     document.getElementById('rows-' + s.id).querySelectorAll('tr').forEach(row => {
       const inputs = row.querySelectorAll('input');
@@ -500,6 +520,7 @@ function collectFormData() {
     validUntil: document.getElementById('validUntil').value,
     notes:      document.getElementById('notes').value,
     sections,
+    profits,
   };
 }
 
@@ -518,6 +539,12 @@ function fillFormData(data) {
   document.getElementById('validUntil').value = data.validUntil || '';
   document.getElementById('notes').value      = data.notes || '';
 
+  if (data.profits) {
+    SECTIONS.forEach(s => {
+      const el = document.getElementById('profit-' + s.id);
+      if (el) el.value = data.profits[s.id] || 0;
+    });
+  }
   if (data.sections) {
     SECTIONS.forEach(s => {
       const tbody = document.getElementById('rows-' + s.id);
@@ -542,6 +569,7 @@ function resetForm() {
   });
   document.querySelectorAll('.info-row input, #notes, #quoteNo, #validUntil').forEach(el => el.value = '');
   document.getElementById('taxRate').value = '5';
+  SECTIONS.forEach(s => { const el = document.getElementById('profit-' + s.id); if (el) el.value = 0; });
   initDates();
   recalcAll();
   document.getElementById('saveStatus').textContent = '';
@@ -768,6 +796,65 @@ function selectPrice(id) {
 }
 
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ===== 列印（成本版 / 客戶版） =====
+let _printModeClient = false;
+
+function applyClientPrices() {
+  // 將每個分類的各列小計改為「成本 × (1 + 利潤%)」顯示
+  SECTIONS.forEach(s => {
+    const profit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
+    const mult = 1 + profit / 100;
+    const rows = document.getElementById('rows-' + s.id).querySelectorAll('tr');
+    let secTotal = 0;
+    rows.forEach(row => {
+      const qty   = parseFloat(row.querySelector('.qty')?.value)   || 0;
+      const price = parseFloat(row.querySelector('.price')?.value) || 0;
+      const sub   = Math.round(qty * price * mult);
+      secTotal += sub;
+      const cell = row.querySelector('.subtotal-cell');
+      if (cell) cell.textContent = sub > 0 ? sub.toLocaleString('zh-TW') : '0';
+    });
+    document.getElementById('total-' + s.id).textContent = fmt(secTotal);
+    document.getElementById('sum-' + s.id).textContent   = fmt(secTotal);
+  });
+  // 重算總計
+  let sub = 0;
+  SECTIONS.forEach(s => {
+    sub += parseFloat((document.getElementById('sum-' + s.id).textContent || '').replace(/[^0-9]/g, '')) || 0;
+  });
+  const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+  const tax = sub * taxRate / 100;
+  document.getElementById('subtotal-all').textContent = fmt(sub);
+  document.getElementById('tax-amount').textContent   = fmt(tax);
+  document.getElementById('grand-total').textContent  = fmt(sub + tax);
+}
+
+window.addEventListener('beforeprint', () => {
+  if (_printModeClient) applyClientPrices();
+});
+window.addEventListener('afterprint', () => {
+  if (_printModeClient) {
+    recalcAll();
+    _printModeClient = false;
+    document.body.classList.remove('print-cost');
+  }
+});
+
+function printCost() {
+  _printModeClient = false;
+  document.body.classList.add('print-cost');
+  window.print();
+  // afterprint handler will NOT fire here since print-cost doesn't set _printModeClient
+  // so we clean up manually after a short delay
+  setTimeout(() => document.body.classList.remove('print-cost'), 500);
+}
+
+function printClient() {
+  _printModeClient = true;
+  document.body.classList.remove('print-cost');
+  window.print();
+}
 
 // ===== 啟動 =====
 async function init() {
