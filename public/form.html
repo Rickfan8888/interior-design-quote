@@ -72,6 +72,12 @@ body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; backgr
 .row-profit-input:focus { border-color: #8e5cbf; outline: none; background: #f8f0ff; }
 thead th.col-profit { width: 44px; }
 td.profit-cell { text-align: center; width: 44px; }
+/* 雙價格顯示 */
+.client-price-row { font-size: 10px; color: #2980b9; margin-top: 3px; white-space: nowrap; line-height: 1.4; }
+.client-price-val { font-weight: 600; }
+.cost-sub-val { font-weight: 600; color: #444; font-size: 12px; display: block; }
+.client-sub-row { font-size: 10px; color: #2980b9; margin-top: 2px; text-align: right; line-height: 1.4; }
+.client-sub-val { font-weight: 600; }
 .section-int-note-btn { background: none; border: none; cursor: pointer; font-size: 14px; color: #ccc; padding: 2px 4px; border-radius: 3px; margin-right: 4px; }
 .section-int-note-btn:hover, .section-int-note-btn.active { color: #f39c12; background: #fff8e6; }
 .section-total-label { font-size: 11px; color: #888; margin-right: 4px; }
@@ -251,6 +257,10 @@ tr.note-row td { padding: 3px 8px 6px 40px; background: #fffef8; }
   .work-section.print-empty { display: none !important; }
   .modal-overlay { display: none !important; }
   .vendor-tag { display: inline-block; }
+  /* 客戶報價：隱藏成本標註，小計已替換為售價 */
+  body:not(.print-cost) .client-price-row { display: none !important; }
+  body:not(.print-cost) .client-sub-row { display: none !important; }
+  /* 成本報價：兩欄都顯示 */
 }
 </style>
 </head>
@@ -442,7 +452,7 @@ function buildSections() {
             <th class="col-num">#</th>
             <th class="col-desc">項目名稱</th>
             <th class="col-spec">規格說明</th>
-            <th>單位</th><th>數量</th><th>單價 (NT$)</th><th class="col-profit" title="個別利潤%（可覆蓋分類預設）">利%</th><th>小計 (NT$)</th>
+            <th>單位</th><th>數量</th><th>單價<br><span style="color:#aaa;font-size:9px;font-weight:400;">成本 / 售價</span></th><th class="col-profit" title="個別利潤%（可覆蓋分類預設）">利%</th><th>小計<br><span style="color:#aaa;font-size:9px;font-weight:400;">成本 / 售價</span></th>
             <th class="col-vendor"></th>
             <th></th><th></th>
           </tr></thead>
@@ -548,10 +558,16 @@ function recalcAll() {
       const rowProfit = (rpVal !== '' && rpVal !== null && rpVal !== undefined)
         ? (parseFloat(rpVal) || 0) : secProfit;
       const sub = qty * price;
+      const clientPriceVal = price * (1 + rowProfit / 100);
+      const clientSub = sub * (1 + rowProfit / 100);
       secCost += sub;
-      secClient += sub * (1 + rowProfit / 100);
-      const cell = row.querySelector('.subtotal-cell');
-      if (cell) cell.textContent = sub > 0 ? Math.round(sub).toLocaleString('zh-TW') : '0';
+      secClient += clientSub;
+      const costSubEl = row.querySelector('.cost-sub-val');
+      if (costSubEl) costSubEl.textContent = sub > 0 ? Math.round(sub).toLocaleString('zh-TW') : '0';
+      const clientSubEl = row.querySelector('.client-sub-val');
+      if (clientSubEl) clientSubEl.textContent = sub > 0 ? Math.round(clientSub).toLocaleString('zh-TW') : '0';
+      const cpEl = row.querySelector('.client-price-val');
+      if (cpEl) cpEl.textContent = price > 0 ? Math.round(clientPriceVal).toLocaleString('zh-TW') : '';
     });
     costSubtotal += secCost;
     clientSubtotal += secClient;
@@ -610,11 +626,15 @@ function addRow(id, descPh = '', specPh = '', unitPh = '', data = null) {
     <td class="price-cell">
       <input type="number" class="num-input price" placeholder="0" min="0" value="${escV(data?.price)}">
       <button class="lookup-btn" title="查詢歷史單價" onclick="openPriceModal('${id}', this.closest('tr'))">💡</button>
+      <div class="client-price-row">售 <span class="client-price-val"></span></div>
     </td>
     <td class="profit-cell">
       <input type="number" class="num-input row-profit-input row-profit" placeholder="%" min="0" max="999" value="${escV(data?.rowProfit)}" title="個別利潤%（空白=沿用分類預設）">
     </td>
-    <td class="subtotal-cell">0</td>
+    <td class="subtotal-cell">
+      <span class="cost-sub-val">0</span>
+      <div class="client-sub-row">售 <span class="client-sub-val">0</span></div>
+    </td>
     <td class="vendor-cell"><button class="vendor-btn${data?.vendor ? ' active' : ''}" title="選擇廠商" onclick="openVendorPicker(this.closest('tr'))">🏭</button></td>
     <td class="tool-cell"><button class="note-btn" title="內部備註" onclick="toggleRowNote(this.closest('tr'))">📝</button></td>
     <td class="delete-cell"><button onclick="deleteRow(this,'${id}')">✕</button></td>`;
@@ -1160,17 +1180,20 @@ async function savePricesFromQuote() {
 function getClientPrices() {
   const result = {};
   SECTIONS.forEach(s => {
-    const profit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
-    const mult = 1 + profit / 100;
+    const secProfit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
     const rows = document.getElementById('rows-' + s.id).querySelectorAll('tr:not(.note-row)');
     let secTotal = 0;
     rows.forEach(row => {
       const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
       const price = parseFloat(row.querySelector('.price')?.value) || 0;
-      const sub = Math.round(qty * price * mult);
-      secTotal += sub;
-      const cell = row.querySelector('.subtotal-cell');
-      if (cell) cell.textContent = sub > 0 ? sub.toLocaleString('zh-TW') : '0';
+      const rpVal = row.querySelector('.row-profit')?.value;
+      const rowProfit = (rpVal !== '' && rpVal !== null && rpVal !== undefined)
+        ? (parseFloat(rpVal) || 0) : secProfit;
+      const clientSub = Math.round(qty * price * (1 + rowProfit / 100));
+      secTotal += clientSub;
+      // In client print: replace cost-sub-val with client sub (client-sub-row is hidden by CSS)
+      const costSubEl = row.querySelector('.cost-sub-val');
+      if (costSubEl) costSubEl.textContent = clientSub > 0 ? clientSub.toLocaleString('zh-TW') : '0';
     });
     document.getElementById('total-' + s.id).textContent = fmt(secTotal);
     document.getElementById('sum-' + s.id).textContent = fmt(secTotal);
