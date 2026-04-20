@@ -11,162 +11,186 @@ body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; backgr
 /* Navbar */
 .navbar {
   background: linear-gradient(135deg, #2c3e50, #4a6fa5);
-  color: #fff; padding: 0 24px; height: 54px;
+  color: #fff; padding: 0 20px; height: 52px;
   display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
+  position: sticky; top: 0; z-index: 200;
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
-.nav-brand { font-size: 16px; font-weight: 700; cursor: pointer; }
-.nav-links { display: flex; gap: 6px; align-items: center; }
-.nav-link {
-  color: rgba(255,255,255,0.8); text-decoration: none;
-  padding: 5px 10px; border-radius: 5px; font-size: 12px;
-}
+.nav-brand { font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.nav-links { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.nav-link { color: rgba(255,255,255,0.8); text-decoration: none; padding: 4px 9px; border-radius: 5px; font-size: 12px; }
 .nav-link:hover { background: rgba(255,255,255,0.2); color: #fff; }
-.nav-right { display: flex; align-items: center; gap: 10px; }
-.nav-user { font-size: 13px; opacity: 0.85; }
+.nav-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.save-status { font-size: 11px; color: rgba(255,255,255,0.6); }
+.nav-user { font-size: 12px; opacity: 0.85; white-space: nowrap; }
 .nav-btn {
   background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-  color: #fff; padding: 6px 13px; border-radius: 6px; cursor: pointer;
-  font-size: 13px; font-family: inherit; text-decoration: none; display: inline-block;
+  color: #fff; padding: 5px 11px; border-radius: 6px; cursor: pointer;
+  font-size: 12px; font-family: inherit; text-decoration: none; display: inline-block; white-space: nowrap;
 }
 .nav-btn:hover { background: rgba(255,255,255,0.25); }
 .nav-btn.save-btn { background: #27ae60; border-color: #27ae60; font-weight: 700; }
 .nav-btn.save-btn:hover { background: #219a52; }
 
 /* Wrapper */
-.wrapper { max-width: 1100px; margin: 24px auto 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); overflow: hidden; }
+.wrapper { max-width: 1140px; margin: 20px auto 40px; background: #fff; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.10); overflow: hidden; }
 
 /* Header */
-.header { background: linear-gradient(135deg, #2c3e50, #4a6fa5); color: #fff; padding: 24px 32px; display: flex; justify-content: space-between; align-items: flex-start; }
-.company-name { font-size: 22px; font-weight: 700; letter-spacing: 2px; }
-.company-sub { font-size: 12px; opacity: 0.8; margin-top: 3px; }
+.header { background: linear-gradient(135deg, #2c3e50, #4a6fa5); color: #fff; padding: 20px 28px; display: flex; justify-content: space-between; align-items: flex-start; }
+.company-name { font-size: 20px; font-weight: 700; letter-spacing: 2px; }
+.company-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
 .quote-title { text-align: right; }
-.quote-title h1 { font-size: 20px; font-weight: 700; letter-spacing: 3px; }
-.quote-no input { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 3px 8px; border-radius: 4px; width: 180px; font-size: 13px; margin-top: 5px; }
+.quote-title h1 { font-size: 18px; font-weight: 700; letter-spacing: 3px; }
+.quote-no input { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 3px 8px; border-radius: 4px; width: 180px; font-size: 13px; margin-top: 4px; }
 .quote-no input::placeholder { color: rgba(255,255,255,0.5); }
+
+/* Print badge */
+.print-badge { display: none; text-align: center; font-size: 11px; color: #c0392b; letter-spacing: 2px; padding: 6px 0 2px; font-weight: 600; border-bottom: 1px dashed #f0c0c0; margin: 0 28px; }
 
 /* Info */
 .info-section { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 2px solid #e8eaf0; }
-.info-block { padding: 18px 32px; }
+.info-block { padding: 16px 28px; }
 .info-block:first-child { border-right: 1px solid #e8eaf0; }
-.info-block h3 { font-size: 11px; color: #7b8fa6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-.info-row { display: flex; align-items: center; margin-bottom: 7px; gap: 8px; }
-.info-row label { font-size: 13px; color: #666; white-space: nowrap; width: 76px; flex-shrink: 0; }
-.info-row input { flex: 1; border: none; border-bottom: 1px solid #ddd; padding: 4px 5px; font-size: 14px; color: #333; outline: none; background: transparent; font-family: inherit; }
+.info-block h3 { font-size: 11px; color: #7b8fa6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.info-row { display: flex; align-items: center; margin-bottom: 6px; gap: 8px; }
+.info-row label { font-size: 13px; color: #666; white-space: nowrap; width: 72px; flex-shrink: 0; }
+.info-row input { flex: 1; border: none; border-bottom: 1px solid #ddd; padding: 3px 4px; font-size: 13px; color: #333; outline: none; background: transparent; font-family: inherit; }
 .info-row input:focus { border-bottom-color: #4a6fa5; }
-
-/* Client DB button */
-.btn-from-db {
-  font-size: 11px; padding: 3px 9px; border-radius: 10px;
-  background: #e8f0ff; border: 1px solid #c0d0ef; color: #4a6fa5;
-  cursor: pointer; font-family: inherit; font-weight: 600; white-space: nowrap;
-}
+.btn-from-db { font-size: 11px; padding: 3px 9px; border-radius: 10px; background: #e8f0ff; border: 1px solid #c0d0ef; color: #4a6fa5; cursor: pointer; font-family: inherit; font-weight: 600; white-space: nowrap; }
 .btn-from-db:hover { background: #d0e0ff; }
 
 /* Sections */
-.sections-container { padding: 0 20px 20px; }
-.work-section { margin-top: 16px; border: 1px solid #e0e4ee; border-radius: 8px; overflow: hidden; }
-.section-header { display: flex; align-items: center; padding: 11px 14px; cursor: pointer; user-select: none; }
-.section-color { width: 5px; height: 26px; border-radius: 3px; margin-right: 10px; flex-shrink: 0; }
-.section-title { font-size: 14px; font-weight: 700; flex: 1; }
-.section-total-label { font-size: 12px; color: #888; margin-right: 6px; }
-.section-total { font-size: 15px; font-weight: 700; min-width: 110px; text-align: right; }
-.toggle-btn { background: none; border: none; cursor: pointer; font-size: 16px; color: #aaa; margin-left: 8px; }
+.sections-container { padding: 0 16px 16px; }
+.work-section { margin-top: 14px; border: 1px solid #e0e4ee; border-radius: 8px; overflow: visible; }
+.section-header { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; user-select: none; position: relative; }
+.section-color { width: 5px; height: 24px; border-radius: 3px; margin-right: 8px; flex-shrink: 0; }
+.section-title { font-size: 13px; font-weight: 700; flex: 1; min-width: 0; }
+.section-profit { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #aaa; margin-right: 6px; white-space: nowrap; }
+.profit-input { width: 42px; border: 1px solid #e0e0e0; border-radius: 4px; padding: 2px 3px; font-size: 11px; text-align: center; font-family: inherit; background: #fafafa; color: #555; }
+.profit-input:focus { border-color: #4a6fa5; outline: none; background: #fff; }
+.section-int-note-btn { background: none; border: none; cursor: pointer; font-size: 14px; color: #ccc; padding: 2px 4px; border-radius: 3px; margin-right: 4px; }
+.section-int-note-btn:hover, .section-int-note-btn.active { color: #f39c12; background: #fff8e6; }
+.section-total-label { font-size: 11px; color: #888; margin-right: 4px; }
+.section-total { font-size: 14px; font-weight: 700; min-width: 100px; text-align: right; }
+.toggle-btn { background: none; border: none; cursor: pointer; font-size: 15px; color: #aaa; margin-left: 6px; }
+.section-int-note-row { display: none; padding: 6px 14px 8px; background: #fffdf5; border-top: 1px dashed #e8d8a0; }
+.section-int-note-row textarea { width: 100%; border: 1px solid #e8d8a0; border-radius: 5px; padding: 6px 8px; font-size: 12px; color: #886600; font-family: inherit; resize: vertical; min-height: 40px; outline: none; background: #fffef8; }
+.section-int-note-row textarea::placeholder { color: #c0a840; }
+.section-int-note-row textarea:focus { border-color: #c0a840; }
 .section-body.collapsed { display: none; }
 
 /* Section colors */
-.sec-demolish .section-header { background: #fff8f5; }
-.sec-demolish .section-color { background: #e07b54; }
-.sec-demolish .section-total { color: #e07b54; }
-.sec-masonry .section-header { background: #f5f9ff; }
-.sec-masonry .section-color { background: #4a6fa5; }
-.sec-masonry .section-total { color: #4a6fa5; }
-.sec-woodwork .section-header { background: #fdfaf3; }
-.sec-woodwork .section-color { background: #c49a2e; }
-.sec-woodwork .section-total { color: #c49a2e; }
-.sec-paint .section-header { background: #f5fff8; }
-.sec-paint .section-color { background: #3a9e6b; }
-.sec-paint .section-total { color: #3a9e6b; }
-.sec-metal .section-header { background: #f8f5ff; }
-.sec-metal .section-color { background: #7c5cbf; }
-.sec-metal .section-total { color: #7c5cbf; }
-.sec-protection .section-header { background: #fff5f5; }
-.sec-protection .section-color { background: #c0392b; }
-.sec-protection .section-total { color: #c0392b; }
-.sec-weakelec .section-header { background: #f0f7ff; }
-.sec-weakelec .section-color { background: #2980b9; }
-.sec-weakelec .section-total { color: #2980b9; }
-.sec-landscape .section-header { background: #f0fff4; }
-.sec-landscape .section-color { background: #27ae60; }
-.sec-landscape .section-total { color: #27ae60; }
-.sec-glass .section-header { background: #f0fbff; }
-.sec-glass .section-color { background: #18a4c4; }
-.sec-glass .section-total { color: #18a4c4; }
-.sec-lighting .section-header { background: #fffdf0; }
-.sec-lighting .section-color { background: #d4a017; }
-.sec-lighting .section-total { color: #d4a017; }
-.sec-cabinet .section-header { background: #f5f5f5; }
-.sec-cabinet .section-color { background: #5a7a5a; }
-.sec-cabinet .section-total { color: #5a7a5a; }
-.sec-other .section-header { background: #fafafa; }
-.sec-other .section-color { background: #95a5a6; }
-.sec-other .section-total { color: #7f8c8d; }
+.sec-demolish .section-header { background: #fff8f5; } .sec-demolish .section-color { background: #e07b54; } .sec-demolish .section-total { color: #e07b54; }
+.sec-masonry .section-header { background: #f5f9ff; } .sec-masonry .section-color { background: #4a6fa5; } .sec-masonry .section-total { color: #4a6fa5; }
+.sec-woodwork .section-header { background: #fdfaf3; } .sec-woodwork .section-color { background: #c49a2e; } .sec-woodwork .section-total { color: #c49a2e; }
+.sec-paint .section-header { background: #f5fff8; } .sec-paint .section-color { background: #3a9e6b; } .sec-paint .section-total { color: #3a9e6b; }
+.sec-metal .section-header { background: #f8f5ff; } .sec-metal .section-color { background: #7c5cbf; } .sec-metal .section-total { color: #7c5cbf; }
+.sec-protection .section-header { background: #fff5f5; } .sec-protection .section-color { background: #c0392b; } .sec-protection .section-total { color: #c0392b; }
+.sec-weakelec .section-header { background: #f0f7ff; } .sec-weakelec .section-color { background: #2980b9; } .sec-weakelec .section-total { color: #2980b9; }
+.sec-landscape .section-header { background: #f0fff4; } .sec-landscape .section-color { background: #27ae60; } .sec-landscape .section-total { color: #27ae60; }
+.sec-glass .section-header { background: #f0fbff; } .sec-glass .section-color { background: #18a4c4; } .sec-glass .section-total { color: #18a4c4; }
+.sec-lighting .section-header { background: #fffdf0; } .sec-lighting .section-color { background: #d4a017; } .sec-lighting .section-total { color: #d4a017; }
+.sec-cabinet .section-header { background: #f5f5f5; } .sec-cabinet .section-color { background: #5a7a5a; } .sec-cabinet .section-total { color: #5a7a5a; }
+.sec-other .section-header { background: #fafafa; } .sec-other .section-color { background: #95a5a6; } .sec-other .section-total { color: #7f8c8d; }
 
 /* Table */
 table { width: 100%; border-collapse: collapse; }
 thead tr { background: #f7f8fc; }
-thead th { padding: 8px 9px; font-size: 11px; color: #7b8fa6; text-align: center; font-weight: 600; border-bottom: 1px solid #e8eaf0; white-space: nowrap; }
-thead th:first-child { text-align: left; padding-left: 14px; width: 30px; }
-thead th.col-desc { text-align: left; width: 28%; }
-thead th.col-spec { text-align: left; width: 18%; }
+thead th { padding: 7px 7px; font-size: 10px; color: #7b8fa6; text-align: center; font-weight: 600; border-bottom: 1px solid #e8eaf0; white-space: nowrap; }
+thead th.col-drag { width: 22px; }
+thead th.col-num { width: 26px; }
+thead th.col-desc { text-align: left; width: 26%; }
+thead th.col-spec { text-align: left; width: 16%; }
+thead th.col-vendor { width: 24px; }
 tbody tr { border-bottom: 1px solid #f0f2f5; }
 tbody tr:last-child { border-bottom: none; }
-tbody td { padding: 7px 9px; font-size: 13px; vertical-align: middle; }
-tbody td:first-child { text-align: center; color: #bbb; font-size: 11px; padding-left: 14px; }
-tbody td input { width: 100%; border: none; background: transparent; font-size: 13px; color: #333; outline: none; font-family: inherit; padding: 2px 3px; border-radius: 3px; }
+tbody td { padding: 6px 6px; font-size: 12px; vertical-align: middle; }
+tbody td input { width: 100%; border: none; background: transparent; font-size: 12px; color: #333; outline: none; font-family: inherit; padding: 2px 3px; border-radius: 3px; }
 tbody td input:focus { background: #f0f4ff; }
 tbody td input.num-input { text-align: right; }
-td.subtotal-cell { text-align: right; font-weight: 600; color: #444; white-space: nowrap; padding-right: 10px; }
-td.delete-cell { text-align: center; width: 30px; }
-td.delete-cell button { background: none; border: none; cursor: pointer; color: #ddd; font-size: 14px; padding: 2px; border-radius: 3px; }
+td.subtotal-cell { text-align: right; font-weight: 600; color: #444; white-space: nowrap; padding-right: 8px; font-size: 12px; }
+td.delete-cell { text-align: center; width: 24px; }
+td.delete-cell button { background: none; border: none; cursor: pointer; color: #ddd; font-size: 13px; padding: 2px; border-radius: 3px; }
 td.delete-cell button:hover { color: #e05050; background: #fff0f0; }
-td.price-cell { position: relative; }
-.lookup-btn {
-  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
-  background: none; border: none; cursor: pointer; font-size: 13px;
-  color: #bbb; padding: 2px 3px; border-radius: 3px; line-height: 1;
-  display: none;
-}
+td.price-cell { position: relative; min-width: 72px; }
+.lookup-btn { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 12px; color: #bbb; padding: 1px 2px; border-radius: 3px; line-height: 1; display: none; }
 td.price-cell:hover .lookup-btn { display: block; }
 .lookup-btn:hover { color: #4a6fa5; background: #eef3ff; }
-.add-row-btn { display: flex; align-items: center; gap: 5px; padding: 9px 14px; color: #7b8fa6; font-size: 12px; cursor: pointer; background: none; border: none; font-family: inherit; }
+.add-row-btn { display: flex; align-items: center; gap: 5px; padding: 8px 12px; color: #7b8fa6; font-size: 12px; cursor: pointer; background: none; border: none; font-family: inherit; }
 .add-row-btn:hover { color: #4a6fa5; background: #f5f7ff; width: 100%; border-radius: 0 0 8px 8px; }
 
+/* Drag handle */
+td.drag-cell { cursor: grab; text-align: center; color: #ccc; font-size: 16px; width: 22px; padding: 6px 2px; user-select: none; }
+td.drag-cell:hover { color: #999; }
+tr.dragging { opacity: 0.4; }
+tr.drag-over-top { border-top: 2px solid #4a6fa5; }
+tr.drag-over-bottom { border-bottom: 2px solid #4a6fa5; }
+
+/* Vendor tag on row */
+.vendor-tag { font-size: 10px; color: #7c5cbf; background: #f4eeff; border-radius: 3px; padding: 1px 5px; margin-top: 2px; display: none; cursor: pointer; }
+.vendor-tag:hover { background: #e8d8ff; }
+.vendor-btn { background: none; border: none; cursor: pointer; font-size: 13px; color: #ccc; padding: 1px 2px; border-radius: 3px; }
+.vendor-btn:hover, .vendor-btn.active { color: #7c5cbf; }
+td.vendor-cell { width: 24px; text-align: center; }
+
+/* Internal note per row */
+.note-btn { background: none; border: none; cursor: pointer; font-size: 12px; color: #ccc; padding: 1px 2px; border-radius: 3px; }
+.note-btn:hover, .note-btn.active { color: #f39c12; }
+td.tool-cell { width: 40px; text-align: center; white-space: nowrap; }
+tr.note-row td { padding: 3px 8px 6px 40px; background: #fffef8; }
+.row-note-input { width: 100%; border: none; border-bottom: 1px dashed #e8d870; background: transparent; font-size: 11px; color: #887700; font-family: inherit; outline: none; padding: 1px 3px; }
+.row-note-input:focus { border-bottom-color: #c0a840; background: #fffde0; }
+.row-note-input::placeholder { color: #c8b860; }
+
+/* Autocomplete */
+.desc-wrap { position: relative; }
+.ac-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #c0d0ef; border-radius: 6px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 300; max-height: 200px; overflow-y: auto; display: none; }
+.ac-item { padding: 7px 10px; cursor: pointer; font-size: 12px; border-bottom: 1px solid #f0f2f5; }
+.ac-item:last-child { border-bottom: none; }
+.ac-item:hover { background: #f0f5ff; }
+.ac-item .ac-name { font-weight: 600; color: #2c3e50; }
+.ac-item .ac-detail { color: #888; font-size: 11px; margin-top: 1px; }
+.ac-item .ac-price { float: right; color: #4a6fa5; font-weight: 700; }
+
 /* Summary */
-.summary-section { margin: 18px 20px 0; border-top: 2px solid #e8eaf0; padding-top: 18px; display: flex; justify-content: flex-end; }
-.summary-box { width: 320px; }
-.summary-row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 13px; border-bottom: 1px solid #f0f2f5; }
+.summary-section { margin: 16px 16px 0; border-top: 2px solid #e8eaf0; padding-top: 16px; display: flex; gap: 16px; justify-content: flex-end; flex-wrap: wrap; }
+.summary-box { width: 300px; }
+.profit-summary-box { width: 260px; background: #f9fafb; border: 1px solid #e0e4ee; border-radius: 10px; padding: 14px 16px; }
+.profit-summary-box h4 { font-size: 11px; color: #7b8fa6; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+.profit-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; border-bottom: 1px solid #eaecf0; }
+.profit-row:last-child { border-bottom: none; }
+.profit-row .plabel { color: #666; }
+.profit-row .pvalue { font-weight: 600; }
+.profit-row.highlight .pvalue { color: #27ae60; font-size: 14px; }
+.profit-row.highlight-neg .pvalue { color: #e05050; font-size: 14px; }
+.summary-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #f0f2f5; }
 .summary-row:last-child { border-bottom: none; }
 .summary-row .label { color: #666; }
 .summary-row .value { font-weight: 600; color: #333; }
 .tax-row { display: flex; align-items: center; gap: 5px; }
-.tax-rate-input { width: 46px; border: 1px solid #ddd; border-radius: 4px; padding: 2px 5px; font-size: 13px; text-align: center; }
-.total-row { background: linear-gradient(135deg, #2c3e50, #4a6fa5); border-radius: 8px; padding: 12px 14px !important; margin-top: 6px; border-bottom: none !important; }
-.total-row .label { color: rgba(255,255,255,0.85); font-size: 14px; font-weight: 600; }
-.total-row .value { color: #fff; font-size: 19px; font-weight: 700; }
+.tax-rate-input { width: 44px; border: 1px solid #ddd; border-radius: 4px; padding: 2px 5px; font-size: 13px; text-align: center; }
+.total-row { background: linear-gradient(135deg, #2c3e50, #4a6fa5); border-radius: 8px; padding: 11px 13px !important; margin-top: 5px; border-bottom: none !important; }
+.total-row .label { color: rgba(255,255,255,0.85); font-size: 13px; font-weight: 600; }
+.total-row .value { color: #fff; font-size: 17px; font-weight: 700; }
 
-/* Notes / Validity */
-.notes-section { margin: 18px 20px; }
-.notes-section h3 { font-size: 12px; color: #7b8fa6; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
-.notes-section textarea { width: 100%; min-height: 70px; border: 1px solid #e0e4ee; border-radius: 6px; padding: 9px 11px; font-size: 13px; color: #555; font-family: inherit; resize: vertical; outline: none; }
+/* Notes */
+.notes-section { margin: 14px 16px; }
+.notes-section h3 { font-size: 11px; color: #7b8fa6; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.notes-section h3 .badge { font-size: 10px; padding: 1px 7px; border-radius: 8px; letter-spacing: 0; text-transform: none; font-weight: 600; }
+.badge-internal { background: #fff8e0; color: #886600; border: 1px solid #e8d870; }
+.badge-client { background: #e8f4e8; color: #2a7a2a; border: 1px solid #a0d8a0; }
+.notes-section textarea { width: 100%; min-height: 64px; border: 1px solid #e0e4ee; border-radius: 6px; padding: 8px 10px; font-size: 12px; color: #555; font-family: inherit; resize: vertical; outline: none; }
 .notes-section textarea:focus { border-color: #4a6fa5; }
-.validity-section { display: flex; align-items: center; gap: 10px; padding: 14px 20px; background: #f7f8fc; border-top: 1px solid #e8eaf0; font-size: 13px; color: #666; }
-.validity-section input[type="date"] { border: 1px solid #ddd; border-radius: 4px; padding: 4px 7px; font-size: 13px; color: #444; font-family: inherit; }
+.notes-internal textarea { border-color: #e8d870; background: #fffef8; color: #664d00; }
+.notes-internal textarea:focus { border-color: #c0a840; }
+
+/* Validity */
+.validity-section { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: #f7f8fc; border-top: 1px solid #e8eaf0; font-size: 12px; color: #666; }
+.validity-section input[type="date"] { border: 1px solid #ddd; border-radius: 4px; padding: 3px 6px; font-size: 12px; color: #444; font-family: inherit; }
 
 /* Actions */
-.actions { display: flex; gap: 10px; justify-content: flex-end; padding: 18px 20px; border-top: 1px solid #e8eaf0; flex-wrap: wrap; }
-.btn { padding: 9px 22px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; }
+.actions { display: flex; gap: 8px; justify-content: flex-end; padding: 14px 16px; border-top: 1px solid #e8eaf0; flex-wrap: wrap; }
+.btn { padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; }
 .btn-green { background: #27ae60; color: #fff; }
 .btn-green:hover { background: #219a52; }
 .btn-outline { background: #fff; border: 1.5px solid #4a6fa5; color: #4a6fa5; }
@@ -177,59 +201,51 @@ td.price-cell:hover .lookup-btn { display: block; }
 .btn-purple:hover { background: #f8f0ff; }
 .btn-orange { background: #fff; border: 1.5px solid #e8721a; color: #e8721a; }
 .btn-orange:hover { background: #fff8f3; }
-
-/* Section profit input */
-.section-profit { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #aaa; margin-right: 8px; white-space: nowrap; }
-.profit-input { width: 44px; border: 1px solid #e0e0e0; border-radius: 4px; padding: 2px 4px; font-size: 11px; text-align: center; font-family: inherit; background: #fafafa; color: #555; }
-.profit-input:focus { border-color: #4a6fa5; outline: none; background: #fff; color: #333; }
-
-/* Print badge */
-.print-badge { display: none; text-align: center; font-size: 11px; color: #c0392b; letter-spacing: 2px; padding: 6px 0 2px; font-weight: 600; border-bottom: 1px dashed #f0c0c0; margin: 0 32px 0; }
+.btn-teal { background: #fff; border: 1.5px solid #16a085; color: #16a085; }
+.btn-teal:hover { background: #f0fff9; }
 
 /* Toast */
-.toast { position: fixed; bottom: 24px; right: 24px; background: #27ae60; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none; }
+.toast { position: fixed; bottom: 20px; right: 20px; background: #27ae60; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 13px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none; }
 .toast.error { background: #c0392b; }
 
-/* Save badge */
-.save-status { font-size: 12px; color: rgba(255,255,255,0.65); }
-
-/* ====== Modal ====== */
-.modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-  z-index: 500; display: none; align-items: center; justify-content: center;
-}
+/* ====== Modals ====== */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 500; display: none; align-items: center; justify-content: center; }
 .modal-overlay.show { display: flex; }
-.modal-box {
-  background: #fff; border-radius: 14px; padding: 24px 26px;
-  width: 560px; max-width: 96vw; max-height: 85vh;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.22);
-  display: flex; flex-direction: column;
-}
-.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.modal-header h3 { font-size: 16px; font-weight: 700; color: #2c3e50; }
+.modal-box { background: #fff; border-radius: 14px; padding: 22px 24px; width: 540px; max-width: 96vw; max-height: 82vh; box-shadow: 0 12px 48px rgba(0,0,0,0.22); display: flex; flex-direction: column; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.modal-header h3 { font-size: 15px; font-weight: 700; color: #2c3e50; }
 .modal-close { background: none; border: none; cursor: pointer; font-size: 20px; color: #aaa; line-height: 1; }
 .modal-close:hover { color: #555; }
-.modal-search { width: 100%; border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; outline: none; margin-bottom: 12px; }
+.modal-search { width: 100%; border: 1.5px solid #e0e4ee; border-radius: 7px; padding: 7px 11px; font-size: 13px; font-family: inherit; outline: none; margin-bottom: 10px; }
 .modal-search:focus { border-color: #4a6fa5; }
-.modal-list { flex: 1; overflow-y: auto; border: 1px solid #e8eaf0; border-radius: 8px; }
-.modal-item {
-  padding: 11px 14px; border-bottom: 1px solid #f0f2f5;
-  cursor: pointer; transition: background 0.15s;
-}
+.modal-list { flex: 1; overflow-y: auto; border: 1px solid #e8eaf0; border-radius: 7px; }
+.modal-item { padding: 10px 13px; border-bottom: 1px solid #f0f2f5; cursor: pointer; transition: background 0.12s; }
 .modal-item:last-child { border-bottom: none; }
 .modal-item:hover { background: #f0f5ff; }
-.modal-item .item-main { font-weight: 600; color: #2c3e50; font-size: 14px; }
-.modal-item .item-sub { font-size: 12px; color: #888; margin-top: 3px; }
-.modal-item .item-price { font-weight: 700; color: #4a6fa5; font-size: 14px; float: right; }
-.modal-empty { text-align: center; padding: 32px; color: #bbb; font-size: 14px; }
+.modal-item .item-main { font-weight: 600; color: #2c3e50; font-size: 13px; }
+.modal-item .item-sub { font-size: 11px; color: #888; margin-top: 2px; }
+.modal-item .item-price { font-weight: 700; color: #4a6fa5; font-size: 13px; float: right; }
+.modal-empty { text-align: center; padding: 28px; color: #bbb; font-size: 13px; }
 
+/* ====== Print ====== */
 @media print {
-  .navbar, .actions, .add-row-btn, .delete-cell, .toggle-btn, .lookup-btn, .btn-from-db, .section-profit { display: none !important; }
+  .navbar, .actions, .add-row-btn, .delete-cell, .toggle-btn, .lookup-btn,
+  .btn-from-db, .section-profit, .section-int-note-btn, .tool-cell,
+  .drag-cell, .vendor-cell, .profit-summary-box { display: none !important; }
   body { background: #fff; }
   .wrapper { box-shadow: none; max-width: 100%; margin: 0; border-radius: 0; }
   tbody td input { background: transparent !important; }
   .section-body.collapsed { display: block !important; }
   body.print-cost .print-badge { display: block !important; }
+  body.print-cost .notes-internal { display: block !important; }
+  body:not(.print-cost) .notes-internal { display: none !important; }
+  body:not(.print-cost) .section-int-note-row { display: none !important; }
+  body.print-cost .section-int-note-row.has-note { display: block !important; }
+  body:not(.print-cost) tr.note-row { display: none !important; }
+  body.print-cost tr.note-row.has-content { display: table-row !important; }
+  .work-section.print-empty { display: none !important; }
+  .modal-overlay { display: none !important; }
+  .vendor-tag { display: inline-block; }
 }
 </style>
 </head>
@@ -241,12 +257,12 @@ td.price-cell:hover .lookup-btn { display: block; }
     <a href="/clients.html" class="nav-link">業主資料</a>
     <a href="/vendors.html" class="nav-link">廠商資料</a>
     <a href="/prices.html" class="nav-link">歷史單價</a>
+    <a href="/closing.html" class="nav-link" id="closingNavLink" style="display:none">📦 結案管理</a>
   </div>
   <div class="nav-right">
     <span class="save-status" id="saveStatus"></span>
     <span class="nav-user" id="navUser"></span>
     <button class="nav-btn save-btn" onclick="saveQuote()">💾 儲存</button>
-    <button class="nav-btn" onclick="printClient()">🖨 列印</button>
     <button class="nav-btn" onclick="logout()">登出</button>
   </div>
 </nav>
@@ -255,12 +271,12 @@ td.price-cell:hover .lookup-btn { display: block; }
 
   <div class="header">
     <div>
-      <div class="company-name">室內設計有限公司</div>
+      <div class="company-name">大事設計有限公司</div>
       <div class="company-sub">Interior Design Co., Ltd.</div>
     </div>
     <div class="quote-title">
       <h1>工 程 報 價 單</h1>
-      <div class="quote-no"><input type="text" id="quoteNo" placeholder="Q-20260415-001"></div>
+      <div class="quote-no"><input type="text" id="quoteNo" placeholder="Q-2026-001"></div>
     </div>
   </div>
 
@@ -286,23 +302,38 @@ td.price-cell:hover .lookup-btn { display: block; }
   <div class="sections-container" id="sectionsContainer"></div>
 
   <div class="summary-section">
+    <div class="profit-summary-box" id="profitBox">
+      <h4>💰 利潤摘要</h4>
+      <div class="profit-row"><span class="plabel">成本報價合計</span><span class="pvalue" id="ps-cost">NT$ 0</span></div>
+      <div class="profit-row"><span class="plabel">客戶報價合計</span><span class="pvalue" id="ps-client">NT$ 0</span></div>
+      <div class="profit-row highlight"><span class="plabel">利潤差額</span><span class="pvalue" id="ps-diff">NT$ 0</span></div>
+      <div class="profit-row"><span class="plabel">平均利潤率</span><span class="pvalue" id="ps-rate">0%</span></div>
+    </div>
     <div class="summary-box" id="summaryBox"></div>
   </div>
 
-  <div class="notes-section" style="margin-top:16px;">
-    <h3>備註說明</h3>
+  <div class="notes-section notes-internal" style="display:none; margin-top:14px;">
+    <h3>內部備註 <span class="badge badge-internal">僅成本報價單顯示</span></h3>
+    <textarea id="notesInternal" placeholder="此備註只在成本報價單上印出，客戶看不到。例如：廠商聯絡備忘、成本控制要點..."></textarea>
+  </div>
+  <div class="notes-section" style="margin-top:8px;">
+    <h3>備註說明 <span class="badge badge-client">業主可見</span></h3>
     <textarea id="notes" placeholder="例：1. 本報價單有效期限為 30 天。&#10;2. 工程款分三期付款：簽約 30%、開工 40%、完工 30%。&#10;3. 本報價不含家具、家電及軟裝費用。"></textarea>
   </div>
 
   <div class="validity-section">
     <span>📅 報價有效期限至：</span>
     <input type="date" id="validUntil">
-    <span style="margin-left:12px;color:#aaa;">（逾期請重新報價）</span>
+    <span style="margin-left:10px;color:#aaa;">（逾期請重新報價）</span>
+    <span style="margin-left: auto;">
+      <button class="btn btn-teal" onclick="toggleInternalNotes()" id="intNotesToggleBtn" style="font-size:11px;padding:4px 10px;">📝 顯示內部備註欄</button>
+    </span>
   </div>
 
   <div class="actions">
     <button class="btn btn-reset" onclick="if(confirm('確定清空所有資料重新填寫？'))resetForm()">清空重填</button>
     <button class="btn btn-purple" onclick="savePricesFromQuote()">💰 儲存單價至歷史庫</button>
+    <button class="btn btn-teal" onclick="openClosingPage()" id="closingBtn" style="display:none">📦 結案</button>
     <button class="btn btn-outline" onclick="printCost()">📄 列印成本報價</button>
     <button class="btn btn-orange" onclick="printClient()">📋 列印客戶報價</button>
     <button class="btn btn-green" onclick="saveQuote()">💾 儲存報價單</button>
@@ -335,6 +366,18 @@ td.price-cell:hover .lookup-btn { display: block; }
   </div>
 </div>
 
+<!-- 廠商選取 Modal -->
+<div class="modal-overlay" id="vendorModal" onclick="onVendorModalClick(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>🏭 選擇廠商</h3>
+      <button class="modal-close" onclick="closeVendorModal()">✕</button>
+    </div>
+    <input type="text" class="modal-search" id="vendorSearch" placeholder="搜尋廠商名稱..." oninput="filterVendorModal()">
+    <div class="modal-list" id="vendorModalList"></div>
+  </div>
+</div>
+
 <script>
 // ===== 工程分類設定 =====
 const SECTIONS = [
@@ -355,46 +398,62 @@ const SECTIONS = [
 let currentQuoteId = null;
 let allClients = [];
 let allPrices = [];
+let allVendors = [];
 let currentPriceSectionId = null;
 let currentPriceRow = null;
+let currentVendorRow = null;
+let _printModeClient = false;
+let acTimer = null;
 
-// ===== 初始化頁面 =====
+// ===== 初始化 =====
 function buildSections() {
   const container = document.getElementById('sectionsContainer');
   const summaryBox = document.getElementById('summaryBox');
 
   SECTIONS.forEach(s => {
-    container.innerHTML += `
-    <div class="work-section sec-${s.id}">
-      <div class="section-header" onclick="toggleSection('${s.id}')">
+    const div = document.createElement('div');
+    div.className = `work-section sec-${s.id}`;
+    div.id = `section-${s.id}`;
+    div.innerHTML = `
+      <div class="section-header" onclick="toggleSection('${s.id}', event)">
         <div class="section-color"></div>
         <div class="section-title">${s.label}</div>
-        <div class="section-profit" title="此分類的利潤加成百分比">
+        <div class="section-profit" title="此分類利潤加成%">
           利潤 <input type="number" class="profit-input" id="profit-${s.id}" value="0" min="0" max="999" placeholder="0"
-            onclick="event.stopPropagation()" oninput="event.stopPropagation()"> %
+            onclick="event.stopPropagation()" oninput="event.stopPropagation(); recalcAll()"> %
         </div>
+        <button class="section-int-note-btn" id="sec-note-btn-${s.id}" title="分類內部備註" onclick="event.stopPropagation(); toggleSectionNote('${s.id}')">📝</button>
         <div class="section-total-label">小計</div>
         <div class="section-total" id="total-${s.id}">NT$ 0</div>
         <button class="toggle-btn" id="toggle-${s.id}">▾</button>
       </div>
+      <div class="section-int-note-row" id="sec-note-row-${s.id}">
+        <textarea id="sec-note-${s.id}" placeholder="分類內部備註（不會印在客戶報價單上）" rows="2" oninput="markSectionNote('${s.id}')"></textarea>
+      </div>
       <div class="section-body" id="body-${s.id}">
         <table>
           <thead><tr>
-            <th>#</th><th class="col-desc">項目名稱</th><th class="col-spec">規格說明</th>
-            <th>單位</th><th>數量</th><th>單價 (NT$)</th><th>小計 (NT$)</th><th></th>
+            <th class="col-drag"></th>
+            <th class="col-num">#</th>
+            <th class="col-desc">項目名稱</th>
+            <th class="col-spec">規格說明</th>
+            <th>單位</th><th>數量</th><th>單價 (NT$)</th><th>小計 (NT$)</th>
+            <th class="col-vendor"></th>
+            <th></th><th></th>
           </tr></thead>
           <tbody id="rows-${s.id}"></tbody>
         </table>
         <button class="add-row-btn" onclick="addRow('${s.id}')">＋ 新增項目</button>
-      </div>
-    </div>`;
+      </div>`;
+    container.appendChild(div);
   });
 
-  let summaryHtml = SECTIONS.map(s =>
+  // Summary HTML
+  let sHtml = SECTIONS.map(s =>
     `<div class="summary-row"><span class="label">${s.label} 小計</span><span class="value" id="sum-${s.id}">NT$ 0</span></div>`
   ).join('');
-  summaryHtml += `
-    <div class="summary-row" style="border-top:2px solid #e8eaf0;margin-top:4px;padding-top:10px;">
+  sHtml += `
+    <div class="summary-row" style="border-top:2px solid #e8eaf0;margin-top:4px;padding-top:8px;">
       <span class="label" style="font-weight:600;">未稅合計</span>
       <span class="value" id="subtotal-all">NT$ 0</span>
     </div>
@@ -408,15 +467,16 @@ function buildSections() {
       <span class="label">含稅總計</span>
       <span class="value" id="grand-total">NT$ 0</span>
     </div>`;
-  summaryBox.innerHTML = summaryHtml;
+  summaryBox.innerHTML = sHtml;
 
   SECTIONS.forEach(s => addRow(s.id, s.ph, s.spec, s.unit));
   document.getElementById('taxRate').addEventListener('input', recalcAll);
 }
 
-function fmt(n) { return 'NT$ ' + Math.round(n).toLocaleString('zh-TW'); }
+function fmt(n) { return 'NT$ ' + Math.round(n||0).toLocaleString('zh-TW'); }
+function numFmt(n) { return Math.round(n||0).toLocaleString('zh-TW'); }
 
-function showToast(msg, isError = false, dur = 2800) {
+function showToast(msg, isError = false, dur = 2600) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast' + (isError ? ' error' : '');
@@ -424,16 +484,34 @@ function showToast(msg, isError = false, dur = 2800) {
   setTimeout(() => t.style.display = 'none', dur);
 }
 
-function toggleSection(id) {
+function toggleSection(id, event) {
+  if (event && event.target.closest('.section-profit, .section-int-note-btn, button')) return;
   const body = document.getElementById('body-' + id);
   const btn = document.getElementById('toggle-' + id);
   body.classList.toggle('collapsed');
   btn.textContent = body.classList.contains('collapsed') ? '▸' : '▾';
 }
 
+function toggleSectionNote(id) {
+  const row = document.getElementById('sec-note-row-' + id);
+  const btn = document.getElementById('sec-note-btn-' + id);
+  const isShowing = row.style.display === 'block';
+  row.style.display = isShowing ? 'none' : 'block';
+  btn.classList.toggle('active', !isShowing);
+  if (!isShowing) {
+    document.getElementById('sec-note-' + id).focus();
+  }
+}
+
+function markSectionNote(id) {
+  const val = document.getElementById('sec-note-' + id).value.trim();
+  const btn = document.getElementById('sec-note-btn-' + id);
+  btn.classList.toggle('active', val.length > 0);
+}
+
 // ===== 計算 =====
 function calcSection(id) {
-  const rows = document.getElementById('rows-' + id).querySelectorAll('tr');
+  const rows = document.getElementById('rows-' + id).querySelectorAll('tr:not(.note-row)');
   let total = 0;
   rows.forEach(row => {
     const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
@@ -449,394 +527,659 @@ function calcSection(id) {
 }
 
 function recalcAll() {
-  let subtotal = 0;
-  SECTIONS.forEach(s => { subtotal += calcSection(s.id); });
+  let costSubtotal = 0;
+  let clientSubtotal = 0;
   const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-  const tax = subtotal * taxRate / 100;
-  document.getElementById('subtotal-all').textContent = fmt(subtotal);
+
+  SECTIONS.forEach(s => {
+    const profit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
+    const mult = 1 + profit / 100;
+    const rows = document.getElementById('rows-' + s.id).querySelectorAll('tr:not(.note-row)');
+    let secCost = 0;
+    rows.forEach(row => {
+      const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
+      const price = parseFloat(row.querySelector('.price')?.value) || 0;
+      const sub = qty * price;
+      secCost += sub;
+      const cell = row.querySelector('.subtotal-cell');
+      if (cell) cell.textContent = sub > 0 ? Math.round(sub).toLocaleString('zh-TW') : '0';
+    });
+    costSubtotal += secCost;
+    clientSubtotal += secCost * mult;
+    document.getElementById('total-' + s.id).textContent = fmt(secCost);
+    document.getElementById('sum-' + s.id).textContent = fmt(secCost);
+  });
+
+  const tax = costSubtotal * taxRate / 100;
+  document.getElementById('subtotal-all').textContent = fmt(costSubtotal);
   document.getElementById('tax-amount').textContent = fmt(tax);
-  document.getElementById('grand-total').textContent = fmt(subtotal + tax);
+  document.getElementById('grand-total').textContent = fmt(costSubtotal + tax);
+
+  // Profit summary
+  const diff = clientSubtotal - costSubtotal;
+  const rate = costSubtotal > 0 ? (diff / costSubtotal * 100).toFixed(1) : '0.0';
+  document.getElementById('ps-cost').textContent = fmt(costSubtotal);
+  document.getElementById('ps-client').textContent = fmt(clientSubtotal);
+  document.getElementById('ps-diff').textContent = fmt(diff);
+  document.getElementById('ps-rate').textContent = rate + '%';
+  const diffRow = document.getElementById('ps-diff').parentElement;
+  diffRow.className = 'profit-row ' + (diff >= 0 ? 'highlight' : 'highlight-neg');
 }
 
 // ===== 列管理 =====
 function addRow(id, descPh = '', specPh = '', unitPh = '', data = null) {
   const tbody = document.getElementById('rows-' + id);
-  const rowNum = tbody.querySelectorAll('tr').length + 1;
+  const rowNum = tbody.querySelectorAll('tr:not(.note-row)').length + 1;
   const tr = document.createElement('tr');
+  tr.draggable = true;
+  if (data?.vendorId) tr.dataset.vendorId = data.vendorId;
+  if (data?.vendor) tr.dataset.vendor = data.vendor;
+
+  const escV = (v) => (v || '').toString().replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
   tr.innerHTML = `
-    <td>${rowNum}</td>
-    <td><input type="text" class="desc-input" placeholder="${descPh}" value="${data?.desc || ''}"></td>
-    <td><input type="text" placeholder="${specPh}" value="${data?.spec || ''}"></td>
-    <td><input type="text" placeholder="${unitPh || '式'}" style="text-align:center;" value="${data?.unit || ''}"></td>
-    <td><input type="number" class="num-input qty" placeholder="0" min="0" value="${data?.qty || ''}"></td>
+    <td class="drag-cell" title="拖曳排序">⠿</td>
+    <td class="row-num" style="text-align:center;color:#bbb;font-size:11px;">${rowNum}</td>
+    <td>
+      <div class="desc-wrap">
+        <input type="text" class="desc-input" placeholder="${escV(descPh)}" value="${escV(data?.desc)}">
+        <div class="ac-dropdown"></div>
+      </div>
+      ${data?.vendor ? `<div class="vendor-tag" title="${escV(data.vendor)}">${escV(data.vendor)} <span onclick="clearVendorTag(this)" style="cursor:pointer;opacity:.6">✕</span></div>` : '<div class="vendor-tag" style="display:none;"></div>'}
+    </td>
+    <td><input type="text" class="spec-input" placeholder="${escV(specPh)}" value="${escV(data?.spec)}"></td>
+    <td><input type="text" class="unit-input" style="text-align:center;" placeholder="${escV(unitPh||'式')}" value="${escV(data?.unit)}"></td>
+    <td><input type="number" class="num-input qty" placeholder="0" min="0" value="${escV(data?.qty)}"></td>
     <td class="price-cell">
-      <input type="number" class="num-input price" placeholder="0" min="0" value="${data?.price || ''}">
+      <input type="number" class="num-input price" placeholder="0" min="0" value="${escV(data?.price)}">
       <button class="lookup-btn" title="查詢歷史單價" onclick="openPriceModal('${id}', this.closest('tr'))">💡</button>
     </td>
     <td class="subtotal-cell">0</td>
+    <td class="vendor-cell"><button class="vendor-btn${data?.vendor ? ' active' : ''}" title="選擇廠商" onclick="openVendorPicker(this.closest('tr'))">🏭</button></td>
+    <td class="tool-cell"><button class="note-btn" title="內部備註" onclick="toggleRowNote(this.closest('tr'))">📝</button></td>
     <td class="delete-cell"><button onclick="deleteRow(this,'${id}')">✕</button></td>`;
+
   tbody.appendChild(tr);
+
+  // Note row
+  if (data?.note) {
+    const noteRow = buildNoteRow(data.note);
+    tbody.insertBefore(noteRow, tr.nextSibling);
+    tr.querySelector('.note-btn').classList.add('active');
+  }
+
+  attachRowEvents(tr, id);
+  renumberRows(id);
+  if (data?.qty || data?.price) recalcAll();
+  return tr;
+}
+
+function buildNoteRow(note) {
+  const nr = document.createElement('tr');
+  nr.className = 'note-row' + (note ? ' has-content' : '');
+  nr.innerHTML = `<td colspan="11">
+    <input type="text" class="row-note-input" placeholder="🔒 內部備註（不顯示於客戶報價單）" value="${(note||'').replace(/"/g,'&quot;')}">
+  </td>`;
+  nr.querySelector('.row-note-input').addEventListener('input', function() {
+    nr.classList.toggle('has-content', this.value.trim().length > 0);
+  });
+  return nr;
+}
+
+function attachRowEvents(tr, sectionId) {
   tr.querySelectorAll('.qty,.price').forEach(inp => inp.addEventListener('input', recalcAll));
-  if (data) recalcAll();
+
+  // Autocomplete
+  const descInput = tr.querySelector('.desc-input');
+  descInput.addEventListener('input', () => {
+    clearTimeout(acTimer);
+    acTimer = setTimeout(() => showAcDropdown(descInput, tr, sectionId), 250);
+  });
+  descInput.addEventListener('focus', () => {
+    if (descInput.value.trim().length >= 1) {
+      clearTimeout(acTimer);
+      acTimer = setTimeout(() => showAcDropdown(descInput, tr, sectionId), 150);
+    }
+  });
+  descInput.addEventListener('keydown', e => {
+    const dd = tr.querySelector('.ac-dropdown');
+    const items = dd.querySelectorAll('.ac-item');
+    if (!items.length || dd.style.display === 'none') return;
+    const active = dd.querySelector('.ac-item.ac-active');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      const next = active ? active.nextElementSibling : items[0];
+      if (next) { active?.classList.remove('ac-active'); next.classList.add('ac-active'); next.scrollIntoView({block:'nearest'}); }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      const prev = active ? active.previousElementSibling : items[items.length-1];
+      if (prev) { active?.classList.remove('ac-active'); prev.classList.add('ac-active'); prev.scrollIntoView({block:'nearest'}); }
+    } else if (e.key === 'Enter' && active) {
+      e.preventDefault();
+      active.click();
+    } else if (e.key === 'Escape') {
+      hideAcDropdown(tr);
+    }
+  });
+
+  // Drag
+  const dragCell = tr.querySelector('.drag-cell');
+  dragCell.addEventListener('mousedown', () => tr.draggable = true);
+  tr.addEventListener('dragstart', e => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', '');
+    setTimeout(() => tr.classList.add('dragging'), 0);
+    window._dragRow = tr;
+    window._dragSectionId = sectionId;
+  });
+  tr.addEventListener('dragend', () => {
+    tr.classList.remove('dragging');
+    document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
+    window._dragRow = null;
+  });
+  tr.addEventListener('dragover', e => {
+    if (!window._dragRow || window._dragRow === tr || window._dragSectionId !== sectionId) return;
+    e.preventDefault();
+    const rect = tr.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
+    tr.classList.add(e.clientY < mid ? 'drag-over-top' : 'drag-over-bottom');
+  });
+  tr.addEventListener('drop', e => {
+    e.preventDefault();
+    if (!window._dragRow || window._dragRow === tr || window._dragSectionId !== sectionId) return;
+    const rect = tr.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    const tbody = tr.closest('tbody');
+    const draggedNote = window._dragRow.nextElementSibling?.classList.contains('note-row') ? window._dragRow.nextElementSibling : null;
+
+    if (e.clientY < mid) {
+      tbody.insertBefore(window._dragRow, tr);
+      if (draggedNote) tbody.insertBefore(draggedNote, tr);
+    } else {
+      const after = tr.nextElementSibling?.classList.contains('note-row') ? tr.nextElementSibling.nextSibling : tr.nextSibling;
+      tbody.insertBefore(window._dragRow, after);
+      if (draggedNote) tbody.insertBefore(draggedNote, after);
+    }
+    document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(r => r.classList.remove('drag-over-top','drag-over-bottom'));
+    renumberRows(sectionId);
+  });
+}
+
+function showAcDropdown(input, tr, sectionId) {
+  const q = input.value.trim();
+  const dd = tr.querySelector('.ac-dropdown');
+  if (q.length < 1) { dd.style.display = 'none'; return; }
+  const matches = allPrices.filter(p => p.item_name.includes(q) || (p.spec||'').includes(q)).slice(0,8);
+  if (!matches.length) { dd.style.display = 'none'; return; }
+  dd.innerHTML = matches.map(p => `
+    <div class="ac-item" data-id="${p.id}" data-name="${(p.item_name||'').replace(/"/g,'&quot;')}" data-spec="${(p.spec||'').replace(/"/g,'&quot;')}" data-unit="${(p.unit||'').replace(/"/g,'&quot;')}" data-price="${p.unit_price}">
+      <span class="ac-price">${numFmt(p.unit_price)}</span>
+      <div class="ac-name">${p.item_name}</div>
+      <div class="ac-detail">${[p.spec, p.unit, p.category].filter(Boolean).join(' · ')}</div>
+    </div>`).join('');
+  dd.querySelectorAll('.ac-item').forEach(item => {
+    item.addEventListener('click', () => {
+      input.value = item.dataset.name;
+      const row = input.closest('tr');
+      const specInput = row.querySelector('.spec-input');
+      const unitInput = row.querySelector('.unit-input');
+      const priceInput = row.querySelector('.price');
+      if (specInput && !specInput.value) specInput.value = item.dataset.spec;
+      if (unitInput && !unitInput.value) unitInput.value = item.dataset.unit;
+      if (priceInput && !priceInput.value) priceInput.value = item.dataset.price;
+      dd.style.display = 'none';
+      recalcAll();
+    });
+  });
+  dd.style.display = 'block';
+
+  // Close on outside click (one-time)
+  setTimeout(() => {
+    const closer = (e) => {
+      if (!dd.contains(e.target) && e.target !== input) {
+        dd.style.display = 'none';
+        document.removeEventListener('click', closer);
+      }
+    };
+    document.addEventListener('click', closer);
+  }, 10);
+}
+
+function hideAcDropdown(tr) {
+  const dd = tr.querySelector('.ac-dropdown');
+  if (dd) dd.style.display = 'none';
+}
+
+function toggleRowNote(tr) {
+  const tbody = tr.closest('tbody');
+  const btn = tr.querySelector('.note-btn');
+  let noteRow = tr.nextElementSibling;
+  if (noteRow && noteRow.classList.contains('note-row')) {
+    // Hide
+    noteRow.remove();
+    btn.classList.remove('active');
+  } else {
+    // Show
+    const nr = buildNoteRow('');
+    tbody.insertBefore(nr, tr.nextSibling);
+    btn.classList.add('active');
+    nr.querySelector('.row-note-input').focus();
+  }
+}
+
+function clearVendorTag(span) {
+  const tag = span.closest('.vendor-tag');
+  const tr = tag.closest('tr');
+  tag.style.display = 'none';
+  tag.textContent = '';
+  delete tr.dataset.vendorId;
+  delete tr.dataset.vendor;
+  tr.querySelector('.vendor-btn').classList.remove('active');
 }
 
 function deleteRow(btn, id) {
-  const tbody = btn.closest('tr').parentElement;
-  if (tbody.querySelectorAll('tr').length <= 1) { alert('每個分類至少需保留一列'); return; }
-  btn.closest('tr').remove();
-  tbody.querySelectorAll('tr').forEach((r, i) => r.cells[0].textContent = i + 1);
+  const tr = btn.closest('tr');
+  const tbody = tr.closest('tbody');
+  const next = tr.nextElementSibling;
+  if (next && next.classList.contains('note-row')) next.remove();
+  tr.remove();
+  renumberRows(id);
   recalcAll();
 }
 
-// ===== 收集資料 =====
-function collectFormData() {
-  const sections = {};
-  const profits = {};
-  SECTIONS.forEach(s => {
-    profits[s.id] = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
-    sections[s.id] = [];
-    document.getElementById('rows-' + s.id).querySelectorAll('tr').forEach(row => {
-      const inputs = row.querySelectorAll('input');
-      sections[s.id].push({
-        desc:  inputs[0]?.value || '',
-        spec:  inputs[1]?.value || '',
-        unit:  inputs[2]?.value || '',
-        qty:   parseFloat(inputs[3]?.value) || 0,
-        price: parseFloat(inputs[4]?.value) || 0,
-      });
-    });
+function renumberRows(id) {
+  const tbody = document.getElementById('rows-' + id);
+  let n = 1;
+  tbody.querySelectorAll('tr:not(.note-row)').forEach(tr => {
+    const cell = tr.querySelector('.row-num');
+    if (cell) cell.textContent = n++;
   });
-  return {
-    quoteNo:    document.getElementById('quoteNo').value,
-    clientName: document.getElementById('clientName').value,
-    clientPhone:document.getElementById('clientPhone').value,
-    clientAddr: document.getElementById('clientAddr').value,
-    clientEmail:document.getElementById('clientEmail').value,
-    designer:   document.getElementById('designer').value,
-    quoteDate:  document.getElementById('quoteDate').value,
-    area:       document.getElementById('area').value,
-    duration:   document.getElementById('duration').value,
-    taxRate:    document.getElementById('taxRate').value,
-    validUntil: document.getElementById('validUntil').value,
-    notes:      document.getElementById('notes').value,
-    sections,
-    profits,
-  };
 }
 
-// ===== 填入資料 =====
-function fillFormData(data) {
-  document.getElementById('quoteNo').value    = data.quoteNo || '';
-  document.getElementById('clientName').value = data.clientName || '';
-  document.getElementById('clientPhone').value= data.clientPhone || '';
-  document.getElementById('clientAddr').value = data.clientAddr || '';
-  document.getElementById('clientEmail').value= data.clientEmail || '';
-  document.getElementById('designer').value   = data.designer || '';
-  document.getElementById('quoteDate').value  = data.quoteDate || '';
-  document.getElementById('area').value       = data.area || '';
-  document.getElementById('duration').value   = data.duration || '';
-  document.getElementById('taxRate').value    = data.taxRate || '5';
-  document.getElementById('validUntil').value = data.validUntil || '';
-  document.getElementById('notes').value      = data.notes || '';
-
-  if (data.profits) {
-    SECTIONS.forEach(s => {
-      const el = document.getElementById('profit-' + s.id);
-      if (el) el.value = data.profits[s.id] || 0;
-    });
-  }
-  if (data.sections) {
-    SECTIONS.forEach(s => {
-      const tbody = document.getElementById('rows-' + s.id);
-      tbody.innerHTML = '';
-      const rows = data.sections[s.id];
-      if (rows && rows.length > 0) {
-        rows.forEach(row => addRow(s.id, s.ph, s.spec, s.unit, row));
-      } else {
-        addRow(s.id, s.ph, s.spec, s.unit);
-      }
-    });
-  }
-  recalcAll();
+// ===== 廠商選取 =====
+function openVendorPicker(tr) {
+  currentVendorRow = tr;
+  document.getElementById('vendorSearch').value = '';
+  renderVendorModal(allVendors);
+  document.getElementById('vendorModal').classList.add('show');
+  document.getElementById('vendorSearch').focus();
 }
 
-function resetForm() {
-  currentQuoteId = null;
-  SECTIONS.forEach(s => {
-    const tbody = document.getElementById('rows-' + s.id);
-    tbody.innerHTML = '';
-    addRow(s.id, s.ph, s.spec, s.unit);
-  });
-  document.querySelectorAll('.info-row input, #notes, #quoteNo, #validUntil').forEach(el => el.value = '');
-  document.getElementById('taxRate').value = '5';
-  SECTIONS.forEach(s => { const el = document.getElementById('profit-' + s.id); if (el) el.value = 0; });
-  initDates();
-  recalcAll();
-  document.getElementById('saveStatus').textContent = '';
+function renderVendorModal(list) {
+  const el = document.getElementById('vendorModalList');
+  if (!list.length) { el.innerHTML = '<div class="modal-empty">無廠商資料，請先至廠商資料庫新增</div>'; return; }
+  el.innerHTML = list.map(v => `
+    <div class="modal-item" onclick="selectVendor(${v.id},'${(v.name||'').replace(/'/g,"\\'")}')">
+      <div class="item-main">${v.name}</div>
+      <div class="item-sub">${[v.specialty, v.contact_person, v.phone||v.mobile].filter(Boolean).join(' · ')}</div>
+    </div>`).join('');
 }
 
-// ===== 儲存 =====
-async function saveQuote() {
-  const formData = collectFormData();
-  const totalText = document.getElementById('grand-total').textContent;
-  const total = parseFloat(totalText.replace(/[^0-9.]/g, '')) || 0;
-  const payload = {
-    quote_no:     formData.quoteNo,
-    client_name:  formData.clientName,
-    total_amount: total,
-    data:         formData,
-  };
-  try {
-    let res, result;
-    if (currentQuoteId) {
-      res = await fetch('/api/quotes/' + currentQuoteId, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-    } else {
-      res = await fetch('/api/quotes', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-    }
-    result = await res.json();
-    if (result.success) {
-      if (!currentQuoteId && result.id) {
-        currentQuoteId = result.id;
-        history.replaceState(null, '', '/form.html?id=' + currentQuoteId);
-      }
-      showToast('✅ 已儲存報價單');
-      document.getElementById('saveStatus').textContent = '已儲存';
-    } else {
-      showToast('儲存失敗：' + (result.error || ''), true);
-    }
-  } catch { showToast('網路錯誤，請稍後再試', true); }
+function selectVendor(id, name) {
+  if (!currentVendorRow) return;
+  currentVendorRow.dataset.vendorId = id;
+  currentVendorRow.dataset.vendor = name;
+  const tag = currentVendorRow.querySelector('.vendor-tag');
+  tag.innerHTML = `${name} <span onclick="clearVendorTag(this)" style="cursor:pointer;opacity:.6">✕</span>`;
+  tag.style.display = 'inline-block';
+  const btn = currentVendorRow.querySelector('.vendor-btn');
+  btn.classList.add('active');
+  closeVendorModal();
 }
 
-// ===== 儲存單價至歷史庫 =====
-async function savePricesFromQuote() {
-  const formData = collectFormData();
-  const quoteNo = formData.quoteNo || '手動匯入';
-  const items = [];
-  SECTIONS.forEach(s => {
-    (formData.sections[s.id] || []).forEach(row => {
-      if (row.desc && row.price > 0) {
-        items.push({
-          category: s.id,
-          item_name: row.desc,
-          spec: row.spec || '',
-          unit: row.unit || s.unit,
-          unit_price: row.price,
-          source: '報價單 ' + quoteNo,
-          notes: '報價單 ' + quoteNo,
-        });
-      }
-    });
-  });
-  if (items.length === 0) { showToast('沒有可匯入的單價（請確認已填入品項名稱與單價）', true); return; }
-  if (!confirm(`確定要將 ${items.length} 筆品項單價儲存至歷史單價庫嗎？`)) return;
-  try {
-    const res = await fetch('/api/prices/batch', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items }),
-    });
-    const data = await res.json();
-    if (data.success) {
-      showToast(`✅ 已匯入 ${data.count} 筆單價至歷史庫`);
-    } else {
-      showToast('匯入失敗：' + (data.error || ''), true);
-    }
-  } catch { showToast('網路錯誤', true); }
+function filterVendorModal() {
+  const q = document.getElementById('vendorSearch').value.toLowerCase();
+  const filtered = allVendors.filter(v => v.name.toLowerCase().includes(q) || (v.specialty||'').toLowerCase().includes(q));
+  renderVendorModal(filtered);
 }
 
-// ===== 登出 =====
-async function logout() {
-  await fetch('/api/logout', { method: 'POST' });
-  location.href = '/login.html';
-}
-
-// ===== 日期初始化 =====
-function initDates() {
-  const today = new Date();
-  const pad = n => String(n).padStart(2,'0');
-  const ymd = today.getFullYear() + '-' + pad(today.getMonth()+1) + '-' + pad(today.getDate());
-  if (!document.getElementById('quoteDate').value) document.getElementById('quoteDate').value = ymd;
-  if (!document.getElementById('validUntil').value) {
-    const v = new Date(today); v.setDate(v.getDate() + 30);
-    document.getElementById('validUntil').value = v.getFullYear() + '-' + pad(v.getMonth()+1) + '-' + pad(v.getDate());
-  }
-}
-
-// ===== 業主資料庫 Modal =====
-async function openClientModal() {
-  if (allClients.length === 0) {
-    const res = await fetch('/api/clients');
-    allClients = await res.json();
-  }
-  document.getElementById('clientSearch').value = '';
-  renderClientModal(allClients);
-  document.getElementById('clientModal').classList.add('show');
-  document.getElementById('clientSearch').focus();
-}
-
-function closeClientModal() { document.getElementById('clientModal').classList.remove('show'); }
-function onClientModalClick(e) { if (e.target === document.getElementById('clientModal')) closeClientModal(); }
-
-function filterClientModal() {
-  const q = document.getElementById('clientSearch').value.toLowerCase();
-  const filtered = allClients.filter(c =>
-    c.name.toLowerCase().includes(q) ||
-    (c.company || '').toLowerCase().includes(q) ||
-    (c.phone || '').includes(q)
-  );
-  renderClientModal(filtered);
-}
-
-function renderClientModal(clients) {
-  const list = document.getElementById('clientModalList');
-  if (clients.length === 0) {
-    list.innerHTML = '<div class="modal-empty">找不到符合的業主</div>';
-    return;
-  }
-  list.innerHTML = clients.map(c => `
-    <div class="modal-item" onclick="selectClient(${c.id})">
-      <div class="item-main">${esc(c.name)} ${c.company ? '<span style="font-weight:400;color:#888;">— ' + esc(c.company) + '</span>' : ''}</div>
-      <div class="item-sub">${[c.phone, c.mobile].filter(Boolean).join(' / ')}${c.email ? ' · ' + c.email : ''}${c.address ? ' · ' + c.address : ''}</div>
-    </div>
-  `).join('');
-}
-
-function selectClient(id) {
-  const c = allClients.find(x => x.id === id);
-  if (!c) return;
-  document.getElementById('clientName').value  = c.name || '';
-  document.getElementById('clientPhone').value = c.phone || c.mobile || '';
-  document.getElementById('clientAddr').value  = c.address || '';
-  document.getElementById('clientEmail').value = c.email || '';
-  closeClientModal();
-  showToast('✅ 已帶入業主資料：' + c.name);
-}
+function closeVendorModal() { document.getElementById('vendorModal').classList.remove('show'); }
+function onVendorModalClick(e) { if (e.target === document.getElementById('vendorModal')) closeVendorModal(); }
 
 // ===== 歷史單價 Modal =====
-async function openPriceModal(sectionId, row) {
+function openPriceModal(sectionId, row) {
   currentPriceSectionId = sectionId;
   currentPriceRow = row;
-  const sec = SECTIONS.find(s => s.id === sectionId);
-  document.getElementById('priceModalTitle').textContent = `💰 歷史單價 — ${sec ? sec.label : ''}`;
-
-  const res = await fetch('/api/prices?category=' + sectionId);
-  allPrices = await res.json();
-
-  // Also load all prices if section has none
-  if (allPrices.length === 0) {
-    const resAll = await fetch('/api/prices');
-    allPrices = await resAll.json();
-  }
-
   document.getElementById('priceSearch').value = '';
-  renderPriceModal(allPrices, sectionId);
+  document.getElementById('priceModalTitle').textContent = '💰 歷史單價查詢 — ' + (SECTIONS.find(s => s.id === sectionId)?.label || '');
+  filterPriceModal();
   document.getElementById('priceModal').classList.add('show');
-  document.getElementById('priceSearch').focus();
+  setTimeout(() => document.getElementById('priceSearch').focus(), 100);
 }
 
-function closePriceModal() {
-  document.getElementById('priceModal').classList.remove('show');
-  currentPriceRow = null;
+function renderPriceModal(list) {
+  const el = document.getElementById('priceModalList');
+  if (!list.length) { el.innerHTML = '<div class="modal-empty">找不到符合的品項</div>'; return; }
+  el.innerHTML = list.map(p => `
+    <div class="modal-item" onclick="selectPrice(${p.id})">
+      <span class="item-price">${numFmt(p.unit_price)} / ${p.unit||'式'}</span>
+      <div class="item-main">${p.item_name}</div>
+      <div class="item-sub">${[p.spec, p.category, p.source].filter(Boolean).join(' · ')}</div>
+    </div>`).join('');
 }
-function onPriceModalClick(e) { if (e.target === document.getElementById('priceModal')) closePriceModal(); }
 
 function filterPriceModal() {
   const q = document.getElementById('priceSearch').value.toLowerCase();
-  const filtered = allPrices.filter(p =>
-    p.item_name.toLowerCase().includes(q) || (p.spec || '').toLowerCase().includes(q)
+  const list = allPrices.filter(p =>
+    p.item_name.toLowerCase().includes(q) ||
+    (p.spec||'').toLowerCase().includes(q) ||
+    (p.category||'').toLowerCase().includes(q)
   );
-  renderPriceModal(filtered, currentPriceSectionId);
-}
-
-const CAT_LABELS = {
-  demolish: '拆除', masonry: '泥作水電', woodwork: '木作',
-  paint: '油漆', metal: '鐵件', protection: '保護',
-  weakelec: '弱電', landscape: '景觀', glass: '玻璃',
-  lighting: '燈具', cabinet: '系統櫃', other: '其他'
-};
-
-function renderPriceModal(prices, currentCat) {
-  const list = document.getElementById('priceModalList');
-  if (prices.length === 0) {
-    list.innerHTML = '<div class="modal-empty">尚無歷史單價資料<br><small>請先至「歷史單價」頁面建立資料</small></div>';
-    return;
-  }
-  // Sort: current category first
-  const sorted = [...prices].sort((a, b) => {
-    if (a.category === currentCat && b.category !== currentCat) return -1;
-    if (b.category === currentCat && a.category !== currentCat) return 1;
-    return 0;
-  });
-  list.innerHTML = sorted.map(p => `
-    <div class="modal-item" onclick="selectPrice(${p.id})">
-      <span class="item-price">NT$ ${Math.round(p.unit_price).toLocaleString('zh-TW')} / ${p.unit || '式'}</span>
-      <div class="item-main">${esc(p.item_name)}</div>
-      <div class="item-sub">${CAT_LABELS[p.category] || p.category}${p.spec ? ' · ' + esc(p.spec) : ''}${p.notes ? ' · ' + esc(p.notes) : ''}</div>
-    </div>
-  `).join('');
+  renderPriceModal(list);
 }
 
 function selectPrice(id) {
   const p = allPrices.find(x => x.id === id);
   if (!p || !currentPriceRow) return;
-  const inputs = currentPriceRow.querySelectorAll('input');
-  if (!inputs[0].value) inputs[0].value = p.item_name;
-  if (!inputs[1].value) inputs[1].value = p.spec || '';
-  inputs[2].value = p.unit || '';
-  inputs[4].value = p.unit_price;
-  // Trigger recalc
-  inputs[4].dispatchEvent(new Event('input'));
+  const descInput = currentPriceRow.querySelector('.desc-input');
+  const specInput = currentPriceRow.querySelector('.spec-input');
+  const unitInput = currentPriceRow.querySelector('.unit-input');
+  const priceInput = currentPriceRow.querySelector('.price');
+  if (descInput && !descInput.value) descInput.value = p.item_name;
+  if (specInput && !specInput.value) specInput.value = p.spec || '';
+  if (unitInput && !unitInput.value) unitInput.value = p.unit || '';
+  if (priceInput) priceInput.value = p.unit_price;
   closePriceModal();
-  showToast('✅ 已帶入歷史單價：NT$ ' + Math.round(p.unit_price).toLocaleString('zh-TW'));
+  recalcAll();
 }
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function closePriceModal() { document.getElementById('priceModal').classList.remove('show'); }
+function onPriceModalClick(e) { if (e.target === document.getElementById('priceModal')) closePriceModal(); }
 
-// ===== 列印（成本版 / 客戶版） =====
-let _printModeClient = false;
+// ===== 業主 Modal =====
+function openClientModal() {
+  document.getElementById('clientSearch').value = '';
+  filterClientModal();
+  document.getElementById('clientModal').classList.add('show');
+  setTimeout(() => document.getElementById('clientSearch').focus(), 100);
+}
 
-function applyClientPrices() {
-  // 將每個分類的各列小計改為「成本 × (1 + 利潤%)」顯示
+function filterClientModal() {
+  const q = document.getElementById('clientSearch').value.toLowerCase();
+  const el = document.getElementById('clientModalList');
+  const list = allClients.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    (c.company||'').toLowerCase().includes(q) ||
+    (c.phone||'').includes(q)
+  );
+  if (!list.length) { el.innerHTML = '<div class="modal-empty">找不到符合的業主</div>'; return; }
+  el.innerHTML = list.map(c => `
+    <div class="modal-item" onclick="selectClient(${c.id})">
+      <div class="item-main">${c.name}${c.company ? ` <span style='font-weight:400;color:#888;font-size:12px;'>（${c.company}）</span>` : ''}</div>
+      <div class="item-sub">${[c.phone, c.mobile, c.email, c.address].filter(Boolean).join(' · ')}</div>
+    </div>`).join('');
+}
+
+function selectClient(id) {
+  const c = allClients.find(x => x.id === id);
+  if (!c) return;
+  document.getElementById('clientName').value = c.name || '';
+  document.getElementById('clientPhone').value = c.mobile || c.phone || '';
+  document.getElementById('clientAddr').value = c.address || '';
+  document.getElementById('clientEmail').value = c.email || '';
+  closeClientModal();
+}
+
+function closeClientModal() { document.getElementById('clientModal').classList.remove('show'); }
+function onClientModalClick(e) { if (e.target === document.getElementById('clientModal')) closeClientModal(); }
+
+// ===== 收集資料 =====
+function collectFormData() {
+  const sections = {};
+  const sectionNotes = {};
+  const profits = {};
+  SECTIONS.forEach(s => {
+    profits[s.id] = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
+    sectionNotes[s.id] = document.getElementById('sec-note-' + s.id)?.value || '';
+    const rows = [];
+    const tbody = document.getElementById('rows-' + s.id);
+    tbody.querySelectorAll('tr:not(.note-row)').forEach(tr => {
+      const noteRow = tr.nextElementSibling?.classList.contains('note-row') ? tr.nextElementSibling : null;
+      rows.push({
+        desc: tr.querySelector('.desc-input')?.value || '',
+        spec: tr.querySelector('.spec-input')?.value || '',
+        unit: tr.querySelector('.unit-input')?.value || '',
+        qty:  tr.querySelector('.qty')?.value || '',
+        price:tr.querySelector('.price')?.value || '',
+        vendor: tr.dataset.vendor || '',
+        vendorId: tr.dataset.vendorId || '',
+        note: noteRow?.querySelector('.row-note-input')?.value || '',
+      });
+    });
+    sections[s.id] = rows;
+  });
+
+  const costTotal = parseFloat((document.getElementById('subtotal-all')?.textContent || '').replace(/[^0-9]/g, '')) || 0;
+  const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+  const grandTotal = costTotal * (1 + taxRate / 100);
+
+  return {
+    quoteNo: document.getElementById('quoteNo').value,
+    clientName: document.getElementById('clientName').value,
+    clientPhone: document.getElementById('clientPhone').value,
+    clientAddr: document.getElementById('clientAddr').value,
+    clientEmail: document.getElementById('clientEmail').value,
+    designer: document.getElementById('designer').value,
+    quoteDate: document.getElementById('quoteDate').value,
+    area: document.getElementById('area').value,
+    duration: document.getElementById('duration').value,
+    taxRate: document.getElementById('taxRate').value,
+    validUntil: document.getElementById('validUntil').value,
+    notes: document.getElementById('notes').value,
+    notesInternal: document.getElementById('notesInternal').value,
+    sections,
+    sectionNotes,
+    profits,
+    _grand: grandTotal,
+    _costTotal: costTotal,
+  };
+}
+
+function fillFormData(data) {
+  if (!data) return;
+  document.getElementById('quoteNo').value = data.quoteNo || '';
+  document.getElementById('clientName').value = data.clientName || '';
+  document.getElementById('clientPhone').value = data.clientPhone || '';
+  document.getElementById('clientAddr').value = data.clientAddr || '';
+  document.getElementById('clientEmail').value = data.clientEmail || '';
+  document.getElementById('designer').value = data.designer || '';
+  document.getElementById('quoteDate').value = data.quoteDate || '';
+  document.getElementById('area').value = data.area || '';
+  document.getElementById('duration').value = data.duration || '';
+  if (data.taxRate !== undefined) document.getElementById('taxRate').value = data.taxRate;
+  document.getElementById('validUntil').value = data.validUntil || '';
+  document.getElementById('notes').value = data.notes || '';
+  document.getElementById('notesInternal').value = data.notesInternal || '';
+  if (data.notesInternal) {
+    document.querySelector('.notes-internal').style.display = 'block';
+    document.getElementById('intNotesToggleBtn').textContent = '📝 隱藏內部備註欄';
+  }
+
+  SECTIONS.forEach(s => {
+    if (data.profits) {
+      const el = document.getElementById('profit-' + s.id);
+      if (el) el.value = data.profits[s.id] || 0;
+    }
+    if (data.sectionNotes && data.sectionNotes[s.id]) {
+      const ta = document.getElementById('sec-note-' + s.id);
+      if (ta) {
+        ta.value = data.sectionNotes[s.id];
+        const row = document.getElementById('sec-note-row-' + s.id);
+        row.style.display = 'block';
+        document.getElementById('sec-note-btn-' + s.id).classList.add('active');
+      }
+    }
+    const tbody = document.getElementById('rows-' + s.id);
+    tbody.innerHTML = '';
+    const rows = data.sections?.[s.id];
+    if (rows && rows.length) {
+      rows.forEach(r => addRow(s.id, s.ph, s.spec, s.unit, r));
+    } else {
+      addRow(s.id, s.ph, s.spec, s.unit);
+    }
+  });
+  recalcAll();
+}
+
+function resetForm() {
+  currentQuoteId = null;
+  document.title = '報價單編輯 — 大事設計有限公司';
+  ['quoteNo','clientName','clientPhone','clientAddr','clientEmail','designer','area','duration','notes','notesInternal','validUntil'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('quoteDate').value = new Date().toISOString().slice(0,10);
+  document.getElementById('taxRate').value = 5;
+  SECTIONS.forEach(s => {
+    const profit = document.getElementById('profit-' + s.id);
+    if (profit) profit.value = 0;
+    const noteEl = document.getElementById('sec-note-' + s.id);
+    if (noteEl) noteEl.value = '';
+    const noteRow = document.getElementById('sec-note-row-' + s.id);
+    if (noteRow) noteRow.style.display = 'none';
+    document.getElementById('sec-note-btn-' + s.id)?.classList.remove('active');
+    const tbody = document.getElementById('rows-' + s.id);
+    tbody.innerHTML = '';
+    addRow(s.id, s.ph, s.spec, s.unit);
+  });
+  recalcAll();
+  document.getElementById('saveStatus').textContent = '';
+  document.getElementById('closingBtn').style.display = 'none';
+  history.pushState(null, '', '/form.html');
+}
+
+// ===== 儲存 / 載入 =====
+async function saveQuote() {
+  const data = collectFormData();
+  const payload = {
+    quote_no: data.quoteNo,
+    client_name: data.clientName,
+    total_amount: data._grand,
+    data
+  };
+  try {
+    let res, result;
+    if (currentQuoteId) {
+      res = await fetch('/api/quotes/' + currentQuoteId, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    } else {
+      res = await fetch('/api/quotes', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      result = await res.json();
+      if (result.id) {
+        currentQuoteId = result.id;
+        history.pushState(null, '', '/form.html?id=' + currentQuoteId);
+        document.getElementById('closingBtn').style.display = 'inline-block';
+      }
+    }
+    if (!result) result = await res.json();
+    if (result.success || result.id) {
+      document.getElementById('saveStatus').textContent = '✓ 已儲存';
+      setTimeout(() => document.getElementById('saveStatus').textContent = '', 3000);
+      showToast('報價單已儲存');
+    } else {
+      showToast(result.error || '儲存失敗', true);
+    }
+  } catch(e) {
+    showToast('儲存失敗：' + e.message, true);
+  }
+}
+
+async function loadQuote(id) {
+  try {
+    const res = await fetch('/api/quotes/' + id);
+    const q = await res.json();
+    if (q.error) { showToast(q.error, true); return; }
+    currentQuoteId = id;
+    fillFormData(q.data);
+    document.title = `報價單 ${q.quote_no || '#'+id} — 大事設計有限公司`;
+    document.getElementById('closingBtn').style.display = 'inline-block';
+    // Populate from URL params if no data
+    const params = new URLSearchParams(location.search);
+    if (!q.data?.clientName && params.get('client')) document.getElementById('clientName').value = decodeURIComponent(params.get('client'));
+    if (!q.data?.clientPhone && params.get('phone')) document.getElementById('clientPhone').value = decodeURIComponent(params.get('phone'));
+  } catch(e) {
+    showToast('載入報價單失敗', true);
+  }
+}
+
+// ===== 儲存單價 =====
+async function savePricesFromQuote() {
+  const items = [];
+  SECTIONS.forEach(s => {
+    document.getElementById('rows-' + s.id).querySelectorAll('tr:not(.note-row)').forEach(tr => {
+      const name = tr.querySelector('.desc-input')?.value?.trim();
+      const price = parseFloat(tr.querySelector('.price')?.value);
+      if (name && price > 0) {
+        items.push({
+          category: s.label,
+          item_name: name,
+          spec: tr.querySelector('.spec-input')?.value || '',
+          unit: tr.querySelector('.unit-input')?.value || '式',
+          unit_price: price,
+          source: document.getElementById('quoteNo').value || ''
+        });
+      }
+    });
+  });
+  if (!items.length) { showToast('沒有可儲存的品項（需填寫名稱與單價）', true); return; }
+  if (!confirm(`將 ${items.length} 個品項儲存至歷史單價庫？`)) return;
+  const res = await fetch('/api/prices/batch', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ items }) });
+  const d = await res.json();
+  if (d.success) showToast(`已儲存 ${d.count} 個品項至歷史單價庫`);
+  else showToast(d.error || '儲存失敗', true);
+}
+
+// ===== 列印 =====
+function getClientPrices() {
+  const result = {};
   SECTIONS.forEach(s => {
     const profit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
     const mult = 1 + profit / 100;
-    const rows = document.getElementById('rows-' + s.id).querySelectorAll('tr');
+    const rows = document.getElementById('rows-' + s.id).querySelectorAll('tr:not(.note-row)');
     let secTotal = 0;
     rows.forEach(row => {
-      const qty   = parseFloat(row.querySelector('.qty')?.value)   || 0;
+      const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
       const price = parseFloat(row.querySelector('.price')?.value) || 0;
-      const sub   = Math.round(qty * price * mult);
+      const sub = Math.round(qty * price * mult);
       secTotal += sub;
       const cell = row.querySelector('.subtotal-cell');
       if (cell) cell.textContent = sub > 0 ? sub.toLocaleString('zh-TW') : '0';
     });
     document.getElementById('total-' + s.id).textContent = fmt(secTotal);
-    document.getElementById('sum-' + s.id).textContent   = fmt(secTotal);
+    document.getElementById('sum-' + s.id).textContent = fmt(secTotal);
+    result[s.id] = secTotal;
   });
-  // 重算總計
   let sub = 0;
-  SECTIONS.forEach(s => {
-    sub += parseFloat((document.getElementById('sum-' + s.id).textContent || '').replace(/[^0-9]/g, '')) || 0;
-  });
+  SECTIONS.forEach(s => sub += result[s.id] || 0);
   const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
-  const tax = sub * taxRate / 100;
+  const tax = Math.round(sub * taxRate / 100);
   document.getElementById('subtotal-all').textContent = fmt(sub);
-  document.getElementById('tax-amount').textContent   = fmt(tax);
-  document.getElementById('grand-total').textContent  = fmt(sub + tax);
+  document.getElementById('tax-amount').textContent = fmt(tax);
+  document.getElementById('grand-total').textContent = fmt(sub + tax);
+}
+
+function markEmptySections(hide) {
+  SECTIONS.forEach(s => {
+    const sec = document.getElementById('section-' + s.id);
+    if (!sec) return;
+    const hasData = [...document.getElementById('rows-' + s.id).querySelectorAll('tr:not(.note-row)')].some(tr => {
+      return (tr.querySelector('.desc-input')?.value?.trim() || tr.querySelector('.qty')?.value || tr.querySelector('.price')?.value);
+    });
+    sec.classList.toggle('print-empty', hide && !hasData);
+  });
 }
 
 window.addEventListener('beforeprint', () => {
-  if (_printModeClient) applyClientPrices();
+  markEmptySections(true);
+  if (_printModeClient) getClientPrices();
 });
 window.addEventListener('afterprint', () => {
+  markEmptySections(false);
   if (_printModeClient) {
     recalcAll();
     _printModeClient = false;
+    document.body.classList.remove('print-cost');
+  } else {
     document.body.classList.remove('print-cost');
   }
 });
@@ -845,8 +1188,6 @@ function printCost() {
   _printModeClient = false;
   document.body.classList.add('print-cost');
   window.print();
-  // afterprint handler will NOT fire here since print-cost doesn't set _printModeClient
-  // so we clean up manually after a short delay
   setTimeout(() => document.body.classList.remove('print-cost'), 500);
 }
 
@@ -856,49 +1197,65 @@ function printClient() {
   window.print();
 }
 
-// ===== 啟動 =====
+// ===== 結案 =====
+function openClosingPage() {
+  if (!currentQuoteId) { showToast('請先儲存報價單', true); return; }
+  window.open('/closing.html?quote=' + currentQuoteId, '_blank');
+}
+
+// ===== 內部備註欄切換 =====
+function toggleInternalNotes() {
+  const sec = document.querySelector('.notes-internal');
+  const btn = document.getElementById('intNotesToggleBtn');
+  const isShowing = sec.style.display !== 'none';
+  sec.style.display = isShowing ? 'none' : 'block';
+  btn.textContent = isShowing ? '📝 顯示內部備註欄' : '📝 隱藏內部備註欄';
+}
+
+// ===== 登出 =====
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.href = '/login.html';
+}
+
+// ===== 初始化 =====
 async function init() {
   try {
     const me = await (await fetch('/api/me')).json();
     if (me.error) return location.href = '/login.html';
     document.getElementById('navUser').textContent = '👤 ' + me.displayName;
+    if (me.role === 'admin') {
+      document.getElementById('closingNavLink').style.display = 'inline-block';
+    }
   } catch { return location.href = '/login.html'; }
 
   buildSections();
-  initDates();
-  recalcAll();
+  document.getElementById('quoteDate').value = new Date().toISOString().slice(0, 10);
 
-  // URL params: 來自業主資料庫的新增報價
+  // Pre-fill from URL params
   const params = new URLSearchParams(location.search);
-  const id = params.get('id');
-  const clientName  = params.get('client_name');
-  const clientPhone = params.get('client_phone');
-  const clientAddr  = params.get('client_addr');
-  const clientEmail = params.get('client_email');
+  if (params.get('client')) document.getElementById('clientName').value = decodeURIComponent(params.get('client'));
+  if (params.get('phone')) document.getElementById('clientPhone').value = decodeURIComponent(params.get('phone'));
+  if (params.get('addr')) document.getElementById('clientAddr').value = decodeURIComponent(params.get('addr'));
+  if (params.get('email')) document.getElementById('clientEmail').value = decodeURIComponent(params.get('email'));
 
-  if (clientName) {
-    document.getElementById('clientName').value  = clientName;
-    document.getElementById('clientPhone').value = clientPhone || '';
-    document.getElementById('clientAddr').value  = clientAddr || '';
-    document.getElementById('clientEmail').value = clientEmail || '';
+  // Load data
+  const [clientsRes, pricesRes, vendorsRes] = await Promise.all([
+    fetch('/api/clients'),
+    fetch('/api/prices'),
+    fetch('/api/vendors'),
+  ]);
+  allClients = await clientsRes.json();
+  allPrices = await pricesRes.json();
+  allVendors = await vendorsRes.json();
+
+  // Load existing quote
+  const qId = params.get('id');
+  if (qId) {
+    await loadQuote(parseInt(qId));
+  } else {
+    recalcAll();
   }
-
-  if (id) {
-    currentQuoteId = parseInt(id);
-    try {
-      const res = await fetch('/api/quotes/' + id);
-      if (res.ok) {
-        const q = await res.json();
-        fillFormData(q.data);
-        document.getElementById('saveStatus').textContent = '已儲存';
-      } else {
-        showToast('無法載入報價單', true);
-      }
-    } catch { showToast('載入失敗', true); }
-  }
-
-  // Preload clients in background
-  fetch('/api/clients').then(r => r.json()).then(data => { allClients = data; });
 }
 
 init();
