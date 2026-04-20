@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>結案管理 — 大事設計有限公司</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; background: #f0f2f5; color: #333; }
+
+.navbar {
+  background: linear-gradient(135deg, #2c3e50, #4a6fa5);
+  color: #fff; padding: 0 24px; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.nav-brand { font-size: 15px; font-weight: 700; cursor: pointer; }
+.nav-right { display: flex; gap: 8px; align-items: center; }
+.nav-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: inherit; text-decoration: none; display: inline-block; }
+.nav-btn:hover { background: rgba(255,255,255,0.25); }
+
+.main { max-width: 1100px; margin: 0 auto; padding: 24px 20px 40px; }
+
+/* Quote selector */
+.quote-selector { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 20px 24px; margin-bottom: 20px; }
+.quote-selector h2 { font-size: 15px; font-weight: 700; color: #2c3e50; margin-bottom: 12px; }
+.quote-select { width: 100%; border: 1.5px solid #e0e4ee; border-radius: 8px; padding: 8px 12px; font-size: 13px; font-family: inherit; outline: none; }
+.quote-select:focus { border-color: #4a6fa5; }
+
+/* Closing panel */
+.closing-panel { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 24px; margin-bottom: 20px; display: none; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.panel-header h2 { font-size: 16px; font-weight: 700; color: #2c3e50; }
+.panel-header .quote-meta { font-size: 13px; color: #888; }
+
+/* Status badge */
+.status-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+.status-draft { background: #fff3e0; color: #d07000; }
+.status-closed { background: #e8f5e9; color: #2e7d32; }
+
+/* Section block */
+.sec-block { border: 1px solid #e0e4ee; border-radius: 8px; margin-bottom: 14px; overflow: hidden; }
+.sec-block-header { display: flex; align-items: center; padding: 10px 14px; background: #f7f8fc; cursor: pointer; user-select: none; }
+.sec-color { width: 5px; height: 22px; border-radius: 3px; margin-right: 8px; flex-shrink: 0; }
+.sec-name { font-size: 13px; font-weight: 700; flex: 1; }
+.sec-meta { font-size: 12px; color: #888; }
+.sec-body { padding: 12px 14px; display: none; }
+.sec-body.open { display: block; }
+
+/* Item table */
+table { width: 100%; border-collapse: collapse; }
+thead th { padding: 7px 8px; font-size: 11px; color: #7b8fa6; text-align: left; font-weight: 600; border-bottom: 1.5px solid #e8eaf0; white-space: nowrap; }
+thead th.num { text-align: right; }
+tbody tr { border-bottom: 1px solid #f0f2f5; }
+tbody tr:last-child { border-bottom: none; }
+tbody td { padding: 7px 8px; font-size: 12px; vertical-align: middle; }
+.item-name { font-weight: 600; color: #2c3e50; }
+.item-spec { color: #888; font-size: 11px; }
+.item-quoted { color: #4a6fa5; font-weight: 600; text-align: right; white-space: nowrap; }
+.item-actual { }
+.item-actual input { border: 1.5px solid #e0e4ee; border-radius: 5px; padding: 4px 7px; font-size: 12px; width: 100px; text-align: right; outline: none; font-family: inherit; }
+.item-actual input:focus { border-color: #4a6fa5; background: #f0f4ff; }
+.item-diff { text-align: right; font-weight: 600; white-space: nowrap; font-size: 12px; }
+.diff-pos { color: #27ae60; }
+.diff-neg { color: #e05050; }
+.item-type select { border: 1px solid #e0e4ee; border-radius: 5px; padding: 3px 6px; font-size: 11px; font-family: inherit; outline: none; background: #fff; }
+.item-note input { border: none; border-bottom: 1px dashed #e0e4ee; padding: 3px 4px; font-size: 11px; width: 100%; outline: none; font-family: inherit; }
+
+/* Profit summary */
+.profit-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.profit-card { background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); padding: 16px 18px; }
+.profit-card .label { font-size: 11px; color: #7b8fa6; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 6px; }
+.profit-card .value { font-size: 20px; font-weight: 700; color: #2c3e50; }
+.profit-card .value.green { color: #27ae60; }
+.profit-card .value.red { color: #e05050; }
+.profit-card .value.blue { color: #4a6fa5; }
+.profit-card .sub { font-size: 11px; color: #aaa; margin-top: 3px; }
+
+/* Actions */
+.closing-actions { display: flex; gap: 10px; justify-content: flex-end; padding: 16px 0 0; border-top: 1px solid #e8eaf0; flex-wrap: wrap; }
+.btn { padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; }
+.btn-green { background: #27ae60; color: #fff; }
+.btn-green:hover { background: #219a52; }
+.btn-outline { background: #fff; border: 1.5px solid #4a6fa5; color: #4a6fa5; }
+.btn-outline:hover { background: #f0f4ff; }
+.btn-draft { background: #fff; border: 1.5px solid #e0a000; color: #c07000; }
+.btn-draft:hover { background: #fffbf0; }
+.btn-back { background: #fff; border: 1.5px solid #e0e4ee; color: #888; }
+.btn-back:hover { border-color: #aaa; color: #555; }
+
+/* Notes */
+.notes-area { margin-top: 14px; }
+.notes-area label { font-size: 11px; color: #7b8fa6; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 5px; }
+.notes-area textarea { width: 100%; border: 1.5px solid #e0e4ee; border-radius: 6px; padding: 8px 10px; font-size: 12px; font-family: inherit; resize: vertical; min-height: 60px; outline: none; }
+.notes-area textarea:focus { border-color: #4a6fa5; }
+
+/* Section colors */
+.color-demolish { background: #e07b54; } .color-masonry { background: #4a6fa5; }
+.color-woodwork { background: #c49a2e; } .color-paint { background: #3a9e6b; }
+.color-metal { background: #7c5cbf; } .color-protection { background: #c0392b; }
+.color-weakelec { background: #2980b9; } .color-landscape { background: #27ae60; }
+.color-glass { background: #18a4c4; } .color-lighting { background: #d4a017; }
+.color-cabinet { background: #5a7a5a; } .color-other { background: #95a5a6; }
+
+/* List view */
+.list-panel { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); overflow: hidden; }
+.list-header { padding: 16px 20px; border-bottom: 1px solid #e8eaf0; display: flex; align-items: center; justify-content: space-between; }
+.list-header h2 { font-size: 15px; font-weight: 700; color: #2c3e50; }
+.list-table { width: 100%; border-collapse: collapse; }
+.list-table thead th { padding: 10px 14px; font-size: 11px; color: #7b8fa6; font-weight: 600; border-bottom: 1.5px solid #e8eaf0; text-align: left; }
+.list-table tbody tr { border-bottom: 1px solid #f0f2f5; cursor: pointer; transition: background .12s; }
+.list-table tbody tr:hover { background: #f5f7ff; }
+.list-table tbody tr:last-child { border-bottom: none; }
+.list-table tbody td { padding: 12px 14px; font-size: 13px; }
+
+.toast { position: fixed; bottom: 20px; right: 20px; background: #27ae60; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 13px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none; }
+.toast.error { background: #c0392b; }
+.loading { text-align: center; padding: 40px; color: #aaa; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand" onclick="location.href='/index.html'">大事設計有限公司</div>
+  <div class="nav-right">
+    <a href="/index.html" class="nav-btn">← 報價單列表</a>
+    <button class="nav-btn" onclick="logout()">登出</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- 結案列表 -->
+  <div class="list-panel" id="listPanel">
+    <div class="list-header">
+      <h2>📦 結案管理</h2>
+      <button class="btn btn-outline" onclick="showNewClosing()">＋ 新增結案</button>
+    </div>
+    <div class="loading" id="listLoading">載入中...</div>
+    <table class="list-table" id="listTable" style="display:none">
+      <thead>
+        <tr>
+          <th>報價單號</th>
+          <th>業主</th>
+          <th>成本報價</th>
+          <th>客戶報價</th>
+          <th>實際成本</th>
+          <th>毛利</th>
+          <th>狀態</th>
+          <th>日期</th>
+          <th style="width:80px"></th>
+        </tr>
+      </thead>
+      <tbody id="listBody"></tbody>
+    </table>
+    <div class="loading" id="listEmpty" style="display:none">尚無結案記錄</div>
+  </div>
+
+  <!-- 新增/編輯結案 -->
+  <div id="closingPanel" style="display:none">
+
+    <!-- 報價單選擇 -->
+    <div class="quote-selector" id="quoteSelectorBox">
+      <h2>選擇報價單</h2>
+      <select class="quote-select" id="quoteSelect" onchange="loadQuoteForClosing()">
+        <option value="">-- 請選擇報價單 --</option>
+      </select>
+    </div>
+
+    <!-- 利潤摘要卡片 -->
+    <div class="profit-cards" id="profitCards" style="display:none">
+      <div class="profit-card"><div class="label">成本報價（含稅）</div><div class="value blue" id="pc-cost">NT$ 0</div></div>
+      <div class="profit-card"><div class="label">客戶報價（含稅）</div><div class="value" id="pc-client">NT$ 0</div></div>
+      <div class="profit-card"><div class="label">實際總成本</div><div class="value" id="pc-actual">NT$ 0</div></div>
+      <div class="profit-card"><div class="label">毛利</div><div class="value green" id="pc-gross">NT$ 0</div><div class="sub" id="pc-gross-rate">毛利率 0%</div></div>
+      <div class="profit-card"><div class="label">自行吸收（超支）</div><div class="value red" id="pc-absorbed">NT$ 0</div></div>
+      <div class="profit-card"><div class="label">追加向業主收款</div><div class="value" id="pc-extra">NT$ 0</div></div>
+    </div>
+
+    <!-- 工程分類逐項 -->
+    <div id="sectionsArea"></div>
+
+    <!-- 全案備註 -->
+    <div style="background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.07);padding:20px 24px;margin-bottom:14px;">
+      <div class="notes-area">
+        <label>結案備註</label>
+        <textarea id="closingNotes" placeholder="廠商結帳情況、保固事項、追加收款說明..."></textarea>
+      </div>
+      <div class="closing-actions">
+        <button class="btn btn-back" onclick="backToList()">← 返回列表</button>
+        <button class="btn btn-draft" onclick="saveDraft()">📋 暫存草稿</button>
+        <button class="btn btn-green" onclick="saveClosing('closed')">✅ 確認結案</button>
+      </div>
+    </div>
+
+  </div><!-- /closingPanel -->
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SECTIONS = [
+  { id: 'demolish',   label: '一、拆除工程' },
+  { id: 'masonry',    label: '二、泥作／水電工程' },
+  { id: 'woodwork',   label: '三、木作工程' },
+  { id: 'paint',      label: '四、油漆／塗裝工程' },
+  { id: 'metal',      label: '五、鐵件工程' },
+  { id: 'protection', label: '六、保護工程' },
+  { id: 'weakelec',   label: '七、弱電工程' },
+  { id: 'landscape',  label: '八、景觀工程' },
+  { id: 'glass',      label: '九、玻璃工程' },
+  { id: 'lighting',   label: '十、燈具工程' },
+  { id: 'cabinet',    label: '十一、系統櫃工程' },
+  { id: 'other',      label: '十二、其他工程' },
+];
+
+let allQuotes = [];
+let currentQuoteData = null;
+let currentClosingId = null;
+let currentClosingQuoteId = null;
+
+function fmt(n) { return 'NT$ ' + Math.round(n||0).toLocaleString('zh-TW'); }
+
+function showToast(msg, isErr=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isErr ? ' error' : '');
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2800);
+}
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.href = '/login.html';
+}
+
+// ===== LIST =====
+async function loadList() {
+  document.getElementById('listLoading').style.display = 'block';
+  document.getElementById('listTable').style.display = 'none';
+  document.getElementById('listEmpty').style.display = 'none';
+  try {
+    const res = await fetch('/api/closings');
+    const list = await res.json();
+    renderList(list);
+  } catch { showToast('載入失敗', true); }
+  finally { document.getElementById('listLoading').style.display = 'none'; }
+}
+
+function renderList(list) {
+  if (!list.length) {
+    document.getElementById('listEmpty').style.display = 'block';
+    return;
+  }
+  document.getElementById('listTable').style.display = 'table';
+  document.getElementById('listBody').innerHTML = list.map(c => `
+    <tr onclick="openClosing(${c.id}, ${c.quote_id})">
+      <td style="font-weight:600;">${c.quote_no || '-'}</td>
+      <td>${c.client_name || '（未填）'}</td>
+      <td style="text-align:right;color:#4a6fa5;">${fmt(c.cost_total)}</td>
+      <td style="text-align:right;">${fmt(c.client_total)}</td>
+      <td style="text-align:right;">${fmt(c.actual_cost)}</td>
+      <td style="text-align:right;font-weight:700;color:${c.gross_profit>=0?'#27ae60':'#e05050'}">${fmt(c.gross_profit)}</td>
+      <td><span class="status-badge status-${c.status}">${c.status === 'closed' ? '已結案' : '草稿'}</span></td>
+      <td style="color:#888;font-size:12px;">${(c.updated_at||c.created_at||'').slice(0,10)}</td>
+      <td onclick="event.stopPropagation()">
+        <button class="btn btn-outline" style="padding:3px 10px;font-size:11px;" onclick="openClosing(${c.id},${c.quote_id})">編輯</button>
+      </td>
+    </tr>`).join('');
+}
+
+function showNewClosing() {
+  document.getElementById('listPanel').style.display = 'none';
+  document.getElementById('closingPanel').style.display = 'block';
+  document.getElementById('quoteSelectorBox').style.display = 'block';
+  document.getElementById('sectionsArea').innerHTML = '';
+  document.getElementById('profitCards').style.display = 'none';
+  document.getElementById('closingNotes').value = '';
+  currentClosingId = null;
+  currentClosingQuoteId = null;
+  currentQuoteData = null;
+  document.getElementById('quoteSelect').value = '';
+
+  // Check URL param
+  const qId = new URLSearchParams(location.search).get('quote');
+  if (qId) {
+    document.getElementById('quoteSelect').value = qId;
+    loadQuoteForClosing();
+  }
+}
+
+async function openClosing(closingId, quoteId) {
+  document.getElementById('listPanel').style.display = 'none';
+  document.getElementById('closingPanel').style.display = 'block';
+  document.getElementById('quoteSelectorBox').style.display = 'none';
+  document.getElementById('sectionsArea').innerHTML = '<div class="loading">載入中...</div>';
+
+  currentClosingId = closingId;
+  currentClosingQuoteId = quoteId;
+
+  try {
+    const res = await fetch('/api/closings/' + quoteId);
+    const closing = await res.json();
+    currentQuoteData = closing.quote_data;
+    document.getElementById('closingNotes').value = closing.notes || '';
+    buildSectionsArea(closing.quote_data, closing.items || []);
+    recalcClosing();
+    document.getElementById('profitCards').style.display = 'grid';
+  } catch(e) {
+    showToast('載入失敗: ' + e.message, true);
+  }
+}
+
+function backToList() {
+  document.getElementById('closingPanel').style.display = 'none';
+  document.getElementById('listPanel').style.display = 'block';
+  history.pushState(null, '', '/closing.html');
+  loadList();
+}
+
+// ===== LOAD QUOTE =====
+async function loadQuoteForClosing() {
+  const qId = document.getElementById('quoteSelect').value;
+  if (!qId) { document.getElementById('sectionsArea').innerHTML = ''; document.getElementById('profitCards').style.display = 'none'; return; }
+  currentClosingQuoteId = parseInt(qId);
+
+  // Check if closing exists
+  const cRes = await fetch('/api/closings/' + qId);
+  if (cRes.ok) {
+    const existing = await cRes.json();
+    currentClosingId = existing.id;
+    currentQuoteData = existing.quote_data;
+    document.getElementById('closingNotes').value = existing.notes || '';
+    buildSectionsArea(existing.quote_data, existing.items || []);
+    recalcClosing();
+    document.getElementById('profitCards').style.display = 'grid';
+    return;
+  }
+
+  // Load quote fresh
+  const qRes = await fetch('/api/quotes/' + qId);
+  const q = await qRes.json();
+  if (q.error) { showToast(q.error, true); return; }
+  currentQuoteData = q.data;
+  currentClosingId = null;
+  buildSectionsArea(q.data, []);
+  recalcClosing();
+  document.getElementById('profitCards').style.display = 'grid';
+}
+
+// ===== BUILD SECTIONS =====
+function buildSectionsArea(qData, savedItems) {
+  const area = document.getElementById('sectionsArea');
+  area.innerHTML = '';
+
+  SECTIONS.forEach(s => {
+    const rows = qData?.sections?.[s.id];
+    const profit = qData?.profits?.[s.id] || 0;
+    if (!rows || !rows.length) return;
+
+    const hasData = rows.some(r => r.desc || r.qty || r.price);
+    if (!hasData) return;
+
+    const block = document.createElement('div');
+    block.className = 'sec-block';
+    block.id = 'secblock-' + s.id;
+
+    const secSavedItems = (savedItems || []).filter(i => i.sectionId === s.id);
+
+    block.innerHTML = `
+      <div class="sec-block-header" onclick="toggleSecBlock('${s.id}')">
+        <div class="sec-color color-${s.id}"></div>
+        <div class="sec-name">${s.label} <small style="color:#888;font-weight:400;">利潤 ${profit}%</small></div>
+        <div class="sec-meta" id="secmeta-${s.id}"></div>
+        <span style="margin-left:8px;color:#bbb;">▾</span>
+      </div>
+      <div class="sec-body open" id="secbody-${s.id}">
+        <table>
+          <thead><tr>
+            <th>#</th>
+            <th>項目名稱</th>
+            <th>規格</th>
+            <th class="num">成本報價</th>
+            <th class="num">客戶報價</th>
+            <th class="num">實際成本</th>
+            <th class="num">差額</th>
+            <th>類型</th>
+            <th>備註</th>
+          </tr></thead>
+          <tbody id="secrows-${s.id}"></tbody>
+        </table>
+      </div>`;
+    area.appendChild(block);
+
+    const tbody = document.getElementById('secrows-' + s.id);
+    rows.forEach((r, i) => {
+      if (!r.desc && !r.qty && !r.price) return;
+      const qty = parseFloat(r.qty) || 0;
+      const price = parseFloat(r.price) || 0;
+      const mult = 1 + profit / 100;
+      const costAmt = Math.round(qty * price);
+      const clientAmt = Math.round(qty * price * mult);
+
+      const saved = secSavedItems.find(x => x.rowIndex === i) || {};
+
+      const tr = document.createElement('tr');
+      tr.dataset.costAmt = costAmt;
+      tr.dataset.clientAmt = clientAmt;
+      tr.dataset.sectionId = s.id;
+      tr.dataset.rowIndex = i;
+
+      tr.innerHTML = `
+        <td style="color:#bbb;font-size:11px;">${i+1}</td>
+        <td><div class="item-name">${r.desc || ''}</div><div class="item-spec">${r.spec || ''}</div></td>
+        <td class="item-spec">${r.unit ? `${qty} ${r.unit}` : ''}</td>
+        <td class="item-quoted">${costAmt > 0 ? costAmt.toLocaleString('zh-TW') : '-'}</td>
+        <td class="item-quoted" style="color:#27ae60;">${clientAmt > 0 ? clientAmt.toLocaleString('zh-TW') : '-'}</td>
+        <td class="item-actual">
+          <input type="number" class="actual-input" placeholder="${costAmt || 0}" value="${saved.actual !== undefined ? saved.actual : ''}" min="0"
+            oninput="onActualInput(this)" onchange="recalcClosing()">
+        </td>
+        <td class="item-diff" id="diff-${s.id}-${i}">—</td>
+        <td class="item-type">
+          <select class="type-select" onchange="recalcClosing()">
+            <option value="normal" ${(saved.type||'normal')==='normal'?'selected':''}>正常</option>
+            <option value="absorbed" ${saved.type==='absorbed'?'selected':''}>自行吸收</option>
+            <option value="extra" ${saved.type==='extra'?'selected':''}>追加收款</option>
+          </select>
+        </td>
+        <td><input type="text" class="note-input" placeholder="備註" value="${saved.note||''}"></td>`;
+
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+function onActualInput(input) {
+  const tr = input.closest('tr');
+  const id = tr.dataset.sectionId;
+  const i = tr.dataset.rowIndex;
+  const costAmt = parseFloat(tr.dataset.costAmt) || 0;
+  const actual = parseFloat(input.value) || 0;
+  const diff = costAmt - actual;
+  const diffCell = document.getElementById(`diff-${id}-${i}`);
+  if (diffCell) {
+    diffCell.textContent = diff >= 0
+      ? '+' + Math.abs(diff).toLocaleString('zh-TW')
+      : '-' + Math.abs(diff).toLocaleString('zh-TW');
+    diffCell.className = 'item-diff ' + (diff >= 0 ? 'diff-pos' : 'diff-neg');
+  }
+  recalcClosing();
+}
+
+function toggleSecBlock(id) {
+  const body = document.getElementById('secbody-' + id);
+  body.classList.toggle('open');
+}
+
+// ===== RECALC =====
+function recalcClosing() {
+  let totalCostQuoted = 0;
+  let totalClientQuoted = 0;
+  let totalActual = 0;
+  let totalAbsorbed = 0;
+  let totalExtra = 0;
+
+  document.querySelectorAll('#sectionsArea tbody tr').forEach(tr => {
+    const costAmt = parseFloat(tr.dataset.costAmt) || 0;
+    const clientAmt = parseFloat(tr.dataset.clientAmt) || 0;
+    const actualInput = tr.querySelector('.actual-input');
+    const actual = parseFloat(actualInput?.value) || costAmt;
+    const type = tr.querySelector('.type-select')?.value || 'normal';
+
+    totalCostQuoted += costAmt;
+    totalClientQuoted += clientAmt;
+    totalActual += actual;
+
+    if (type === 'absorbed') {
+      const over = Math.max(0, actual - costAmt);
+      totalAbsorbed += over;
+    } else if (type === 'extra') {
+      totalExtra += actual;
+    }
+  });
+
+  const grossProfit = totalClientQuoted - totalActual;
+  const grossRate = totalClientQuoted > 0 ? (grossProfit / totalClientQuoted * 100).toFixed(1) : '0.0';
+
+  document.getElementById('pc-cost').textContent = fmt(totalCostQuoted);
+  document.getElementById('pc-client').textContent = fmt(totalClientQuoted);
+  document.getElementById('pc-actual').textContent = fmt(totalActual);
+  document.getElementById('pc-gross').textContent = fmt(grossProfit);
+  document.getElementById('pc-gross').className = 'value ' + (grossProfit >= 0 ? 'green' : 'red');
+  document.getElementById('pc-gross-rate').textContent = `毛利率 ${grossRate}%`;
+  document.getElementById('pc-absorbed').textContent = fmt(totalAbsorbed);
+  document.getElementById('pc-extra').textContent = fmt(totalExtra);
+
+  // Section meta
+  SECTIONS.forEach(s => {
+    const meta = document.getElementById('secmeta-' + s.id);
+    if (!meta) return;
+    let secActual = 0;
+    document.querySelectorAll(`#secrows-${s.id} tr`).forEach(tr => {
+      const costAmt = parseFloat(tr.dataset.costAmt) || 0;
+      const v = parseFloat(tr.querySelector('.actual-input')?.value) || costAmt;
+      secActual += v;
+    });
+    meta.textContent = `實際: ${fmt(secActual)}`;
+  });
+
+  return { totalCostQuoted, totalClientQuoted, totalActual, grossProfit, totalAbsorbed, totalExtra };
+}
+
+// ===== COLLECT =====
+function collectClosingData() {
+  const items = [];
+  document.querySelectorAll('#sectionsArea tbody tr').forEach(tr => {
+    const costAmt = parseFloat(tr.dataset.costAmt) || 0;
+    const actual = parseFloat(tr.querySelector('.actual-input')?.value);
+    items.push({
+      sectionId: tr.dataset.sectionId,
+      rowIndex: parseInt(tr.dataset.rowIndex),
+      costAmt,
+      clientAmt: parseFloat(tr.dataset.clientAmt) || 0,
+      actual: isNaN(actual) ? null : actual,
+      type: tr.querySelector('.type-select')?.value || 'normal',
+      note: tr.querySelector('.note-input')?.value || '',
+    });
+  });
+  return items;
+}
+
+// ===== SAVE =====
+async function saveDraft() { await saveClosing('draft'); }
+
+async function saveClosing(status) {
+  const { totalCostQuoted, totalClientQuoted, totalActual, grossProfit, totalAbsorbed, totalExtra } = recalcClosing();
+  const items = collectClosingData();
+  const notes = document.getElementById('closingNotes').value;
+
+  // Get quote ID
+  const quoteId = currentClosingQuoteId || parseInt(document.getElementById('quoteSelect').value);
+  if (!quoteId) { showToast('請先選擇報價單', true); return; }
+
+  const payload = {
+    quote_id: quoteId,
+    cost_total: totalCostQuoted,
+    client_total: totalClientQuoted,
+    actual_cost: totalActual,
+    gross_profit: grossProfit,
+    absorbed_amount: totalAbsorbed,
+    extra_billed: totalExtra,
+    items,
+    notes,
+    status,
+  };
+
+  try {
+    const res = await fetch('/api/closings', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const d = await res.json();
+    if (d.success) {
+      currentClosingId = d.id;
+      showToast(status === 'closed' ? '✅ 結案完成' : '草稿已儲存');
+    } else {
+      showToast(d.error || '儲存失敗', true);
+    }
+  } catch(e) {
+    showToast('儲存失敗: ' + e.message, true);
+  }
+}
+
+// ===== INIT =====
+async function init() {
+  try {
+    const me = await (await fetch('/api/me')).json();
+    if (me.error) return location.href = '/login.html';
+  } catch { return location.href = '/login.html'; }
+
+  // Load quotes for selector
+  const qRes = await fetch('/api/quotes');
+  allQuotes = await qRes.json();
+  const sel = document.getElementById('quoteSelect');
+  allQuotes.forEach(q => {
+    const opt = document.createElement('option');
+    opt.value = q.id;
+    opt.textContent = `${q.quote_no || '#'+q.id} — ${q.client_name || '（未填業主）'} (${(q.updated_at||'').slice(0,10)})`;
+    sel.appendChild(opt);
+  });
+
+  const params = new URLSearchParams(location.search);
+  const qId = params.get('quote');
+
+  if (qId) {
+    // Open new closing for this quote
+    showNewClosing();
+  } else {
+    // Show list
+    loadList();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
