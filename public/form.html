@@ -68,6 +68,10 @@ body { font-family: 'Noto Sans TC', '微軟正黑體', Arial, sans-serif; backgr
 .section-profit { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #aaa; margin-right: 6px; white-space: nowrap; }
 .profit-input { width: 42px; border: 1px solid #e0e0e0; border-radius: 4px; padding: 2px 3px; font-size: 11px; text-align: center; font-family: inherit; background: #fafafa; color: #555; }
 .profit-input:focus { border-color: #4a6fa5; outline: none; background: #fff; }
+.row-profit-input { width: 36px; border: 1px solid #e2d4f5; border-radius: 3px; padding: 2px 2px; font-size: 10px; text-align: center; font-family: inherit; background: #fdfbff; color: #7c5cbf; }
+.row-profit-input:focus { border-color: #8e5cbf; outline: none; background: #f8f0ff; }
+thead th.col-profit { width: 44px; }
+td.profit-cell { text-align: center; width: 44px; }
 .section-int-note-btn { background: none; border: none; cursor: pointer; font-size: 14px; color: #ccc; padding: 2px 4px; border-radius: 3px; margin-right: 4px; }
 .section-int-note-btn:hover, .section-int-note-btn.active { color: #f39c12; background: #fff8e6; }
 .section-total-label { font-size: 11px; color: #888; margin-right: 4px; }
@@ -231,7 +235,8 @@ tr.note-row td { padding: 3px 8px 6px 40px; background: #fffef8; }
 @media print {
   .navbar, .actions, .add-row-btn, .delete-cell, .toggle-btn, .lookup-btn,
   .btn-from-db, .section-profit, .section-int-note-btn, .tool-cell,
-  .drag-cell, .vendor-cell, .profit-summary-box { display: none !important; }
+  .drag-cell, .vendor-cell, .profit-summary-box,
+  td.profit-cell, thead th.col-profit { display: none !important; }
   body { background: #fff; }
   .wrapper { box-shadow: none; max-width: 100%; margin: 0; border-radius: 0; }
   tbody td input { background: transparent !important; }
@@ -420,7 +425,7 @@ function buildSections() {
         <div class="section-title">${s.label}</div>
         <div class="section-profit" title="此分類利潤加成%">
           利潤 <input type="number" class="profit-input" id="profit-${s.id}" value="0" min="0" max="999" placeholder="0"
-            onclick="event.stopPropagation()" oninput="event.stopPropagation(); recalcAll()"> %
+            onclick="event.stopPropagation()" oninput="event.stopPropagation(); updateSectionProfit('${s.id}'); recalcAll()"> %
         </div>
         <button class="section-int-note-btn" id="sec-note-btn-${s.id}" title="分類內部備註" onclick="event.stopPropagation(); toggleSectionNote('${s.id}')">📝</button>
         <div class="section-total-label">小計</div>
@@ -437,7 +442,7 @@ function buildSections() {
             <th class="col-num">#</th>
             <th class="col-desc">項目名稱</th>
             <th class="col-spec">規格說明</th>
-            <th>單位</th><th>數量</th><th>單價 (NT$)</th><th>小計 (NT$)</th>
+            <th>單位</th><th>數量</th><th>單價 (NT$)</th><th class="col-profit" title="個別利潤%（可覆蓋分類預設）">利%</th><th>小計 (NT$)</th>
             <th class="col-vendor"></th>
             <th></th><th></th>
           </tr></thead>
@@ -532,20 +537,24 @@ function recalcAll() {
   const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
 
   SECTIONS.forEach(s => {
-    const profit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
-    const mult = 1 + profit / 100;
+    const secProfit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
     const rows = document.getElementById('rows-' + s.id).querySelectorAll('tr:not(.note-row)');
     let secCost = 0;
+    let secClient = 0;
     rows.forEach(row => {
       const qty = parseFloat(row.querySelector('.qty')?.value) || 0;
       const price = parseFloat(row.querySelector('.price')?.value) || 0;
+      const rpVal = row.querySelector('.row-profit')?.value;
+      const rowProfit = (rpVal !== '' && rpVal !== null && rpVal !== undefined)
+        ? (parseFloat(rpVal) || 0) : secProfit;
       const sub = qty * price;
       secCost += sub;
+      secClient += sub * (1 + rowProfit / 100);
       const cell = row.querySelector('.subtotal-cell');
       if (cell) cell.textContent = sub > 0 ? Math.round(sub).toLocaleString('zh-TW') : '0';
     });
     costSubtotal += secCost;
-    clientSubtotal += secCost * mult;
+    clientSubtotal += secClient;
     document.getElementById('total-' + s.id).textContent = fmt(secCost);
     document.getElementById('sum-' + s.id).textContent = fmt(secCost);
   });
@@ -564,6 +573,14 @@ function recalcAll() {
   document.getElementById('ps-rate').textContent = rate + '%';
   const diffRow = document.getElementById('ps-diff').parentElement;
   diffRow.className = 'profit-row ' + (diff >= 0 ? 'highlight' : 'highlight-neg');
+}
+
+// 分類利潤變更時，同步更新該分類所有列的個別利潤欄
+function updateSectionProfit(id) {
+  const pct = document.getElementById('profit-' + id)?.value ?? '';
+  document.getElementById('rows-' + id)
+    .querySelectorAll('tr:not(.note-row) .row-profit')
+    .forEach(inp => { inp.value = pct; });
 }
 
 // ===== 列管理 =====
@@ -594,12 +611,21 @@ function addRow(id, descPh = '', specPh = '', unitPh = '', data = null) {
       <input type="number" class="num-input price" placeholder="0" min="0" value="${escV(data?.price)}">
       <button class="lookup-btn" title="查詢歷史單價" onclick="openPriceModal('${id}', this.closest('tr'))">💡</button>
     </td>
+    <td class="profit-cell">
+      <input type="number" class="num-input row-profit-input row-profit" placeholder="%" min="0" max="999" value="${escV(data?.rowProfit)}" title="個別利潤%（空白=沿用分類預設）">
+    </td>
     <td class="subtotal-cell">0</td>
     <td class="vendor-cell"><button class="vendor-btn${data?.vendor ? ' active' : ''}" title="選擇廠商" onclick="openVendorPicker(this.closest('tr'))">🏭</button></td>
     <td class="tool-cell"><button class="note-btn" title="內部備註" onclick="toggleRowNote(this.closest('tr'))">📝</button></td>
     <td class="delete-cell"><button onclick="deleteRow(this,'${id}')">✕</button></td>`;
 
   tbody.appendChild(tr);
+
+  // 新列若未帶 rowProfit，則沿用分類利潤預設值
+  if (data?.rowProfit === undefined || data?.rowProfit === null || data?.rowProfit === '') {
+    const sProfit = document.getElementById('profit-' + id)?.value || '';
+    if (sProfit !== '' && sProfit !== '0') tr.querySelector('.row-profit').value = sProfit;
+  }
 
   // Note row
   if (data?.note) {
@@ -617,7 +643,7 @@ function addRow(id, descPh = '', specPh = '', unitPh = '', data = null) {
 function buildNoteRow(note) {
   const nr = document.createElement('tr');
   nr.className = 'note-row' + (note ? ' has-content' : '');
-  nr.innerHTML = `<td colspan="11">
+  nr.innerHTML = `<td colspan="12">
     <input type="text" class="row-note-input" placeholder="🔒 內部備註（不顯示於客戶報價單）" value="${(note||'').replace(/"/g,'&quot;')}">
   </td>`;
   nr.querySelector('.row-note-input').addEventListener('input', function() {
@@ -627,7 +653,7 @@ function buildNoteRow(note) {
 }
 
 function attachRowEvents(tr, sectionId) {
-  tr.querySelectorAll('.qty,.price').forEach(inp => inp.addEventListener('input', recalcAll));
+  tr.querySelectorAll('.qty,.price,.row-profit').forEach(inp => inp.addEventListener('input', recalcAll));
 
   // Autocomplete
   const descInput = tr.querySelector('.desc-input');
@@ -945,6 +971,7 @@ function collectFormData() {
         vendor: tr.dataset.vendor || '',
         vendorId: tr.dataset.vendorId || '',
         note: noteRow?.querySelector('.row-note-input')?.value || '',
+        rowProfit: tr.querySelector('.row-profit')?.value || '',
       });
     });
     sections[s.id] = rows;
