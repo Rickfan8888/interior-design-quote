@@ -214,6 +214,8 @@ tr.note-row td { padding: 3px 8px 6px 40px; background: #fffef8; }
 .btn-orange:hover { background: #fff8f3; }
 .btn-teal { background: #fff; border: 1.5px solid #16a085; color: #16a085; }
 .btn-teal:hover { background: #f0fff9; }
+.btn-blue { background: #1565c0; color: #fff; border-color: #1565c0; }
+.btn-blue:hover { background: #0d47a1; border-color: #0d47a1; }
 
 /* Toast */
 .toast { position: fixed; bottom: 20px; right: 20px; background: #27ae60; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 13px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; display: none; }
@@ -265,6 +267,7 @@ tr.note-row td { padding: 3px 8px 6px 40px; background: #fffef8; }
   /* 成本報價：兩欄都顯示 */
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -353,6 +356,7 @@ tr.note-row td { padding: 3px 8px 6px 40px; background: #fffef8; }
     <button class="btn btn-teal" onclick="openClosingPage()" id="closingBtn" style="display:none">📦 結案</button>
     <button class="btn btn-outline" onclick="printCost()">📄 列印成本報價</button>
     <button class="btn btn-orange" onclick="printClient()">📋 列印客戶報價</button>
+    <button class="btn btn-blue" onclick="downloadExcel()">📥 下載 Excel</button>
     <button class="btn btn-green" onclick="saveQuote()">💾 儲存報價單</button>
   </div>
 </div>
@@ -1314,6 +1318,126 @@ async function init() {
 }
 
 init();
+
+// ===== Excel 下載 =====
+function buildExcelSheet(isClient) {
+  const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+  const quoteNo = document.getElementById('quoteNo').value || '報價單';
+  const clientName = document.getElementById('clientName').value || '';
+  const clientPhone = document.getElementById('clientPhone').value || '';
+  const clientAddr = document.getElementById('clientAddr').value || '';
+  const clientEmail = document.getElementById('clientEmail').value || '';
+  const designer = document.getElementById('designer').value || '';
+  const quoteDate = document.getElementById('quoteDate').value || '';
+  const area = document.getElementById('area').value || '';
+  const duration = document.getElementById('duration').value || '';
+  const validUntil = document.getElementById('validUntil').value || '';
+  const notes = document.getElementById('notes').value || '';
+  const notesInternal = document.getElementById('notesInternal').value || '';
+
+  const aoa = [];
+  const label = isClient ? '客戶報價版' : '內部成本版';
+
+  // 標題列
+  aoa.push(['大事設計有限公司　工程報價單（' + label + '）']);
+  aoa.push(['報價單號：' + quoteNo, '', '', '', '報價日期：' + quoteDate]);
+  aoa.push([]);
+  aoa.push(['業主姓名', clientName, '', '負責設計師', designer]);
+  aoa.push(['聯絡電話', clientPhone, '', '工程坪數', area]);
+  aoa.push(['工程地址', clientAddr, '', '施工期間', duration]);
+  aoa.push(['電子信箱', clientEmail, '', '有效期限', validUntil]);
+  aoa.push([]);
+
+  // 欄位標題
+  aoa.push(['#', '項目名稱', '規格說明', '單位', '數量',
+    isClient ? '售價單價（元）' : '成本單價（元）',
+    isClient ? '售價小計（元）' : '成本小計（元）']);
+
+  let grandSubtotal = 0;
+
+  SECTIONS.forEach(s => {
+    const secProfit = parseFloat(document.getElementById('profit-' + s.id)?.value) || 0;
+    const rows = [...document.getElementById('rows-' + s.id).querySelectorAll('tr:not(.note-row)')];
+    const activeRows = rows.filter(tr =>
+      tr.querySelector('.desc-input')?.value?.trim() ||
+      parseFloat(tr.querySelector('.qty')?.value) ||
+      parseFloat(tr.querySelector('.price')?.value)
+    );
+    if (!activeRows.length) return;
+
+    // 大項標題
+    aoa.push([s.label]);
+
+    let secSubtotal = 0;
+    let rowNum = 1;
+
+    activeRows.forEach(tr => {
+      const desc = tr.querySelector('.desc-input')?.value?.trim() || '';
+      const spec = tr.querySelector('.spec-input')?.value?.trim() || '';
+      const unit = tr.querySelector('.unit-input')?.value?.trim() || '';
+      const qty = parseFloat(tr.querySelector('.qty')?.value) || 0;
+      const price = parseFloat(tr.querySelector('.price')?.value) || 0;
+      const rpVal = tr.querySelector('.row-profit')?.value;
+      const rowProfit = (rpVal !== '' && rpVal !== null && rpVal !== undefined)
+        ? (parseFloat(rpVal) || 0) : secProfit;
+
+      const unitPrice = isClient ? Math.round(price * (1 + rowProfit / 100)) : price;
+      const subtotal = isClient
+        ? Math.round(qty * price * (1 + rowProfit / 100))
+        : Math.round(qty * price);
+
+      secSubtotal += subtotal;
+      aoa.push([rowNum++, desc, spec, unit, qty, unitPrice, subtotal]);
+    });
+
+    grandSubtotal += secSubtotal;
+    aoa.push(['', '', '', '', '', '小計', secSubtotal]);
+    aoa.push([]);
+  });
+
+  // 合計摘要
+  const tax = Math.round(grandSubtotal * taxRate / 100);
+  aoa.push(['', '', '', '', '', '未稅合計', grandSubtotal]);
+  aoa.push(['', '', '', '', '', '稅率 ' + taxRate + '%', tax]);
+  aoa.push(['', '', '', '', '', '含稅總計', grandSubtotal + tax]);
+
+  if (notes) {
+    aoa.push([]);
+    aoa.push(['備註說明：']);
+    notes.split('\n').forEach(line => aoa.push(['', line]));
+  }
+  if (!isClient && notesInternal) {
+    aoa.push([]);
+    aoa.push(['【內部備註，請勿對外提供】']);
+    notesInternal.split('\n').forEach(line => aoa.push(['', line]));
+  }
+
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols'] = [
+    { wch: 4 },   // #
+    { wch: 28 },  // 項目名稱
+    { wch: 22 },  // 規格說明
+    { wch: 6 },   // 單位
+    { wch: 8 },   // 數量
+    { wch: 16 },  // 單價
+    { wch: 16 },  // 小計
+  ];
+  return ws;
+}
+
+function downloadExcel() {
+  if (typeof XLSX === 'undefined') {
+    showToast('Excel 功能尚未載入，請重新整理頁面', true);
+    return;
+  }
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, buildExcelSheet(true), '客戶報價');
+  XLSX.utils.book_append_sheet(wb, buildExcelSheet(false), '內部成本');
+  const quoteNo = document.getElementById('quoteNo').value || '報價單';
+  const date = new Date().toISOString().slice(0, 10);
+  XLSX.writeFile(wb, quoteNo + '_' + date + '.xlsx');
+  showToast('✅ Excel 已下載（含客戶報價 + 內部成本兩份）');
+}
 </script>
 </body>
 </html>
