@@ -82,6 +82,7 @@ td.profit-cell { text-align: center; width: 44px; }
 .section-int-note-btn:hover, .section-int-note-btn.active { color: #f39c12; background: #fff8e6; }
 .section-total-label { font-size: 11px; color: #888; margin-right: 4px; }
 .section-total { font-size: 14px; font-weight: 700; min-width: 100px; text-align: right; }
+.section-client-total { font-size: 10px; color: #2980b9; font-weight: 600; text-align: right; white-space: nowrap; line-height: 1.4; min-width: 100px; }
 .toggle-btn { background: none; border: none; cursor: pointer; font-size: 15px; color: #aaa; margin-left: 6px; }
 .section-int-note-row { display: none; padding: 6px 14px 8px; background: #fffdf5; border-top: 1px dashed #e8d8a0; }
 .section-int-note-row textarea { width: 100%; border: 1px solid #e8d8a0; border-radius: 5px; padding: 6px 8px; font-size: 12px; color: #886600; font-family: inherit; resize: vertical; min-height: 40px; outline: none; background: #fffef8; }
@@ -260,6 +261,7 @@ tr.note-row td { padding: 3px 8px 6px 40px; background: #fffef8; }
   /* 客戶報價：隱藏成本標註，小計已替換為售價 */
   body:not(.print-cost) .client-price-row { display: none !important; }
   body:not(.print-cost) .client-sub-row { display: none !important; }
+  body:not(.print-cost) .section-client-total { display: none !important; }
   /* 成本報價：兩欄都顯示 */
 }
 </style>
@@ -440,6 +442,7 @@ function buildSections() {
         <button class="section-int-note-btn" id="sec-note-btn-${s.id}" title="分類內部備註" onclick="event.stopPropagation(); toggleSectionNote('${s.id}')">📝</button>
         <div class="section-total-label">小計</div>
         <div class="section-total" id="total-${s.id}">NT$ 0</div>
+        <div class="section-client-total" id="client-total-${s.id}">售 NT$ 0</div>
         <button class="toggle-btn" id="toggle-${s.id}">▾</button>
       </div>
       <div class="section-int-note-row" id="sec-note-row-${s.id}">
@@ -573,6 +576,8 @@ function recalcAll() {
     clientSubtotal += secClient;
     document.getElementById('total-' + s.id).textContent = fmt(secCost);
     document.getElementById('sum-' + s.id).textContent = fmt(secCost);
+    const ctEl = document.getElementById('client-total-' + s.id);
+    if (ctEl) ctEl.textContent = '售 ' + fmt(secClient);
   });
 
   const tax = costSubtotal * taxRate / 100;
@@ -1312,5 +1317,3 @@ init();
 </script>
 </body>
 </html>
-
-<!-- dual-price display v2 -->
