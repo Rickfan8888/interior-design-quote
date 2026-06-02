@@ -105,6 +105,11 @@ async function initDB() {
       console.log('Default admin created: admin / admin123');
     }
 
+    // Fix garbled display names (one-time migration, using chr() to avoid encoding issues)
+    // chr(31649)||chr(29702)||chr(21729) builds the 3-char string for admin display name
+    await client.query("UPDATE users SET display_name = chr(31649)||chr(29702)||chr(21729) WHERE username = 'admin' AND display_name != 'Admin' AND display_name != chr(31649)||chr(29702)||chr(21729)");
+    await client.query("DELETE FROM users WHERE username = 'admin_fix'");
+
     console.log('Database initialized');
   } finally {
     client.release();
